@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Óptica TOL — Agendá tu hora</title>
+<meta name="description" content="Óptica TOL, San José de Mayo. Desde 1948 al cuidado de tus ojos. Agendá tu hora online o por WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233F;
+    --ink-soft:#3B4A6B;
+    --glass:#EDF1F2;
+    --glass-deep:#DCE4E6;
+    --white:#FFFFFF;
+    --brass:#B98A3D;
+    --brass-soft:#E7D3AC;
+    --teal:#2F6F62;
+    --teal-deep:#234F45;
+    --slate:#7C879A;
+    --wa:#2FA745;
+    --radius:2px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--glass);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{max-width:100%;display:block;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal-deep);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px; background:var(--brass);
+    display:inline-block;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(237,241,242,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--glass-deep);
+  }
+  .headbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    max-width:var(--maxw); margin:0 auto;
+  }
+  .brand{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:.02em;
+  }
+  .brand span{color:var(--brass);}
+  .head-actions{display:flex; align-items:center; gap:14px;}
+  .tel-link{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    display:none;
+  }
+  @media(min-width:640px){ .tel-link{display:inline;} }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 18px;
+    border-radius:var(--radius);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    text-decoration:none;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-wa{background:var(--wa); color:#fff;}
+  .btn-wa:hover{box-shadow:0 6px 16px rgba(47,167,69,.35);}
+  .btn-ghost{border-color:var(--ink); color:var(--ink); background:transparent;}
+  .btn-ghost:hover{background:var(--ink); color:var(--white);}
+  .btn-teal{background:var(--teal); color:#fff;}
+  .btn-teal:hover{box-shadow:0 6px 18px rgba(47,111,98,.35); background:var(--teal-deep);}
+  .btn-sm{padding:8px 14px; font-size:13px;}
+
+  /* ---------- hero / chart ---------- */
+  .hero{
+    padding:64px 0 40px;
+    overflow:hidden;
+  }
+  .hero-top{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .hero-note{
+    max-width:320px; font-size:14px; color:var(--ink-soft); line-height:1.5;
+  }
+  .chart{
+    border-top:1px solid var(--glass-deep);
+  }
+  .chart-row{
+    display:flex; align-items:baseline; gap:18px;
+    border-bottom:1px solid var(--glass-deep);
+    padding:10px 0;
+    opacity:0; transform:translateY(10px);
+    animation:rowIn .6s ease forwards;
+  }
+  .chart-row:nth-child(1){animation-delay:.05s;}
+  .chart-row:nth-child(2){animation-delay:.18s;}
+  .chart-row:nth-child(3){animation-delay:.31s;}
+  .chart-row:nth-child(4){animation-delay:.44s;}
+  .chart-row:nth-child(5){animation-delay:.57s;}
+  @keyframes rowIn{to{opacity:1; transform:translateY(0);}}
+  .acuity{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--slate);
+    width:64px; flex:0 0 auto;
+    font-size:12px;
+  }
+  .chart-row:last-child .acuity{color:var(--teal);}
+  .chart-word{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    color:var(--ink);
+    line-height:1;
+    letter-spacing:-.01em;
+  }
+  .chart-row:nth-child(1) .chart-word{font-size:clamp(40px,9vw,104px); color:var(--brass);}
+  .chart-row:nth-child(2) .chart-word{font-size:clamp(34px,7vw,80px);}
+  .chart-row:nth-child(3) .chart-word{font-size:clamp(26px,5.4vw,58px);}
+  .chart-row:nth-child(4) .chart-word{font-size:clamp(20px,4vw,42px); color:var(--ink-soft);}
+  .chart-row:last-child{
+    cursor:pointer;
+  }
+  .chart-row:last-child .chart-word{
+    font-size:clamp(16px,2.6vw,26px);
+    color:var(--teal);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:700;
+    display:flex; align-items:center; gap:10px;
+  }
+  .chart-row:last-child:hover .chart-word{color:var(--teal-deep);}
+  .chart-row:last-child .chart-word::after{content:"→"; font-weight:500;}
+
+  .hero-ctas{
+    display:flex; flex-wrap:wrap; gap:12px; margin-top:34px;
+  }
+  .trust-strip{
+    margin-top:44px; padding-top:20px; border-top:1px solid var(--glass-deep);
+    display:flex; flex-wrap:wrap; gap:28px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); letter-spacing:.03em;
+  }
+  .trust-strip b{color:var(--ink); font-weight:600;}
+
+  /* ---------- sections ---------- */
+  section{padding:72px 0;}
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(26px,3.6vw,38px);
+    margin:10px 0 8px;
+    letter-spacing:-.01em;
+  }
+  .section-head{margin-bottom:40px; max-width:640px;}
+  .lead{color:var(--ink-soft); font-size:16px; line-height:1.6; margin:0;}
+
+  .services{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px;
+    background:var(--glass-deep);
+    border:1px solid var(--glass-deep);
+  }
+  .service-card{
+    background:var(--white); padding:28px 24px; min-height:200px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .service-num{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--brass);
+  }
+  .service-card h3{
+    font-family:'Fraunces', serif; font-weight:500; font-size:20px; margin:0;
+  }
+  .service-card p{font-size:14px; color:var(--ink-soft); line-height:1.55; margin:0;}
+
+  .why{
+    background:var(--ink); color:var(--glass);
+    padding:64px 0;
+  }
+  .why .eyebrow{color:var(--brass-soft);}
+  .why .eyebrow::before{background:var(--brass-soft);}
+  .why h2{color:var(--white);}
+  .stat-row{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:32px; margin-top:36px;
+  }
+  .stat{border-top:1px solid rgba(255,255,255,.18); padding-top:16px;}
+  .stat .num{font-family:'Fraunces', serif; font-size:36px; color:var(--brass-soft);}
+  .stat .label{font-size:13px; color:#B7C0D6; margin-top:4px; line-height:1.4;}
+
+  /* ---------- booking form ---------- */
+  .booking{
+    display:grid; grid-template-columns:1fr; gap:0;
+    border:1px solid var(--glass-deep);
+    background:var(--white);
+  }
+  @media(min-width:860px){ .booking{grid-template-columns:0.9fr 1.1fr;} }
+  .booking-aside{
+    background:var(--teal); color:#fff;
+    padding:40px 32px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .booking-aside .eyebrow{color:#CFE6DE;}
+  .booking-aside .eyebrow::before{background:#CFE6DE;}
+  .booking-aside h3{font-family:'Fraunces', serif; font-weight:500; font-size:26px; margin:14px 0; line-height:1.15;}
+  .booking-aside p{font-size:14px; line-height:1.6; color:#DCEDE7;}
+  .wa-inline{
+    margin-top:24px; display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.4);
+    padding-bottom:2px; width:fit-content;
+  }
+  .booking-form{padding:40px 32px;}
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block; font-size:12px; font-family:'IBM Plex Mono', monospace;
+    color:var(--ink-soft); margin-bottom:6px; letter-spacing:.03em;
+  }
+  .field input, .field select, .field textarea{
+    width:100%; padding:12px 12px; border:1px solid var(--glass-deep); border-radius:var(--radius);
+    font-family:'IBM Plex Sans', sans-serif; font-size:14px; color:var(--ink);
+    background:var(--glass); outline:none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    border-color:var(--teal); box-shadow:0 0 0 3px rgba(47,111,98,.12);
+  }
+  .field-row{display:grid; grid-template-columns:1fr; gap:18px;}
+  @media(min-width:520px){ .field-row.two{grid-template-columns:1fr 1fr;} }
+  .field textarea{resize:vertical; min-height:80px;}
+  .submit-row{display:flex; align-items:center; gap:16px; margin-top:6px; flex-wrap:wrap;}
+  .form-msg{font-size:13px; display:none;}
+  .form-msg.show{display:block;}
+  .form-msg.ok{color:var(--teal-deep);}
+  .form-msg.err{color:#B14545;}
+
+  /* ---------- location ---------- */
+  .loc{
+    display:grid; grid-template-columns:1fr; gap:32px;
+  }
+  @media(min-width:860px){ .loc{grid-template-columns:1fr 1fr;} }
+  .loc-card{border:1px solid var(--glass-deep); background:var(--white); padding:32px;}
+  .loc-card dl{margin:0; display:grid; gap:16px;}
+  .loc-card dt{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--brass); margin-bottom:2px;}
+  .loc-card dd{margin:0; font-size:15px; color:var(--ink);}
+  .loc-card a{text-decoration:none;}
+  .loc-card a:hover{color:var(--teal);}
+  .social-row{display:flex; gap:12px; margin-top:20px;}
+  .social-chip{
+    border:1px solid var(--glass-deep); border-radius:var(--radius);
+    padding:8px 14px; font-size:13px; text-decoration:none; color:var(--ink-soft);
+  }
+  .social-chip:hover{border-color:var(--teal); color:var(--teal);}
+  .map-frame{width:100%; height:340px; border:1px solid var(--glass-deep); filter:grayscale(.15);}
+
+  footer{
+    border-top:1px solid var(--glass-deep);
+    padding:32px 0; font-size:12px; color:var(--slate);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  /* floating whatsapp */
+  .float-wa{
+    position:fixed; right:20px; bottom:20px; z-index:60;
+    width:52px; height:52px; border-radius:50%;
+    background:var(--wa); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.22);
+    text-decoration:none;
+  }
+  .float-wa svg{width:24px; height:24px;}
+
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="headbar">
+    <div class="brand">ÓPTICA <span>TOL</span></div>
+    <div class="head-actions">
+      <a class="tel-link" href="tel:+59843423605">4342 3605</a>
+      <a class="btn btn-wa btn-sm" href="https://wa.me/59899090773?text=Hola%2C%20quiero%20agendar%20una%20hora%20en%20%C3%93ptica%20TOL" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.5 1.34 5.02L2 22l5.12-1.34A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.28c-.24.68-1.4 1.32-1.94 1.4-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.2 0 .4 0 .57.01.18.01.43-.07.67.51.24.58.83 2 .9 2.15.07.15.12.32.02.52-.1.2-.15.32-.3.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2 .78.68 1.28.9 1.71 1.11.15.07.26.06.36-.03.11-.09.68-.79.86-1.06.18-.27.36-.22.61-.13.24.09 1.55.73 1.82.86.27.13.44.2.51.31.07.1.07.6-.17 1.28z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <div class="eyebrow">Cartilla de agudeza visual — San José de Mayo</div>
+        <div class="hero-note">En Óptica TOL leemos línea por línea desde 1948. Empezá arriba, terminá agendando tu hora.</div>
+      </div>
+
+      <div class="chart">
+        <div class="chart-row"><span class="acuity">20/200</span><span class="chart-word">Desde</span></div>
+        <div class="chart-row"><span class="acuity">20/100</span><span class="chart-word">1948</span></div>
+        <div class="chart-row"><span class="acuity">20/60</span><span class="chart-word">al cuidado</span></div>
+        <div class="chart-row"><span class="acuity">20/40</span><span class="chart-word">de tus ojos</span></div>
+        <div class="chart-row" id="heroCta"><span class="acuity">20/20</span><span class="chart-word">Agendá tu hora</span></div>
+      </div>
+
+      <div class="hero-ctas">
+        <a class="btn btn-wa" href="https://wa.me/59899090773?text=Hola%2C%20quiero%20agendar%20una%20hora%20en%20%C3%93ptica%20TOL" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.5 1.34 5.02L2 22l5.12-1.34A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.28c-.24.68-1.4 1.32-1.94 1.4-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.2 0 .4 0 .57.01.18.01.43-.07.67.51.24.58.83 2 .9 2.15.07.15.12.32.02.52-.1.2-.15.32-.3.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2 .78.68 1.28.9 1.71 1.11.15.07.26.06.36-.03.11-.09.68-.79.86-1.06.18-.27.36-.22.61-.13.24.09 1.55.73 1.82.86.27.13.44.2.51.31.07.1.07.6-.17 1.28z"/></svg>
+          Reservar por WhatsApp
+        </a>
+        <a class="btn btn-ghost" href="#reservar">Completar formulario</a>
+      </div>
+
+      <div class="trust-strip">
+        <div><b>78 años</b> en San José de Mayo</div>
+        <div><b>BPS</b> y convenios institucionales</div>
+        <div><b>Cristales</b> monofocales, bifocales, progresivos y blue cut</div>
+        <div><b>Audífonos</b> — audiogramas y adaptación</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Servicios</div>
+        <h2>Todo lo que tu vista necesita, bajo un mismo techo</h2>
+        <p class="lead">Desde el examen de la vista hasta el armado del cristal en nuestro laboratorio propio.</p>
+      </div>
+      <div class="services reveal">
+        <div class="service-card">
+          <span class="service-num">01</span>
+          <h3>Lentes de receta</h3>
+          <p>Armazones y montaje a medida, con asesoramiento personalizado para encontrar el marco correcto.</p>
+        </div>
+        <div class="service-card">
+          <span class="service-num">02</span>
+          <h3>Cristales</h3>
+          <p>Monofocales, bifocales, progresivos y cristales blue cut para protección frente a pantallas.</p>
+        </div>
+        <div class="service-card">
+          <span class="service-num">03</span>
+          <h3>Lentes de sol</h3>
+          <p>Gran variedad de marcas y modelos, con la opción de graduarlos a tu receta.</p>
+        </div>
+        <div class="service-card">
+          <span class="service-num">04</span>
+          <h3>Lentes de contacto</h3>
+          <p>Adaptación y venta de lentes de contacto para uso diario o prolongado.</p>
+        </div>
+        <div class="service-card">
+          <span class="service-num">05</span>
+          <h3>Audífonos</h3>
+          <p>Audiogramas, logoaudiometrías, service y adaptación de audífonos de última tecnología.</p>
+        </div>
+        <div class="service-card">
+          <span class="service-num">06</span>
+          <h3>Convenios e instituciones</h3>
+          <p>Aceptamos órdenes de BPS y contamos con convenios con distintas instituciones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="why">
+    <div class="wrap reveal">
+      <div class="eyebrow">Óptica TOL</div>
+      <h2>Una óptica de familia, de toda la vida</h2>
+      <div class="stat-row">
+        <div class="stat"><div class="num">1948</div><div class="label">Año de fundación, en el corazón de San José de Mayo</div></div>
+        <div class="stat"><div class="num">Asamblea 590</div><div class="label">Nuestra dirección de siempre</div></div>
+        <div class="stat"><div class="num">11+</div><div class="label">Medios de pago aceptados: tarjetas, BPS, crédito de la casa</div></div>
+        <div class="stat"><div class="num">100%</div><div class="label">Atención personalizada, examen a examen</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section id="reservar">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Reservar hora</div>
+        <h2>Agendá tu hora en Óptica TOL</h2>
+        <p class="lead">Contanos qué necesitás y te confirmamos por teléfono o WhatsApp a la brevedad.</p>
+      </div>
+
+      <div class="booking reveal">
+        <div class="booking-aside">
+          <div>
+            <div class="eyebrow">Vía directa</div>
+            <h3>¿Preferís algo más rápido?</h3>
+            <p>Escribinos por WhatsApp y coordinamos tu hora al instante, sin formularios.</p>
+          </div>
+          <a class="wa-inline" href="https://wa.me/59899090773?text=Hola%2C%20quiero%20agendar%20una%20hora%20en%20%C3%93ptica%20TOL" target="_blank" rel="noopener">
+            099 090 773 — abrir WhatsApp →
+          </a>
+        </div>
+
+        <form class="booking-form" id="bookingForm">
+          <div class="field-row two">
+            <div class="field">
+              <label for="nombre">Nombre y apellido</label>
+              <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="field">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" required placeholder="09X XXX XXX">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="field-row two">
+            <div class="field">
+              <label for="servicio">Motivo de consulta</label>
+              <select id="servicio" name="servicio" required>
+                <option value="" disabled selected>Elegí una opción</option>
+                <option>Examen de la vista / lentes de receta</option>
+                <option>Cristales (monofocal, bifocal, progresivo, blue cut)</option>
+                <option>Lentes de sol</option>
+                <option>Lentes de contacto</option>
+                <option>Audífonos</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="horario">Horario preferido</label>
+              <select id="horario" name="horario" required>
+                <option value="" disabled selected>Elegí una opción</option>
+                <option>Mañana</option>
+                <option>Tarde</option>
+                <option>Indistinto</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="fecha">Fecha preferida</label>
+            <input type="date" id="fecha" name="fecha" required>
+          </div>
+
+          <div class="field">
+            <label for="comentarios">Comentarios (opcional)</label>
+            <textarea id="comentarios" name="comentarios" placeholder="Alguna aclaración sobre tu consulta"></textarea>
+          </div>
+
+          <div class="submit-row">
+            <button type="submit" class="btn btn-teal" id="submitBtn">Confirmar reserva</button>
+            <span class="form-msg" id="formMsg"></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <section id="ubicacion">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Ubicación y contacto</div>
+        <h2>Te esperamos en Asamblea 590</h2>
+      </div>
+      <div class="loc reveal">
+        <div class="loc-card">
+          <dl>
+            <div>
+              <dt>Dirección</dt>
+              <dd>Asamblea 590, San José de Mayo, Uruguay</dd>
+            </div>
+            <div>
+              <dt>WhatsApp</dt>
+              <dd><a href="https://wa.me/59899090773" target="_blank" rel="noopener">099 090 773</a></dd>
+            </div>
+            <div>
+              <dt>Teléfono fijo</dt>
+              <dd><a href="tel:+59843423605">4342 3605</a> / <a href="tel:+59843426844">4342 6844</a></dd>
+            </div>
+            <div>
+              <dt>Redes</dt>
+              <dd>
+                <div class="social-row">
+                  <a class="social-chip" href="https://www.instagram.com/opticatol/" target="_blank" rel="noopener">Instagram</a>
+                  <a class="social-chip" href="https://www.facebook.com/%C3%93ptica-TOL-San-Jos%C3%A9-577004499039450/" target="_blank" rel="noopener">Facebook</a>
+                </div>
+              </dd>
+            </div>
+          </dl>
+        </div>
+        <iframe class="map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Asamblea+590,+San+Jos%C3%A9+de+Mayo,+Uruguay&output=embed">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; width:100%;">
+    <span>Óptica TOL — Desde 1948 al cuidado de sus ojos.</span>
+    <span>Asamblea 590, San José de Mayo</span>
+  </div>
+</footer>
+
+<a class="float-wa" href="https://wa.me/59899090773?text=Hola%2C%20quiero%20agendar%20una%20hora%20en%20%C3%93ptica%20TOL" target="_blank" rel="noopener" aria-label="Agendar por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.5 1.34 5.02L2 22l5.12-1.34A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.28c-.24.68-1.4 1.32-1.94 1.4-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.2 0 .4 0 .57.01.18.01.43-.07.67.51.24.58.83 2 .9 2.15.07.15.12.32.02.52-.1.2-.15.32-.3.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2 .78.68 1.28.9 1.71 1.11.15.07.26.06.36-.03.11-.09.68-.79.86-1.06.18-.27.36-.22.61-.13.24.09 1.55.73 1.82.86.27.13.44.2.51.31.07.1.07.6-.17 1.28z"/></svg>
+</a>
+
+<script>
+  // ---- reveal on scroll ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, {threshold:.12});
+  revealEls.forEach(el=>io.observe(el));
+
+  // ---- hero CTA scrolls to form ----
+  document.getElementById('heroCta').addEventListener('click', ()=>{
+    document.getElementById('reservar').scrollIntoView({behavior:'smooth'});
+  });
+
+  // ---- booking form submit ----
+  // 1) Deployá el Google Apps Script (ver INSTRUCCIONES.md) y pegá acá la URL que te da al publicarlo.
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8ZcefY4yAmu8C1elDL3ybROyimnBW2bCwd9M0SxTg9-cF66TQgVzsX8KjKOCxYb3U/exec";
+
+  const form = document.getElementById('bookingForm');
+  const msg = document.getElementById('formMsg');
+  const submitBtn = document.getElementById('submitBtn');
+
+  // fecha mínima = hoy
+  const fechaInput = document.getElementById('fecha');
+  fechaInput.min = new Date().toISOString().split('T')[0];
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    if(SCRIPT_URL.includes('PEGA_AQUI')){
+      msg.textContent = 'Falta conectar el formulario con Google (ver INSTRUCCIONES.md). Mientras tanto, escribinos por WhatsApp.';
+      msg.className = 'form-msg show err';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    try{
+      const data = new FormData(form);
+      await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body:data });
+      msg.textContent = '¡Listo! Recibimos tu solicitud y te confirmamos la hora a la brevedad.';
+      msg.className = 'form-msg show ok';
+      form.reset();
+    }catch(err){
+      msg.textContent = 'No pudimos enviar el formulario. Probá de nuevo o escribinos por WhatsApp.';
+      msg.className = 'form-msg show err';
+    }finally{
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Confirmar reserva';
+    }
+  });
+</script>
+
+</body>
+</html>
