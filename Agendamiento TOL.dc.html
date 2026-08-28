@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-cf681d07-f775-4f68-be63-6d76b77f79e2/styles.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@media (max-width: 940px){
+  [data-m="bookgrid"]{grid-template-columns:1fr !important;min-height:0 !important}
+  [data-m="aside"]{border-right:none !important;border-bottom:1px solid #E2E7E9 !important}
+  [data-m="slots"]{border-left:none !important;border-top:1px solid #E2E7E9 !important}
+  [data-m="cols3"],[data-m="cols2"]{grid-template-columns:1fr !important;gap:1px !important}
+  [data-m="cols2"]{gap:36px !important}
+}
+@media (max-width: 720px){
+  nav{padding:14px 18px !important;gap:14px !important}
+  [data-m="navlinks"]{display:none !important}
+  header{padding:56px 20px 64px !important}
+  header h1{font-size:40px !important;letter-spacing:-0.025em !important}
+  header p{font-size:16.5px !important}
+  section{padding-left:18px !important;padding-right:18px !important}
+  section h2{font-size:34px !important;letter-spacing:-0.025em !important}
+  section p{font-size:16.5px !important}
+  footer{padding:24px 18px !important;font-size:12.5px !important}
+  a[href="#agendar"],a[href^="https://wa.me"]{padding:15px 22px !important;font-size:13px !important}
+  [data-m="slots"] > div > div{max-height:none !important}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F1F0EB;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0F2230}
+*{box-sizing:border-box}
+a{color:#14496E;text-decoration:none}
+a:hover{color:#0C3450}
+input,select,textarea,button{font-family:inherit}
+@keyframes tolIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#14496E"/><text x="200" y="170" font-family="Archivo,sans-serif" font-size="90" font-weight="800" fill="#A8D8EE" text-anchor="middle">TOL</text></svg></template>
+<div style="min-height:100%;background:#F1F0EB">
+
+  <nav style="background:#14496E;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 40px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="background:#fff;border-radius:10px;padding:8px 14px;display:flex"><img src="assets/logo-tol-trim.png" alt="Óptica TOL — Óptica y Audífonos" style="height:38px;width:auto;object-fit:contain;display:block"></span>
+    </div>
+    <div data-m="navlinks" style="display:flex;align-items:center;gap:36px;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="#servicios" style="color:#fff" style-hover="color:#CBEAF8">Servicios</a>
+      <a href="#como" style="color:#fff" style-hover="color:#CBEAF8">Cómo funciona</a>
+      <a href="#donde" style="color:#fff" style-hover="color:#CBEAF8">Dónde estamos</a>
+    </div>
+    <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px" style-hover="background:#CBEAF8">Agendar</a>
+  </nav>
+
+  <header style="background:linear-gradient(120deg,#14496E 0%,#14496E 45%,#2C7BA8 100%);color:#fff;padding:110px 40px 120px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h1 style="margin:0;font-size:104px;line-height:0.94;font-weight:700;letter-spacing:-0.035em;max-width:15ch;text-wrap:pretty">Desde 1948 al <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-0.01em">cuidado de tus ojos.</span></h1>
+      <p style="margin:34px 0 0;font-size:20px;line-height:1.5;opacity:.85;max-width:44ch">Examen de la vista, cristales, lentes de contacto y audífonos en Asamblea 590, San José de Mayo.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:44px">
+        <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px" style-hover="background:#CBEAF8">Agendar tu hora</a>
+        <a href="https://wa.me/59899090773" target="_blank" rel="noopener" style="border:1.5px solid rgba(255,255,255,.6);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px" style-hover="background:rgba(255,255,255,.12);color:#fff">Escribinos por WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="agendar" style="padding:96px 40px 40px">
+    <div style="max-width:1180px;margin:0 auto;text-align:center">
+      <div style="font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#14496E">Agendá online · 30 segundos</div>
+      <h2 style="margin:22px 0 0;font-size:78px;line-height:1;font-weight:700;letter-spacing:-0.035em">Agendá tu <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">hora.</span></h2>
+      <p style="margin:24px 0 0;font-size:19px;color:#4C5E68">Elegí día y horario. Llenás tus datos. Te confirmamos por WhatsApp.</p>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 90px">
+    <div style="max-width:1180px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 24px 60px rgba(15,34,48,.10);padding:14px">
+      <div data-m="bookgrid" style="display:grid;grid-template-columns:300px 1fr 310px;gap:0;border:1px solid #E2E7E9;border-radius:16px;overflow:hidden;min-height:560px">
+
+        <aside data-m="aside" style="padding:32px 28px;border-right:1px solid #E2E7E9;display:flex;flex-direction:column;gap:22px">
+          <img src="assets/logo-tol-trim.png" alt="Óptica TOL" style="height:46px;width:auto;object-fit:contain;align-self:flex-start;display:block">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#14496E">Óptica TOL</div>
+            <h3 style="margin:8px 0 0;font-size:27px;line-height:1.1;font-weight:700;letter-spacing:-0.02em">{{ servicioTitulo }}</h3>
+          </div>
+          <p style="margin:0;font-size:14.5px;line-height:1.55;color:#4C5E68">Control de agudeza visual y receta en el día. Si necesitás cristales, los armamos en nuestro laboratorio propio.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#42545E;margin-top:auto">
+            <div style="display:flex;gap:10px;align-items:center"><span style="width:18px;height:18px;border:1.5px solid #93A5AF;border-radius:50%;display:inline-block"></span>{{ duracion }}</div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="width:12px;height:12px;border:1.5px solid #93A5AF;border-radius:50% 50% 50% 0;transform:rotate(-45deg);margin:0 3px"></span>Asamblea 590, San José de Mayo</div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="width:18px;height:18px;border:1.5px solid #93A5AF;border-radius:50%;display:inline-block"></span>America/Montevideo</div>
+          </div>
+        </aside>
+
+        <div style="padding:30px 30px 34px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+            <div style="font-size:22px;font-weight:600;letter-spacing:-0.01em">{{ mesLabel }} <span style="color:#93A5AF">{{ anioLabel }}</span></div>
+            <div style="display:flex;gap:6px">
+              <button onClick="{{ mesAnterior }}" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px" style-hover="background:#E7F0F5;border-color:#14496E;color:#14496E">‹</button>
+              <button onClick="{{ mesSiguiente }}" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px" style-hover="background:#E7F0F5;border-color:#14496E;color:#14496E">›</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">DOM</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">LUN</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MAR</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MIÉ</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">JUE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">VIE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">SÁB</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px" hint-placeholder-count="1">
+            <sc-for list="{{ dias }}" as="dia" hint-placeholder-count="35">
+              <button onClick="{{ dia.click }}" disabled="{{ dia.disabled }}" style="{{ dia.style }}">{{ dia.label }}</button>
+            </sc-for>
+          </div>
+          <p style="margin:22px 0 0;font-size:12.5px;color:#93A5AF">Lunes a viernes 9:00–12:30 y 14:30–19:00 · Sábados 9:00–12:30</p>
+        </div>
+
+        <div data-m="slots" style="padding:30px 24px;border-left:1px solid #E2E7E9;background:#FBFBFC;display:flex;flex-direction:column">
+          <sc-if value="{{ etapaElegir }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;height:100%">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px">
+                <div style="font-size:16px;font-weight:600">{{ diaElegidoLabel }}</div>
+                <div style="display:flex;background:#E9EDEF;border-radius:8px;padding:3px">
+                  <button onClick="{{ usar12 }}" style="{{ estilo12 }}">12 h</button>
+                  <button onClick="{{ usar24 }}" style="{{ estilo24 }}">24hs</button>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;overflow-y:auto;max-height:430px;padding-right:2px">
+                <sc-for list="{{ horarios }}" as="h" hint-placeholder-count="6">
+                  <button onClick="{{ h.click }}" style="width:100%;padding:14px 0;border:1px solid #DCE2E5;background:#fff;border-radius:10px;font-size:15px;font-weight:600;color:#0F2230;cursor:pointer" style-hover="border-color:#14496E;color:#14496E;background:#EFF5F9">{{ h.label }}</button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ sinDia }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:14px;color:#93A5AF;line-height:1.5">Elegí un día en el calendario para ver los horarios disponibles.</p>
+              </sc-if>
+              <sc-if value="{{ sinHorarios }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:14px;color:#93A5AF;line-height:1.5">No hay horarios disponibles ese día. Probá con otra fecha o escribinos por WhatsApp.</p>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ etapaDatos }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:tolIn .25s ease both;display:flex;flex-direction:column;gap:14px">
+              <button onClick="{{ volver }}" style="align-self:flex-start;border:none;background:none;padding:0;font-size:13px;font-weight:600;color:#14496E;cursor:pointer">‹ Cambiar horario</button>
+              <div style="background:#E7F0F5;border-radius:12px;padding:14px 16px">
+                <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#14496E">Tu turno</div>
+                <div style="font-size:16px;font-weight:600;margin-top:6px">{{ resumenTurno }}</div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#64757F">Nombre y apellido
+                <input value="{{ nombre }}" onChange="{{ setNombre }}" placeholder="María Pérez" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#64757F">Teléfono
+                <input value="{{ telefono }}" onChange="{{ setTelefono }}" placeholder="09X XXX XXX" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#64757F">Motivo de consulta
+                <select value="{{ motivo }}" onChange="{{ setMotivo }}" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+                  <option>Examen de la vista / lentes de receta</option>
+                  <option>Cristales (monofocal, bifocal, progresivo, blue cut)</option>
+                  <option>Lentes de sol</option>
+                  <option>Lentes de contacto</option>
+                  <option>Audífonos</option>
+                  <option>Otro</option>
+                </select>
+              </label>
+              <sc-if value="{{ hayError }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13px;color:#C22A12;font-weight:600">{{ error }}</div>
+              </sc-if>
+              <button onClick="{{ confirmar }}" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#0C3450">Confirmar reserva</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ etapaListo }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:tolIn .25s ease both;display:flex;flex-direction:column;gap:16px;justify-content:center;height:100%">
+              <div style="width:44px;height:44px;border-radius:50%;background:#14496E;color:#A8D8EE;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">✓</div>
+              <h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Reserva <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">confirmada.</span></h3>
+              <div style="font-size:15px;line-height:1.6;color:#4C5E68">{{ resumenFinal }}</div>
+              <p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">Te escribimos por WhatsApp para confirmar. Si necesitás cambiarla, avisanos al 099 090 773.</p>
+              <button onClick="{{ reiniciar }}" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#E7F0F5">Agendar otra hora</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ mostrarPasos }}" hint-placeholder-val="{{ true }}">
+    <section id="como" style="padding:0 40px 90px">
+      <div data-m="cols3" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#DEDCD5;border-top:1px solid #DEDCD5;border-bottom:1px solid #DEDCD5">
+        <div style="background:#F1F0EB;padding:38px 30px">
+          <div style="font-size:13px;font-weight:700;color:#14496E;letter-spacing:0.14em">01</div>
+          <h3 style="margin:14px 0 8px;font-size:24px;font-weight:600;letter-spacing:-0.02em">Elegís día y hora</h3>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#4C5E68">Agenda real del consultorio, actualizada. Sin llamadas ni esperas.</p>
+        </div>
+        <div style="background:#F1F0EB;padding:38px 30px">
+          <div style="font-size:13px;font-weight:700;color:#14496E;letter-spacing:0.14em">02</div>
+          <h3 style="margin:14px 0 8px;font-size:24px;font-weight:600;letter-spacing:-0.02em">Confirmamos</h3>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#4C5E68">Te llega el aviso por WhatsApp con la dirección y el horario reservado.</p>
+        </div>
+        <div style="background:#F1F0EB;padding:38px 30px">
+          <div style="font-size:13px;font-weight:700;color:#14496E;letter-spacing:0.14em">03</div>
+          <h3 style="margin:14px 0 8px;font-size:24px;font-weight:600;letter-spacing:-0.02em">Te atendemos</h3>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#4C5E68">Examen completo y, si hace falta, los cristales armados en el laboratorio propio.</p>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <section id="servicios" style="padding:0 40px 90px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="margin:0 0 34px;font-size:44px;font-weight:700;letter-spacing:-0.03em;max-width:22ch">Todo lo que tu vista necesita, bajo un mismo techo</h2>
+      <div data-m="cols3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">01</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Lentes de receta</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Armazones y montaje a medida, con asesoramiento personalizado.</p></div>
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">02</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Cristales</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Monofocales, bifocales, progresivos y blue cut para pantallas.</p></div>
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">03</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Lentes de sol</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Gran variedad de marcas, con la opción de graduarlos a tu receta.</p></div>
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">04</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Lentes de contacto</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Adaptación y venta para uso diario o prolongado.</p></div>
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">05</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Audífonos</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Audiogramas, logoaudiometrías, service y adaptación.</p></div>
+        <div style="background:#fff;border-radius:16px;padding:28px 26px"><div style="font-size:12px;font-weight:700;color:#14496E;letter-spacing:0.14em">06</div><h3 style="margin:12px 0 8px;font-size:21px;font-weight:600;letter-spacing:-0.015em">Convenios e instituciones</h3><p style="margin:0;font-size:14.5px;line-height:1.6;color:#4C5E68">Aceptamos órdenes de BPS y convenios con distintas instituciones.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="donde" style="background:#14496E;color:#fff;padding:80px 40px">
+    <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start">
+      <div>
+        <h2 style="margin:0;font-size:56px;line-height:1;font-weight:700;letter-spacing:-0.035em">Te esperamos en <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">Asamblea 590.</span></h2>
+        <p style="margin:26px 0 0;font-size:18px;line-height:1.55;opacity:.85">San José de Mayo, Uruguay. Lunes a viernes 9:00–12:30 y 14:30–19:00. Sábados 9:00–12:30.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-size:16px">
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">WhatsApp</span><a href="https://wa.me/59899090773" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">099 090 773</a></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Teléfono</span><span style="font-weight:600">4342 3605 · 4342 6844</span></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Instagram</span><a href="https://www.instagram.com/opticatol/" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">@opticatol</a></div>
+        <a href="#agendar" style="margin-top:10px;align-self:flex-start;background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:16px 30px;border-radius:999px" style-hover="background:#CBEAF8">Agendar tu hora</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:28px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#64757F">
+    <span>Óptica TOL — Desde 1948 al cuidado de sus ojos.</span>
+    <span>Asamblea 590, San José de Mayo</span>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;servicioTitulo&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Examen de la vista&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;duracion&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;30 minutos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;formatoHora&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;12 h&quot;,&quot;24hs&quot;],&quot;default&quot;:&quot;12 h&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mostrarPasos&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DIAS_CORTOS = ['dom','lun','mar','mié','jue','vie','sáb'];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const hoy = new Date();
+    this.state = {
+      mes: hoy.getMonth(), anio: hoy.getFullYear(),
+      sel: null, hora: null, f12: (props.formatoHora ?? '12 h') === '12 h',
+      etapa: 'elegir', nombre: '', telefono: '', motivo: 'Examen de la vista / lentes de receta', error: ''
+    };
+  }
+
+  esCerrado(d) { return d.getDay() === 0; }
+
+  horariosDe(d) {
+    if (!d || this.esCerrado(d)) return [];
+    const out = [];
+    const push = (h, m) => out.push(h * 60 + m);
+    for (let t = 9 * 60; t <= 12 * 60 + 30; t += 30) push(Math.floor(t / 60), t % 60);
+    if (d.getDay() !== 6) for (let t = 14 * 60 + 30; t <= 19 * 60; t += 30) push(Math.floor(t / 60), t % 60);
+    return out;
+  }
+
+  fmt(mins) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    const mm = String(m).padStart(2, '0');
+    if (!this.state.f12) return h + ':' + mm;
+    const suf = h >= 12 ? 'pm' : 'am';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return h12 + ':' + mm + suf;
+  }
+
+  renderVals() {
+    const { mes, anio, sel, hora, etapa } = this.state;
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const primero = new Date(anio, mes, 1);
+    const total = new Date(anio, mes + 1, 0).getDate();
+    const dias = [];
+    for (let i = 0; i < primero.getDay(); i++) dias.push({ key: 'e' + i, label: '', disabled: true, style: { visibility: 'hidden', border: 'none', background: 'none', height: '46px' } });
+    for (let n = 1; n <= total; n++) {
+      const d = new Date(anio, mes, n);
+      const pasado = d < hoy;
+      const cerrado = this.esCerrado(d);
+      const activo = !pasado && !cerrado;
+      const elegido = sel && sel.getTime() === d.getTime();
+      dias.push({
+        key: 'd' + n, label: String(n), disabled: !activo,
+        style: {
+          height: '46px', borderRadius: '10px', fontSize: '15px', fontFamily: 'inherit',
+          fontWeight: elegido ? 700 : 500, border: '1px solid transparent',
+          background: elegido ? '#14496E' : activo ? '#E4EDF3' : 'transparent',
+          color: elegido ? '#fff' : activo ? '#14496E' : '#C2CBD0',
+          cursor: activo ? 'pointer' : 'default', transition: 'background .15s ease'
+        },
+        click: activo ? () => this.setState({ sel: d, hora: null, etapa: 'elegir' }) : null
+      });
+    }
+
+    const mins = this.horariosDe(sel);
+    const optPill = (on) => ({
+      border: 'none', borderRadius: '6px', padding: '7px 13px', fontSize: '13px', fontWeight: 600,
+      cursor: 'pointer', background: on ? '#fff' : 'transparent', color: on ? '#0F2230' : '#64757F',
+      boxShadow: on ? '0 1px 3px rgba(15,34,48,.16)' : 'none'
+    });
+    const etiquetaFecha = (d) => d ? DIAS_CORTOS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] : '';
+
+    return {
+      servicioTitulo: this.props.servicioTitulo ?? 'Examen de la vista',
+      duracion: this.props.duracion ?? '30 minutos',
+      mostrarPasos: this.props.mostrarPasos ?? true,
+      mesLabel: MESES[mes], anioLabel: String(anio),
+      mesAnterior: () => this.setState(s => ({ mes: s.mes === 0 ? 11 : s.mes - 1, anio: s.mes === 0 ? s.anio - 1 : s.anio })),
+      mesSiguiente: () => this.setState(s => ({ mes: s.mes === 11 ? 0 : s.mes + 1, anio: s.mes === 11 ? s.anio + 1 : s.anio })),
+      dias,
+      etapaElegir: etapa === 'elegir', etapaDatos: etapa === 'datos', etapaListo: etapa === 'listo',
+      diaElegidoLabel: sel ? etiquetaFecha(sel) : 'Elegí un día',
+      sinHorarios: etapa === 'elegir' && !!sel && mins.length === 0,
+      sinDia: etapa === 'elegir' && !sel,
+      horarios: mins.map(m => ({ key: 'h' + m, label: this.fmt(m), click: () => this.setState({ hora: m, etapa: 'datos', error: '' }) })),
+      usar12: () => this.setState({ f12: true }), usar24: () => this.setState({ f12: false }),
+      estilo12: optPill(this.state.f12), estilo24: optPill(!this.state.f12),
+      resumenTurno: sel && hora != null ? etiquetaFecha(sel) + ' · ' + this.fmt(hora) : '',
+      resumenFinal: sel && hora != null ? (this.state.nombre || 'Tu turno') + ' — ' + etiquetaFecha(sel) + ' a las ' + this.fmt(hora) + '. ' + (this.props.servicioTitulo ?? 'Examen de la vista') + '.' : '',
+      nombre: this.state.nombre, telefono: this.state.telefono, motivo: this.state.motivo,
+      setNombre: e => this.setState({ nombre: e.target.value }),
+      setTelefono: e => this.setState({ telefono: e.target.value }),
+      setMotivo: e => this.setState({ motivo: e.target.value }),
+      hayError: !!this.state.error, error: this.state.error,
+      volver: () => this.setState({ etapa: 'elegir', hora: null }),
+      confirmar: () => {
+        if (this.state.nombre.trim().length < 3) return this.setState({ error: 'Escribí tu nombre y apellido.' });
+        if (this.state.telefono.replace(/\D/g, '').length < 8) return this.setState({ error: 'Necesitamos un teléfono válido para confirmarte.' });
+        this.setState({ etapa: 'listo', error: '' });
+      },
+      reiniciar: () => this.setState({ etapa: 'elegir', sel: null, hora: null, nombre: '', telefono: '', error: '' })
+    };
+  }
+}
+
+</script>
+</body>
+</html>
