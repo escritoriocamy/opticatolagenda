@@ -2,6 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <script>
+    if (!location.pathname.endsWith('/Consultorio%20Oftalmologico.dc.html') && !location.pathname.endsWith('/Consultorio%20Oftalmologico.dc.html/')) {
+      location.replace('Consultorio%20Oftalmologico.dc.html' + location.search + location.hash);
+    }
+  </script>
   <title>Bundled Page</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
