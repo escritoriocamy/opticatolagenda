@@ -23,7 +23,7 @@ a{color:#14496E;text-decoration:none}
 a:hover{color:#0C3450}
 input,select,textarea,button{font-family:inherit}
 @keyframes cnsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.reveal-on-scroll{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal-on-scroll{opacity:0;transform:translate3d(0,20px,0);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
 .reveal-on-scroll.is-visible{opacity:1;transform:none}
 .reveal-on-scroll:nth-child(2){transition-delay:.08s}
 .reveal-on-scroll:nth-child(3){transition-delay:.16s}
@@ -84,6 +84,11 @@ input,select,textarea,button{font-family:inherit}
   [data-m="toggle"] button{flex:1 1 0 !important;min-height:42px !important}
   [data-m="toggle"] button{min-width:0 !important}
   [data-m="slots"]{overflow-x:hidden !important;min-width:0 !important}
+  [data-m="cols2"] > *{min-width:0 !important;max-width:100% !important}
+  #contacto [data-m="cols2"] > div:last-child > div{align-items:flex-start !important;flex-wrap:wrap !important}
+  #contacto [data-m="cols2"] > div:last-child > div > span:last-child,
+  #contacto [data-m="cols2"] > div:last-child > div > a{max-width:100% !important;overflow-wrap:anywhere !important;text-align:left !important}
+  #contacto [data-m="cols2"] > div:last-child > a{align-self:stretch !important;text-align:center !important}
 }
 @media (max-width: 460px){
   [data-m="brandname"]{font-size:13.5px !important;letter-spacing:0 !important}
@@ -372,8 +377,8 @@ input,select,textarea,button{font-family:inherit}
       </div>
       <div style="display:flex;flex-direction:column;gap:18px;font-size:16px">
         <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Dirección</span><span style="font-weight:600">Sarandí 575</span></div>
-        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Teléfono</span><a href="tel:+59892494961" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 49 49 61</a></div>
-        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">WhatsApp</span><a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 49 49 61</a></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Teléfono</span><a href="tel:+59892494961" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 494 961</a></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">WhatsApp</span><a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 494 961</a></div>
         <a href="#agendar" style="margin-top:10px;align-self:flex-start;background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:16px 30px;border-radius:999px" style-hover="background:#CBEAF8">Agendar sin espera</a>
       </div>
     </div>
@@ -392,7 +397,7 @@ input,select,textarea,button{font-family:inherit}
 
   <footer style="padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#64757F">
     <span>Consultorio Oftalmológico · San José de Mayo</span>
-    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 49 49 61 <a href="admin.html" style="color:#A8B7BF;font-size:11px;opacity:.45" title="Acceso al panel de reservas">Acceso</a></span>
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 494 961 <a href="admin.html" style="color:#A8B7BF;font-size:11px;opacity:.45" title="Acceso al panel de reservas">Acceso</a></span>
   </footer>
 </div>
 
