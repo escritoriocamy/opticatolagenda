@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-cf681d07-f775-4f68-be63-6d76b77f79e2/styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#F1F0EB;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0F2230}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{-webkit-overflow-scrolling:touch}
+a{color:#14496E;text-decoration:none}
+a:hover{color:#0C3450}
+input,select,textarea,button{font-family:inherit}
+@keyframes cnsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reveal-on-scroll{opacity:0;transform:translate3d(0,20px,0);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.reveal-on-scroll.is-visible{opacity:1;transform:none}
+.reveal-on-scroll:nth-child(2){transition-delay:.08s}
+.reveal-on-scroll:nth-child(3){transition-delay:.16s}
+.clinic-gallery{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:220px 220px;gap:14px}
+.clinic-gallery figure{position:relative;margin:0;overflow:hidden;border-radius:16px;background:#DDE8ED}
+.clinic-gallery figure:first-child{grid-row:span 2}
+.clinic-gallery img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s ease}
+.clinic-gallery figure:hover img{transform:scale(1.035)}
+.clinic-gallery figcaption{position:absolute;left:14px;bottom:14px;padding:7px 10px;background:rgba(15,34,48,.78);color:#fff;border-radius:999px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+@media (max-width: 940px){
+  [data-m="bookgrid"]{grid-template-columns:1fr !important;min-height:0 !important}
+  [data-m="aside"]{border-right:none !important;border-bottom:1px solid #E2E7E9 !important}
+  [data-m="slots"]{border-left:none !important;border-top:1px solid #E2E7E9 !important}
+  [data-m="cols3"],[data-m="cols2"]{grid-template-columns:1fr !important}
+  [data-m="cols2"]{gap:36px !important}
+}
+@media (max-width: 720px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  nav{padding:12px 16px !important;gap:10px !important}
+  [data-m="navlinks"]{display:none !important}
+  nav a[href="#agendar"]{padding:12px 18px !important;font-size:12px !important}
+  nav svg{width:24px !important;height:24px !important}
+  header{padding:44px 18px 52px !important}
+  header h1{font-size:38px !important;letter-spacing:-0.02em !important;max-width:none !important}
+  header p{font-size:16px !important;margin-top:22px !important}
+  header > div > div:first-child{font-size:11px !important;letter-spacing:0.14em !important}
+  header > div > div:nth-child(4){gap:10px !important;margin-top:30px !important}
+  header a{width:100% !important;text-align:center !important;padding:15px 18px !important;font-size:13px !important}
+  section{padding-left:16px !important;padding-right:16px !important;padding-bottom:52px !important}
+  section:first-of-type{padding-top:52px !important}
+  section h2{font-size:30px !important;letter-spacing:-0.02em !important}
+  section p{font-size:16px !important}
+  [data-m="cardwrap"]{padding:6px !important;border-radius:18px !important;box-shadow:0 10px 26px rgba(15,34,48,.10) !important}
+  [data-m="bookgrid"]{border-radius:12px !important;width:100% !important;min-width:0 !important}
+  [data-m="bookgrid"] > *{min-width:0 !important;width:100% !important}
+  [data-m="aside"]{padding:20px 16px !important;gap:16px !important}
+  [data-m="calcol"]{padding:20px 14px 24px !important}
+  [data-m="slots"]{padding:20px 16px !important}
+  [data-m="slothead"]{width:100% !important}
+  [data-m="calgrid"],[data-m="calhead"]{gap:4px !important}
+  [data-m="calgrid"] button{height:42px !important;font-size:14px !important;border-radius:8px !important}
+  [data-m="calhead"] div{font-size:9.5px !important;letter-spacing:0.04em !important}
+  [data-m="slots"] > div > div{max-height:none !important}
+  [data-m="slots"] button{max-width:100% !important}
+  [data-m="slots"] button{min-height:46px !important}
+  [data-eq="1"] > div > div:first-child{height:230px !important}
+  .clinic-gallery{grid-template-columns:1fr 1fr;grid-template-rows:220px 150px;gap:10px}
+  .clinic-gallery figure:first-child{grid-column:span 2;grid-row:auto}
+  .clinic-gallery figcaption{left:10px;bottom:10px;font-size:10px;padding:6px 8px}
+  [data-m="servlist"] > div{font-size:16px !important;padding:15px 0 !important}
+  footer{padding:22px 16px !important;font-size:12px !important;flex-direction:column !important}
+  #contacto{padding:52px 18px !important}
+  #contacto h2{font-size:34px !important}
+}
+@media (max-width: 720px){
+  [data-m="slothead"]{flex-direction:column !important;align-items:stretch !important;gap:12px !important}
+  [data-m="toggle"]{width:100% !important}
+  [data-m="toggle"] button{flex:1 1 0 !important;min-height:42px !important}
+  [data-m="toggle"] button{min-width:0 !important}
+  [data-m="slots"]{overflow-x:hidden !important;min-width:0 !important}
+  [data-m="cols2"] > *{min-width:0 !important;max-width:100% !important}
+  #contacto [data-m="cols2"] > div:last-child > div{align-items:flex-start !important;flex-wrap:wrap !important}
+  #contacto [data-m="cols2"] > div:last-child > div > span:last-child,
+  #contacto [data-m="cols2"] > div:last-child > div > a{max-width:100% !important;overflow-wrap:anywhere !important;text-align:left !important}
+  #contacto [data-m="cols2"] > div:last-child > a{align-self:stretch !important;text-align:center !important}
+}
+@media (max-width: 460px){
+  [data-m="brandname"]{font-size:13.5px !important;letter-spacing:0 !important}
+  [data-m="brandsub"]{display:none !important}
+  nav{padding:11px 13px !important}
+  nav svg{width:21px !important;height:21px !important}
+  nav a[href="#agendar"]{padding:11px 14px !important;font-size:11.5px !important;letter-spacing:0.05em !important;white-space:nowrap !important}
+  nav > span:first-child{gap:9px !important;min-width:0 !important}
+}
+@media (max-width: 400px){
+  header h1{font-size:32px !important}
+  section h2{font-size:26px !important}
+  [data-m="calgrid"] button{height:38px !important;font-size:13px !important}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal-on-scroll{opacity:1;transform:none;transition:none}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+<script>
+  (() => {
+    const activate = () => {
+      const items = document.querySelectorAll('.reveal-on-scroll');
+      if (!items.length) return false;
+      if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        items.forEach((item) => item.classList.add('is-visible'));
+        return true;
+      }
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          currentObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      items.forEach((item) => observer.observe(item));
+      return true;
+    };
+    const start = () => { if (!activate()) window.setTimeout(activate, 250); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
+</script>
+</helmet>
+
+<div style="min-height:100%;background:#F1F0EB">
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#14496E"/><circle cx="200" cy="150" r="58" fill="none" stroke="#A8D8EE" stroke-width="14"/><circle cx="200" cy="150" r="18" fill="#A8D8EE"/></svg></template>
+
+  <nav style="position:sticky;top:0;z-index:60;background:#14496E;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 40px">
+    <span style="display:flex;align-items:center;gap:12px">
+      <img src="assets/logo-tol-trim.png" alt="Consultorio Oftalmológico" style="height:42px;width:auto;max-width:220px;object-fit:contain;display:block;background:#fff;border-radius:6px;padding:3px">
+      <span style="display:flex;flex-direction:column;line-height:1.15">
+        <span data-m="brandname" style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Consultorio Oftalmológico</span>
+        <span data-m="brandsub" style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;opacity:.7">San José de Mayo</span>
+      </span>
+    </span>
+    <div data-m="navlinks" style="display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="#equipo" style="color:#fff" style-hover="color:#A8D8EE">Oftalmólogos</a>
+      <a href="#servicios" style="color:#fff" style-hover="color:#A8D8EE">Servicios</a>
+      <a href="#contacto" style="color:#fff" style-hover="color:#A8D8EE">Contacto</a>
+    </div>
+    <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px" style-hover="background:#CBEAF8">Agendar</a>
+  </nav>
+
+  <header style="background:linear-gradient(120deg,#14496E 0%,#14496E 45%,#2C7BA8 100%);color:#fff;padding:104px 40px 112px">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#A8D8EE">Consultorio Oftalmológico · San José de Mayo</div>
+      <h1 class="reveal-on-scroll" style="margin:26px 0 0;font-size:96px;line-height:0.95;font-weight:700;letter-spacing:-0.035em;max-width:16ch;text-wrap:pretty">Consultas <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h1>
+      <p style="margin:32px 0 0;font-size:20px;line-height:1.5;opacity:.88;max-width:52ch">Consultas y estudios oftalmológicos con profesionales especializados. Elegí el oftalmólogo, el servicio y solicitá el día y horario que prefieras.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:42px">
+        <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px" style-hover="background:#CBEAF8">Agendar sin espera</a>
+        <a href="#equipo" style="border:1.5px solid rgba(255,255,255,.6);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px" style-hover="background:rgba(255,255,255,.12);color:#fff">Conocé al equipo</a>
+        <a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="border:1.5px solid rgba(255,255,255,.6);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px" style-hover="background:rgba(255,255,255,.12);color:#fff">WhatsApp</a>
+      </div>
+      <div style="margin-top:40px;font-size:15px;letter-spacing:0.04em;opacity:.8">Sarandí 575 · San José de Mayo</div>
+    </div>
+  </header>
+
+  <section id="agendar" style="padding:88px 40px 36px">
+    <div style="max-width:1180px;margin:0 auto;text-align:center">
+      <div style="font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#14496E">Agenda online</div>
+      <h2 class="reveal-on-scroll" style="margin:20px 0 0;font-size:72px;line-height:1;font-weight:700;letter-spacing:-0.035em">Agendá <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h2>
+      <p style="margin:22px 0 0;font-size:19px;color:#4C5E68">Elegí oftalmólogo, servicio, día y horario. Completás tus datos y te confirmamos la reserva.</p>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div data-m="cardwrap" style="max-width:1180px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 24px 60px rgba(15,34,48,.10);padding:14px">
+      <div data-m="bookgrid" style="display:grid;grid-template-columns:330px 1fr 320px;border:1px solid #E2E7E9;border-radius:16px;overflow:hidden;min-height:600px">
+
+        <aside data-m="aside" style="padding:30px 26px;border-right:1px solid #E2E7E9;display:flex;flex-direction:column;gap:20px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Oftalmólogo</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ medicos }}" as="m" hint-placeholder-count="3">
+              <button onClick="{{ m.click }}" style="{{ m.style }}">
+                <span style="display:block;font-size:15.5px;font-weight:700;letter-spacing:-0.01em">{{ m.nombre }}</span>
+                <span style="display:block;font-size:12.5px;margin-top:3px;opacity:.75">{{ m.especialidad }}</span>
+                <span style="display:block;font-size:11.5px;margin-top:6px;opacity:.6">{{ m.diasLabel }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Servicio
+            <select value="{{ servicio }}" onChange="{{ setServicio }}" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              <option>Receta para lentes convencionales y lentes de contacto</option>
+              <option>Paquimetría</option>
+              <option>Curva de Pío</option>
+              <option>OCT</option>
+              <option>Control de presión intraocular</option>
+              <option>Fondo de ojo</option>
+              <option>Refractometrías</option>
+            </select>
+          </label>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14px;color:#42545E;margin-top:auto">
+            <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>Sarandí 575, San José de Mayo</div>
+            <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg>America/Montevideo</div>
+          </div>
+        </aside>
+
+        <div data-m="calcol" style="padding:28px 30px 32px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div style="font-size:22px;font-weight:600;letter-spacing:-0.01em">{{ mesLabel }} <span style="color:#93A5AF">{{ anioLabel }}</span></div>
+            <div style="display:flex;gap:6px">
+              <button onClick="{{ mesAnterior }}" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px" style-hover="background:#E7F0F5;border-color:#14496E;color:#14496E">‹</button>
+              <button onClick="{{ mesSiguiente }}" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px" style-hover="background:#E7F0F5;border-color:#14496E;color:#14496E">›</button>
+            </div>
+          </div>
+          <div data-m="calhead" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">DOM</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">LUN</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MAR</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MIÉ</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">JUE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">VIE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">SÁB</div>
+          </div>
+          <div data-m="calgrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">
+            <sc-for list="{{ dias }}" as="dia" hint-placeholder-count="35">
+              <button onClick="{{ dia.click }}" disabled="{{ dia.disabled }}" style="{{ dia.style }}">{{ dia.label }}</button>
+            </sc-for>
+          </div>
+          <p style="margin:20px 0 0;font-size:12.5px;color:#93A5AF;line-height:1.5">Los días y horarios disponibles se definen por profesional y pueden variar semana a semana.</p>
+        </div>
+
+        <div data-m="slots" style="padding:28px 24px;border-left:1px solid #E2E7E9;background:#FBFBFC;display:flex;flex-direction:column">
+          <sc-if value="{{ etapaElegir }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;height:100%">
+              <div data-m="slothead" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+                <div style="font-size:16px;font-weight:600">{{ diaElegidoLabel }}</div>
+              </div>
+              <sc-if value="{{ sinDia }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:14px;color:#93A5AF;line-height:1.5">Elegí un día en el calendario para ver los horarios disponibles con {{ medicoNombre }}.</p>
+              </sc-if>
+              <sc-if value="{{ mesVacio }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px;background:#E7F0F5;border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.5;color:#14496E">
+                  <div style="font-weight:600">{{ mesVacioTexto }}</div>
+                  <button onClick="{{ irProximoMes }}" style="margin-top:10px;border:1px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer" style-hover="background:#14496E;color:#fff">Ver próximo mes</button>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:8px;overflow-y:auto;max-height:450px;padding-right:2px">
+                <sc-for list="{{ horarios }}" as="h" hint-placeholder-count="6">
+                  <button onClick="{{ h.click }}" style="width:100%;padding:13px 0;border:1px solid #DCE2E5;background:#fff;border-radius:10px;font-size:15px;font-weight:600;color:#0F2230;cursor:pointer" style-hover="border-color:#14496E;color:#14496E;background:#EFF5F9">{{ h.label }}</button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ sinHorarios }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:14px;color:#93A5AF;line-height:1.5">No hay horarios disponibles ese día. Probá con otra fecha o escribinos al 092 49 49 61.</p>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ etapaDatos }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:cnsIn .25s ease both;display:flex;flex-direction:column;gap:13px">
+              <button onClick="{{ volver }}" style="align-self:flex-start;border:none;background:none;padding:0;font-size:13px;font-weight:600;color:#14496E;cursor:pointer">‹ Cambiar horario</button>
+              <div style="background:#E7F0F5;border-radius:12px;padding:14px 16px">
+                <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#14496E">Tu solicitud</div>
+                <div style="font-size:15.5px;font-weight:600;margin-top:6px;line-height:1.4">{{ resumenTurno }}</div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Nombre y apellido *
+                <input value="{{ nombre }}" onChange="{{ setNombre }}" placeholder="María Pérez" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Cédula *
+                <input value="{{ cedula }}" onChange="{{ setCedula }}" placeholder="1.234.567-8" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Fecha de nacimiento *
+                <input type="date" value="" onChange="{{ setNacimiento }}" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400" style-focus="outline:2px solid #14496E;outline-offset:1px;border-color:#14496E">
+              </label>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">¿Tenés diabetes? *</span>
+                <div style="display:flex;gap:8px">
+                  <button onClick="{{ diabetesSi }}" style="{{ estiloSi }}">Sí</button>
+                  <button onClick="{{ diabetesNo }}" style="{{ estiloNo }}">No</button>
+                </div>
+              </div>
+              <sc-if value="{{ hayError }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13px;color:#C22A12;font-weight:600">{{ error }}</div>
+              </sc-if>
+              <button onClick="{{ confirmar }}" disabled="{{ enviando }}" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#0C3450">{{ textoEnviar }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ etapaListo }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:cnsIn .25s ease both;display:flex;flex-direction:column;gap:16px;justify-content:center;height:100%">
+              <div style="width:44px;height:44px;border-radius:50%;background:#14496E;color:#A8D8EE;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">✓</div>
+              <h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Solicitud <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">enviada.</span></h3>
+              <div style="font-size:15px;line-height:1.6;color:#4C5E68">{{ resumenFinal }}</div>
+              <p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">{{ notaEnvio }}</p>
+              <a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>
+              <button onClick="{{ reiniciar }}" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#E7F0F5">Agendar otra hora</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="equipo" style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 class="reveal-on-scroll" style="margin:0 0 32px;font-size:44px;font-weight:700;letter-spacing:-0.03em">Nuestros oftalmólogos</h2>
+      <div data-m="cols3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" data-eq="1">
+        <div style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dr-rivas.jpg" alt="Dr. Rodrigo Rivas" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dr. Rodrigo Rivas</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujano Oftalmólogo</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dra-saldana.jpg" alt="Dra. Rosario Saldaña" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dra. Rosario Saldaña</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujana Oftalmóloga</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dr-perez.jpg" alt="Dr. Tomás Pérez" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dr. Tomás Pérez</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujano Oftalmólogo</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicios" style="padding:0 40px 88px">
+    <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:start">
+      <h2 class="reveal-on-scroll" style="margin:0;font-size:44px;font-weight:700;letter-spacing:-0.03em">Servicios</h2>
+      <div data-m="servlist" style="display:flex;flex-direction:column">
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Receta para lentes convencionales y lentes de contacto</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Paquimetría</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Curva de Pío</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>OCT</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Control de presión intraocular</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Fondo de ojo</div>
+        <div style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;border-bottom:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Refractometrías</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 class="reveal-on-scroll" style="margin:0 0 28px;font-size:44px;font-weight:700;letter-spacing:-0.03em">El consultorio</h2>
+      <div class="clinic-gallery reveal-on-scroll">
+        <figure><img src="uploads/pasted-1787947484190-0.png" alt="Equipamiento oftalmológico del consultorio" loading="lazy"><figcaption>Equipamiento preciso</figcaption></figure>
+        <figure><img src="uploads/pasted-1787948921038-0.png" alt="Atención oftalmológica en el consultorio" loading="lazy"><figcaption>Atención profesional</figcaption></figure>
+        <figure><img src="uploads/pasted-1787949021956-0.png" alt="Tecnología del consultorio oftalmológico" loading="lazy"><figcaption>Tecnología clínica</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" style="background:#14496E;color:#fff;padding:80px 40px">
+    <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start">
+      <div>
+        <h2 class="reveal-on-scroll" style="margin:0;font-size:54px;line-height:1;font-weight:700;letter-spacing:-0.035em">Te esperamos en <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">Sarandí 575.</span></h2>
+        <p style="margin:26px 0 0;font-size:18px;line-height:1.55;opacity:.85">San José de Mayo · Uruguay</p>
+        <div style="margin-top:28px;border-radius:14px;overflow:hidden;background:#E7F0F5;aspect-ratio:16/10;min-height:240px">
+          <iframe title="Mapa de ubicación del Consultorio Oftalmológico" src="https://www.google.com/maps?q=Sarand%C3%AD+575%2C+San+Jos%C3%A9+de+Mayo%2C+Uruguay&output=embed" style="width:100%;height:100%;min-height:240px;border:0;display:block" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-size:16px">
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Dirección</span><span style="font-weight:600">Sarandí 575</span></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Teléfono</span><a href="tel:+59892494961" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 494 961</a></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">WhatsApp</span><a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600" style-hover="color:#CBEAF8">092 494 961</a></div>
+        <a href="#agendar" style="margin-top:10px;align-self:flex-start;background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:16px 30px;border-radius:999px" style-hover="background:#CBEAF8">Agendar sin espera</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto;background:#E7F0F5;border-radius:18px;padding:34px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#14496E">Después de tu consulta</div>
+        <h2 style="margin:10px 0 0;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.025em">Tu opinión nos ayuda a mejorar.</h2>
+        <p style="margin:12px 0 0;font-size:15px;line-height:1.5;color:#4C5E68">Escribinos por WhatsApp y contanos cómo fue tu experiencia en el consultorio.</p>
+      </div>
+      <a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="flex:none;background:#25D366;color:#073B22;border-radius:999px;padding:16px 24px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase">Enviar opinión</a>
+    </div>
+  </section>
+
+  <footer style="padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#64757F">
+    <span>Consultorio Oftalmológico · San José de Mayo</span>
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 494 961 <a href="admin.html" style="color:#A8B7BF;font-size:11px;opacity:.45" title="Acceso al panel de reservas">Acceso</a></span>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;endpoint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Agenda&quot;},&quot;intervalo&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:20,&quot;min&quot;:10,&quot;max&quot;:60,&quot;step&quot;:5,&quot;unit&quot;:&quot;min&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Agenda&quot;},&quot;formatoHora&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;12 h&quot;,&quot;24hs&quot;],&quot;default&quot;:&quot;12 h&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Agenda&quot;}}">
+// Pegá acá la URL de la app web de Google Apps Script (termina en /exec)
+const ENDPOINT_SHEETS = 'https://script.google.com/macros/s/AKfycbzklZw6a6et58cFmr2xROjMdtFO9FqQuYqqH71vUA3qazfaU2mOw74DL3wpIRdrtalD_Q/exec';
+
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DIAS_CORTOS = ['dom','lun','mar','mié','jue','vie','sáb'];
+const NOMS = ['dom','lun','mar','mié','jue','vie','sáb'];
+
+const MEDICOS = [
+  { nombre: 'Dr. Rodrigo Rivas', especialidad: 'Cirujano Oftalmólogo', dias: [1, 3, 5], rangos: [[540, 750], [870, 1080]] },
+  { nombre: 'Dra. Rosario Saldaña', especialidad: 'Cirujana Oftalmóloga', dias: [2, 4], rangos: [[600, 780], [900, 1140]] },
+  { nombre: 'Dr. Tomás Pérez', especialidad: 'Cirujano Oftalmólogo', dias: [1, 2, 4, 6], rangos: [[570, 780], [900, 1110]] }
+];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const hoy = new Date();
+    this.state = {
+      medico: 0, servicio: 'Receta para lentes convencionales y lentes de contacto',
+      mes: hoy.getMonth(), anio: hoy.getFullYear(),
+      sel: null, hora: null,
+      etapa: 'elegir', nombre: '', cedula: '', nacimiento: '', diabetes: '', error: ''
+    };
+  }
+
+  paso() { return this.props.intervalo ?? 20; }
+
+  horariosDe(d) {
+    if (!d) return [];
+    const m = MEDICOS[this.state.medico];
+    if (!m.dias.includes(d.getDay())) return [];
+    const rangos = d.getDay() === 6 ? [m.rangos[0]] : m.rangos;
+    const out = [];
+    for (const [a, b] of rangos) for (let t = a; t <= b - this.paso(); t += this.paso()) out.push(t);
+    return out;
+  }
+
+  async enviar() {
+    const s = this.state, m = MEDICOS[s.medico];
+    const hh = String(Math.floor(s.hora / 60)).padStart(2, '0') + ':' + String(s.hora % 60).padStart(2, '0');
+    const f = s.sel;
+    const fecha = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
+    const datos = {
+      enviado: new Date().toISOString(), nombre: s.nombre.trim(), cedula: s.cedula.trim(),
+      nacimiento: s.nacimiento, oftalmologo: m.nombre, servicio: s.servicio,
+      fecha, hora: hh, diabetes: s.diabetes === 'si' ? 'Sí' : 'No', origen: 'web'
+    };
+    const url = this.props.endpoint || ENDPOINT_SHEETS;
+    if (!url) {
+      const texto = 'Hola, quiero agendar una hora.\n' +
+        'Nombre: ' + datos.nombre + '\nCédula: ' + datos.cedula + '\nFecha de nacimiento: ' + datos.nacimiento +
+        '\nOftalmólogo: ' + datos.oftalmologo + '\nServicio: ' + datos.servicio +
+        '\nDía: ' + datos.fecha + '\nHora: ' + datos.hora + '\nDiabetes: ' + datos.diabetes;
+      window.open('https://wa.me/59892494961?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+      return this.setState({ etapa: 'listo', enviando: false, error: '', canal: 'whatsapp' });
+    }
+    this.setState({ enviando: true, error: '' });
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+      this.setState({ etapa: 'listo', enviando: false, error: '', canal: 'planilla' });
+    } catch (e) {
+      this.setState({ enviando: false, error: 'No pudimos enviar la solicitud. Probá de nuevo o escribinos al 092 49 49 61.' });
+    }
+  }
+
+  fmt(mins) {
+    const h = Math.floor(mins / 60), mm = String(mins % 60).padStart(2, '0');
+    return String(h).padStart(2, '0') + ':' + mm;
+  }
+
+  renderVals() {
+    const { mes, anio, sel, hora, etapa, medico } = this.state;
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const primero = new Date(anio, mes, 1);
+    const total = new Date(anio, mes + 1, 0).getDate();
+    const m = MEDICOS[medico];
+
+    const dias = [];
+    for (let i = 0; i < primero.getDay(); i++) dias.push({ key: 'e' + i, label: '', disabled: true, style: { visibility: 'hidden', border: 'none', background: 'none', height: '46px' } });
+    for (let n = 1; n <= total; n++) {
+      const d = new Date(anio, mes, n);
+      const activo = d >= hoy && m.dias.includes(d.getDay());
+      const elegido = sel && sel.getTime() === d.getTime();
+      dias.push({
+        key: 'd' + n, label: String(n), disabled: !activo,
+        style: {
+          height: '46px', borderRadius: '10px', fontSize: '15px', fontFamily: 'inherit',
+          fontWeight: elegido ? 700 : 500, border: '1px solid transparent',
+          background: elegido ? '#14496E' : activo ? '#E4EDF3' : 'transparent',
+          color: elegido ? '#fff' : activo ? '#14496E' : '#C2CBD0',
+          cursor: activo ? 'pointer' : 'default', transition: 'background .15s ease'
+        },
+        click: activo ? () => this.setState({ sel: d, hora: null, etapa: 'elegir' }) : null
+      });
+    }
+
+    const mins = this.horariosDe(sel);
+    const pill = (on) => ({
+      border: 'none', borderRadius: '6px', padding: '7px 13px', fontSize: '13px', fontWeight: 600,
+      cursor: 'pointer', background: on ? '#fff' : 'transparent', color: on ? '#0F2230' : '#64757F',
+      boxShadow: on ? '0 1px 3px rgba(15,34,48,.16)' : 'none'
+    });
+    const sn = (on) => ({
+      flex: 1, padding: '12px 0', borderRadius: '10px', fontSize: '14.5px', fontWeight: 600, cursor: 'pointer',
+      border: '1px solid ' + (on ? '#14496E' : '#DCE2E5'), background: on ? '#14496E' : '#fff', color: on ? '#fff' : '#42545E'
+    });
+    const etiqueta = (d) => d ? DIAS_CORTOS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] : '';
+
+    return {
+      medicos: MEDICOS.map((x, i) => ({
+        key: 'm' + i, nombre: x.nombre, especialidad: x.especialidad,
+        diasLabel: 'Atiende ' + x.dias.map(dd => NOMS[dd]).join(' · '),
+        style: {
+          textAlign: 'left', padding: '14px 16px', borderRadius: '12px', cursor: 'pointer',
+          border: '1px solid ' + (i === medico ? '#14496E' : '#DCE2E5'),
+          background: i === medico ? '#14496E' : '#fff', color: i === medico ? '#fff' : '#0F2230'
+        },
+        click: () => this.setState({ medico: i, sel: null, hora: null, etapa: 'elegir' })
+      })),
+      servicio: this.state.servicio,
+      setServicio: e => this.setState({ servicio: e.target.value }),
+      medicoNombre: m.nombre,
+      mesLabel: MESES[mes], anioLabel: String(anio),
+      mesAnterior: () => this.setState(s => ({ mes: s.mes === 0 ? 11 : s.mes - 1, anio: s.mes === 0 ? s.anio - 1 : s.anio })),
+      mesSiguiente: () => this.setState(s => ({ mes: s.mes === 11 ? 0 : s.mes + 1, anio: s.mes === 11 ? s.anio + 1 : s.anio })),
+      dias,
+      etapaElegir: etapa === 'elegir', etapaDatos: etapa === 'datos', etapaListo: etapa === 'listo',
+      diaElegidoLabel: sel ? etiqueta(sel) : 'Elegí un día',
+      sinDia: etapa === 'elegir' && !sel,
+      mesVacio: etapa === 'elegir' && !sel && !dias.some(d => !d.disabled),
+      mesVacioTexto: 'Sin días disponibles en ' + MESES[mes] + ' con ' + m.nombre + '.',
+      irProximoMes: () => this.setState(s => ({ mes: s.mes === 11 ? 0 : s.mes + 1, anio: s.mes === 11 ? s.anio + 1 : s.anio })),
+      sinHorarios: etapa === 'elegir' && !!sel && mins.length === 0,
+      horarios: mins.map(x => ({ key: 'h' + x, label: this.fmt(x), click: () => this.setState({ hora: x, etapa: 'datos', error: '' }) })),
+      resumenTurno: sel && hora != null ? m.nombre + ' · ' + etiqueta(sel) + ' a las ' + this.fmt(hora) + ' · ' + this.state.servicio : '',
+      resumenFinal: sel && hora != null ? (this.state.nombre || 'Paciente') + ' — ' + etiqueta(sel) + ' a las ' + this.fmt(hora) + ' con ' + m.nombre + '. ' + this.state.servicio + '.' : '',
+      nombre: this.state.nombre, cedula: this.state.cedula, nacimiento: this.state.nacimiento,
+      setNombre: e => this.setState({ nombre: e.target.value }),
+      setCedula: e => this.setState({ cedula: e.target.value }),
+      setNacimiento: e => this.setState({ nacimiento: e.target.value }),
+      diabetesSi: () => this.setState({ diabetes: 'si' }), diabetesNo: () => this.setState({ diabetes: 'no' }),
+      estiloSi: sn(this.state.diabetes === 'si'), estiloNo: sn(this.state.diabetes === 'no'),
+      hayError: !!this.state.error, error: this.state.error,
+      textoEnviar: this.state.enviando ? 'Enviando…' : 'Solicitar hora',
+      notaEnvio: this.state.canal === 'whatsapp'
+        ? 'Abrimos WhatsApp con los datos de tu solicitud: envianos el mensaje para que quede registrada. Teléfono del consultorio: 092 49 49 61.'
+        : 'Enviamos tu solicitud al consultorio. Te confirman la hora por WhatsApp al 092 49 49 61.',
+      enviando: !!this.state.enviando,
+      volver: () => this.setState({ etapa: 'elegir', hora: null }),
+      confirmar: () => {
+        if (this.state.nombre.trim().length < 3) return this.setState({ error: 'Escribí tu nombre y apellido.' });
+        if (this.state.cedula.replace(/\D/g, '').length < 7) return this.setState({ error: 'Ingresá tu cédula.' });
+        if (!this.state.nacimiento) return this.setState({ error: 'Ingresá tu fecha de nacimiento.' });
+        if (!this.state.diabetes) return this.setState({ error: 'Indicá si tenés diabetes.' });
+        this.enviar();
+      },
+      reiniciar: () => this.setState({ etapa: 'elegir', sel: null, hora: null, nombre: '', cedula: '', nacimiento: '', diabetes: '', error: '' })
+    };
+  }
+}
+
+</script>
+</body>
+</html>
