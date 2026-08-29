@@ -238,10 +238,6 @@ input,select,textarea,button{font-family:inherit}
             <div style="display:flex;flex-direction:column;height:100%">
               <div data-m="slothead" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
                 <div style="font-size:16px;font-weight:600">{{ diaElegidoLabel }}</div>
-                <div data-m="toggle" style="display:flex;background:#E9EDEF;border-radius:8px;padding:3px;flex:none">
-                  <button onClick="{{ usar12 }}" style="{{ estilo12 }}">12 h</button>
-                  <button onClick="{{ usar24 }}" style="{{ estilo24 }}">24hs</button>
-                </div>
               </div>
               <sc-if value="{{ sinDia }}" hint-placeholder-val="{{ false }}">
                 <p style="margin:0;font-size:14px;color:#93A5AF;line-height:1.5">Elegí un día en el calendario para ver los horarios disponibles con {{ medicoNombre }}.</p>
@@ -423,7 +419,7 @@ class Component extends DCLogic {
     this.state = {
       medico: 0, servicio: 'Receta para lentes convencionales y lentes de contacto',
       mes: hoy.getMonth(), anio: hoy.getFullYear(),
-      sel: null, hora: null, f12: (props.formatoHora ?? '12 h') === '12 h',
+      sel: null, hora: null,
       etapa: 'elegir', nombre: '', cedula: '', nacimiento: '', diabetes: '', error: ''
     };
   }
@@ -470,9 +466,7 @@ class Component extends DCLogic {
 
   fmt(mins) {
     const h = Math.floor(mins / 60), mm = String(mins % 60).padStart(2, '0');
-    if (!this.state.f12) return h + ':' + mm;
-    const suf = h >= 12 ? 'pm' : 'am', h12 = h % 12 === 0 ? 12 : h % 12;
-    return h12 + ':' + mm + suf;
+    return String(h).padStart(2, '0') + ':' + mm;
   }
 
   renderVals() {
@@ -539,8 +533,6 @@ class Component extends DCLogic {
       irProximoMes: () => this.setState(s => ({ mes: s.mes === 11 ? 0 : s.mes + 1, anio: s.mes === 11 ? s.anio + 1 : s.anio })),
       sinHorarios: etapa === 'elegir' && !!sel && mins.length === 0,
       horarios: mins.map(x => ({ key: 'h' + x, label: this.fmt(x), click: () => this.setState({ hora: x, etapa: 'datos', error: '' }) })),
-      usar12: () => this.setState({ f12: true }), usar24: () => this.setState({ f12: false }),
-      estilo12: pill(this.state.f12), estilo24: pill(!this.state.f12),
       resumenTurno: sel && hora != null ? m.nombre + ' · ' + etiqueta(sel) + ' a las ' + this.fmt(hora) + ' · ' + this.state.servicio : '',
       resumenFinal: sel && hora != null ? (this.state.nombre || 'Paciente') + ' — ' + etiqueta(sel) + ' a las ' + this.fmt(hora) + ' con ' + m.nombre + '. ' + this.state.servicio + '.' : '',
       nombre: this.state.nombre, cedula: this.state.cedula, nacimiento: this.state.nacimiento,
