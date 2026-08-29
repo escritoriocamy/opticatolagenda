@@ -27,6 +27,12 @@ input,select,textarea,button{font-family:inherit}
 .reveal-on-scroll.is-visible{opacity:1;transform:none}
 .reveal-on-scroll:nth-child(2){transition-delay:.08s}
 .reveal-on-scroll:nth-child(3){transition-delay:.16s}
+.clinic-gallery{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:220px 220px;gap:14px}
+.clinic-gallery figure{position:relative;margin:0;overflow:hidden;border-radius:16px;background:#DDE8ED}
+.clinic-gallery figure:first-child{grid-row:span 2}
+.clinic-gallery img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s ease}
+.clinic-gallery figure:hover img{transform:scale(1.035)}
+.clinic-gallery figcaption{position:absolute;left:14px;bottom:14px;padding:7px 10px;background:rgba(15,34,48,.78);color:#fff;border-radius:999px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 @media (max-width: 940px){
   [data-m="bookgrid"]{grid-template-columns:1fr !important;min-height:0 !important}
   [data-m="aside"]{border-right:none !important;border-bottom:1px solid #E2E7E9 !important}
@@ -64,6 +70,9 @@ input,select,textarea,button{font-family:inherit}
   [data-m="slots"] button{max-width:100% !important}
   [data-m="slots"] button{min-height:46px !important}
   [data-eq="1"] > div > div:first-child{height:230px !important}
+  .clinic-gallery{grid-template-columns:1fr 1fr;grid-template-rows:220px 150px;gap:10px}
+  .clinic-gallery figure:first-child{grid-column:span 2;grid-row:auto}
+  .clinic-gallery figcaption{left:10px;bottom:10px;font-size:10px;padding:6px 8px}
   [data-m="servlist"] > div{font-size:16px !important;padding:15px 0 !important}
   footer{padding:22px 16px !important;font-size:12px !important;flex-direction:column !important}
   #contacto{padding:52px 18px !important}
@@ -344,10 +353,10 @@ input,select,textarea,button{font-family:inherit}
   <section style="padding:0 40px 88px">
     <div style="max-width:1180px;margin:0 auto">
       <h2 class="reveal-on-scroll" style="margin:0 0 28px;font-size:44px;font-weight:700;letter-spacing:-0.03em">El consultorio</h2>
-      <div data-m="cols3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-        <div style="height:260px"><image-slot id="sala-1" shape="rounded" radius="16" placeholder="Foto de sala de espera"></image-slot></div>
-        <div style="height:260px"><image-slot id="sala-2" shape="rounded" radius="16" placeholder="Foto de consultorio"></image-slot></div>
-        <div style="height:260px"><image-slot id="sala-3" shape="rounded" radius="16" placeholder="Foto de equipamiento"></image-slot></div>
+      <div class="clinic-gallery reveal-on-scroll">
+        <figure><img src="uploads/consultorio-1.jpg" alt="Equipamiento oftalmológico del consultorio" loading="lazy"><figcaption>Equipamiento preciso</figcaption></figure>
+        <figure><img src="uploads/consultorio-2.jpg" alt="Atención oftalmológica en el consultorio" loading="lazy"><figcaption>Atención profesional</figcaption></figure>
+        <figure><img src="uploads/consultorio-3.jpg" alt="Tecnología del consultorio oftalmológico" loading="lazy"><figcaption>Tecnología clínica</figcaption></figure>
       </div>
     </div>
   </section>
