@@ -369,8 +369,25 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     hora: null,
     etapa: 'elegir',
     nombre: '', cedula: '', nacimiento: '', diabetes: '', error: '',
-    enviando: false, canal: null
+    enviando: false, canal: null, ocupadas: []
   };
+
+  // ---------- Horas ya reservadas ----------
+  const ocupadosCache = {};
+  let ocupadosToken = 0;
+  async function cargarOcupados(oftalmologo, fecha) {
+    const key = oftalmologo + '|' + fecha;
+    if (ocupadosCache[key]) return ocupadosCache[key];
+    try {
+      const resp = await fetch(ENDPOINT_SHEETS + '?ocupados=1&fecha=' + encodeURIComponent(fecha) + '&oftalmologo=' + encodeURIComponent(oftalmologo));
+      const data = await resp.json();
+      const horas = Array.isArray(data.horas) ? data.horas : [];
+      ocupadosCache[key] = horas;
+      return horas;
+    } catch (err) {
+      return [];
+    }
+  }
 
   function fmt(mins) {
     const h = Math.floor(mins / 60), mm = String(mins % 60).padStart(2, '0');
@@ -449,8 +466,16 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         ';cursor:' + (activo ? 'pointer' : 'default') + ';transition:background .15s ease';
       if (activo) {
         btn.addEventListener('click', () => {
-          state.sel = d; state.hora = null; state.etapa = 'elegir';
+          state.sel = d; state.hora = null; state.etapa = 'elegir'; state.ocupadas = [];
           renderCalendar(); renderElegirPanel(); showPanel('elegir');
+          const fechaStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          const medicoNombre = MEDICOS[state.medico].nombre;
+          const miToken = ++ocupadosToken;
+          cargarOcupados(medicoNombre, fechaStr).then((horas) => {
+            if (miToken !== ocupadosToken || state.sel !== d) return;
+            state.ocupadas = horas;
+            renderHorarios();
+          });
         });
       }
       calGrid.appendChild(btn);
@@ -497,18 +522,30 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     mesVacioBox.style.display = mesVacio ? 'block' : 'none';
     if (mesVacio) mesVacioTexto.textContent = 'Sin días disponibles en ' + MESES[state.mes] + ' con ' + m.nombre + '.';
 
+    renderHorarios();
+  }
+
+  function renderHorarios() {
     const mins = horariosDe(state.sel);
+    const ocupadas = state.ocupadas || [];
     horariosList.innerHTML = '';
     mins.forEach((x) => {
+      const hhmm = fmt(x);
+      const ocupado = ocupadas.includes(hhmm);
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'slot-btn';
-      btn.textContent = fmt(x);
-      btn.style.cssText = 'width:100%;padding:13px 0;border:1px solid #DCE2E5;background:#fff;border-radius:10px;font-size:15px;font-weight:600;color:#0F2230;cursor:pointer';
-      btn.addEventListener('click', () => {
-        state.hora = x; state.etapa = 'datos'; state.error = '';
-        renderDatosPanel(); showPanel('datos');
-      });
+      btn.textContent = ocupado ? (hhmm + ' · Ocupado') : hhmm;
+      btn.disabled = ocupado;
+      if (ocupado) {
+        btn.style.cssText = 'width:100%;padding:13px 0;border:1px solid #0B3355;background:#0B3355;border-radius:10px;font-size:15px;font-weight:600;color:#7FA6C2;cursor:not-allowed;opacity:.95';
+      } else {
+        btn.style.cssText = 'width:100%;padding:13px 0;border:1px solid #DCE2E5;background:#fff;border-radius:10px;font-size:15px;font-weight:600;color:#0F2230;cursor:pointer';
+        btn.addEventListener('click', () => {
+          state.hora = x; state.etapa = 'datos'; state.error = '';
+          renderDatosPanel(); showPanel('datos');
+        });
+      }
       horariosList.appendChild(btn);
     });
 
@@ -609,10 +646,26 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
       state.enviando = true;
       btnConfirmar.disabled = true;
+      btnConfirmar.textContent = 'Verificando…';
+
+      const keyOcupado = m2.nombre + '|' + fecha;
+      delete ocupadosCache[keyOcupado]; // forzamos a repreguntarle al Sheet, no usar la caché
+      const ocupadasAhora = await cargarOcupados(m2.nombre, fecha);
+      if (ocupadasAhora.includes(hh)) {
+        state.ocupadas = ocupadasAhora;
+        state.enviando = false;
+        state.etapa = 'elegir'; state.hora = null;
+        renderCalendar(); renderElegirPanel(); showPanel('elegir');
+        sinHorariosMsg.style.display = 'none';
+        diaElegidoLabel.textContent = etiqueta(state.sel) + ' — esa hora se acaba de ocupar, elegí otra';
+        return;
+      }
+
       btnConfirmar.textContent = 'Enviando…';
 
       try {
         await fetch(ENDPOINT_SHEETS, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+        ocupadosCache[keyOcupado] = ocupadasAhora.concat([hh]);
         state.etapa = 'listo'; state.canal = 'planilla'; state.enviando = false; setError('');
         renderListoPanel(); showPanel('listo');
       } catch (e) {
