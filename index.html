@@ -368,7 +368,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     sel: null,
     hora: null,
     etapa: 'elegir',
-    nombre: '', cedula: '', nacimiento: '', diabetes: '', error: '',
+    nombre: '', apellido: '', cedula: '', nacimiento: '', diabetes: '', error: '',
     enviando: false, canal: null, ocupadas: []
   };
 
@@ -568,9 +568,14 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         '<div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#14496E">Tu solicitud</div>' +
         '<div style="font-size:15.5px;font-weight:600;margin-top:6px;line-height:1.4">' + resumen + '</div>' +
       '</div>' +
-      '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Nombre y apellido *' +
-        '<input id="in-nombre" type="text" placeholder="María Pérez" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
-      '</label>' +
+      '<div style="display:flex;gap:10px">' +
+        '<label style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Nombre *' +
+          '<input id="in-nombre" type="text" placeholder="María" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400;width:100%">' +
+        '</label>' +
+        '<label style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Apellido *' +
+          '<input id="in-apellido" type="text" placeholder="Pérez" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400;width:100%">' +
+        '</label>' +
+      '</div>' +
       '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Cédula *' +
         '<input id="in-cedula" type="text" placeholder="1.234.567-8" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
       '</label>' +
@@ -588,6 +593,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       '<button type="button" id="btn-confirmar" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Solicitar hora</button>';
 
     const inNombre = document.getElementById('in-nombre');
+    const inApellido = document.getElementById('in-apellido');
     const inCedula = document.getElementById('in-cedula');
     const inNacimiento = document.getElementById('in-nacimiento');
     const btnSi = document.getElementById('btn-diabetes-si');
@@ -596,10 +602,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const btnConfirmar = document.getElementById('btn-confirmar');
 
     inNombre.value = state.nombre;
+    inApellido.value = state.apellido;
     inCedula.value = state.cedula;
     inNacimiento.value = state.nacimiento;
 
     inNombre.addEventListener('input', (e) => { state.nombre = e.target.value; });
+    inApellido.addEventListener('input', (e) => { state.apellido = e.target.value; });
     inCedula.addEventListener('input', (e) => { state.cedula = e.target.value; });
     inNacimiento.addEventListener('change', (e) => { state.nacimiento = e.target.value; });
 
@@ -628,7 +636,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     });
 
     btnConfirmar.addEventListener('click', async () => {
-      if (state.nombre.trim().length < 3) return setError('Escribí tu nombre y apellido.');
+      if (state.nombre.trim().length < 2) return setError('Escribí tu nombre.');
+      if (state.apellido.trim().length < 2) return setError('Escribí tu apellido.');
       if (state.cedula.replace(/\D/g, '').length < 7) return setError('Ingresá tu cédula.');
       if (!state.nacimiento) return setError('Ingresá tu fecha de nacimiento.');
       if (!state.diabetes) return setError('Indicá si tenés diabetes.');
@@ -638,8 +647,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       const hh = fmt(state.hora);
       const f = state.sel;
       const fecha = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
+      const nombreCompleto = (state.nombre.trim() + ' ' + state.apellido.trim()).trim();
       const datos = {
-        enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }), nombre: state.nombre.trim(), cedula: state.cedula.trim(),
+        enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }), nombre: nombreCompleto, cedula: state.cedula.trim(),
         nacimiento: state.nacimiento, oftalmologo: m2.nombre, servicio: state.servicio,
         fecha, hora: hh, diabetes: state.diabetes === 'si' ? 'Sí' : 'No', origen: 'web'
       };
@@ -683,7 +693,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function renderListoPanel() {
     const m = MEDICOS[state.medico];
     const resumenFinal = (state.sel && state.hora != null)
-      ? (state.nombre || 'Paciente') + ' — ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '. ' + state.servicio + '.'
+      ? ((state.nombre + ' ' + state.apellido).trim() || 'Paciente') + ' — ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '. ' + state.servicio + '.'
       : '';
     const notaEnvio = 'Enviamos tu solicitud al consultorio. Te confirman la hora por WhatsApp al 092 49 49 61.';
 
@@ -697,7 +707,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
     document.getElementById('btn-reiniciar').addEventListener('click', () => {
       state.etapa = 'elegir'; state.sel = null; state.hora = null;
-      state.nombre = ''; state.cedula = ''; state.nacimiento = ''; state.diabetes = ''; state.error = '';
+      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.nacimiento = ''; state.diabetes = ''; state.error = '';
       renderCalendar(); renderElegirPanel(); showPanel('elegir');
     });
   }
