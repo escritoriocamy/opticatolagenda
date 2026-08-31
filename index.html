@@ -19,6 +19,8 @@ input,select,textarea,button{font-family:inherit}
 @keyframes cnsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .reveal-on-scroll{opacity:0;transform:translate3d(-56px,0,0);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
 .reveal-on-scroll.is-visible{opacity:1;transform:none}
+@keyframes marqueeScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.marquee-band:hover .marquee-track{animation-play-state:paused}
 .reveal-on-scroll:nth-child(2){transition-delay:.08s}
 .reveal-on-scroll:nth-child(3){transition-delay:.16s}
 .clinic-gallery{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:220px 220px;gap:14px}
@@ -112,6 +114,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .reveal-on-scroll{opacity:1;transform:none;transition:none}
+  .marquee-track{animation:none !important}
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
 </style>
@@ -148,6 +151,31 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       <div style="margin-top:40px;font-size:15px;letter-spacing:0.04em;opacity:.8">Sarandí 575 · San José de Mayo</div>
     </div>
   </header>
+
+  <div class="marquee-band" aria-hidden="true" style="overflow:hidden;background:#A8D8EE;border-top:1px solid #14496E;border-bottom:1px solid #14496E;padding:16px 0">
+    <div class="marquee-track" style="display:flex;width:max-content;white-space:nowrap;animation:marqueeScroll 26s linear infinite">
+      <span class="marquee-set" style="display:flex;align-items:center">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">San José, Uruguay</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Cuidamos tu visión</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Reserva online, sin esperas</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Sarandí 575</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+      </span>
+      <span class="marquee-set" style="display:flex;align-items:center" aria-hidden="true">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">San José, Uruguay</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Cuidamos tu visión</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Reserva online, sin esperas</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Sarandí 575</span>
+        <span style="width:6px;height:6px;border-radius:50%;background:#14496E;flex:none"></span>
+      </span>
+    </div>
+  </div>
 
   <section id="agendar" style="padding:88px 40px 36px">
     <div style="max-width:1180px;margin:0 auto;text-align:center">
