@@ -132,6 +132,19 @@
   <div id="lista"></div>
 </div>
 
+<div id="modal-cancelar" style="display:none;position:fixed;inset:0;background:rgba(15,34,48,.55);z-index:100;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:16px;padding:28px 26px;max-width:400px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.25)">
+    <div style="font-size:17px;font-weight:700;color:#0F2230;margin-bottom:6px">Cancelar reserva</div>
+    <div id="modal-detalle" style="font-size:14px;color:#42545E;margin-bottom:16px;line-height:1.5"></div>
+    <div style="font-size:13px;color:#64757F;margin-bottom:8px">Para confirmar, escribí <b>CANCELAR</b> en mayúsculas:</div>
+    <input id="modal-input" type="text" autocomplete="off" style="width:100%;border:1px solid #DCE2E5;border-radius:10px;padding:11px 12px;font-size:14.5px;box-sizing:border-box;margin-bottom:16px">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button type="button" id="modal-cerrar" style="background:none;border:1px solid #DCE2E5;color:#42545E;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:8px;cursor:pointer">Volver</button>
+      <button type="button" id="modal-confirmar" disabled style="background:#DCE2E5;color:#fff;border:none;font-size:13.5px;font-weight:700;padding:10px 18px;border-radius:8px;cursor:not-allowed">Cancelar reserva</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyArHa2213mzivo_I9IoiXuNlE6ShYQp9A3Pi_6AhQLglR8hDomV7OpaWBNq3bVxt0RDg/exec';
@@ -290,12 +303,79 @@
             '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
             '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + '</div>' +
+            '<button type="button" class="btn-cancelar" style="margin-top:10px;background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
           '</div>';
+        const btnCancelar = card.querySelector('.btn-cancelar');
+        btnCancelar.addEventListener('click', () => cancelarReserva(r, btnCancelar));
         grupoEl.appendChild(card);
       });
 
       lista.appendChild(grupoEl);
     });
+  }
+
+  const modalCancelar = document.getElementById('modal-cancelar');
+  const modalDetalle = document.getElementById('modal-detalle');
+  const modalInput = document.getElementById('modal-input');
+  const modalConfirmar = document.getElementById('modal-confirmar');
+  const modalCerrar = document.getElementById('modal-cerrar');
+  let pendiente = null; // { reserva, boton }
+
+  function abrirModalCancelar(r, boton) {
+    pendiente = { r, boton };
+    modalDetalle.innerHTML = '¿Cancelar la reserva de <b>' + escapeHtml(r.nombre || 'este paciente') + '</b> el ' +
+      escapeHtml(r.fecha || '') + ' a las ' + escapeHtml(r.hora || '') + '? Esto libera la hora y no se puede deshacer.';
+    modalInput.value = '';
+    pintarBotonModal();
+    modalCancelar.style.display = 'flex';
+    modalInput.focus();
+  }
+
+  function cerrarModalCancelar() {
+    modalCancelar.style.display = 'none';
+    pendiente = null;
+  }
+
+  function pintarBotonModal() {
+    const habilitado = modalInput.value.trim() === 'CANCELAR';
+    modalConfirmar.disabled = !habilitado;
+    modalConfirmar.style.background = habilitado ? '#B4361A' : '#DCE2E5';
+    modalConfirmar.style.cursor = habilitado ? 'pointer' : 'not-allowed';
+  }
+  modalInput.addEventListener('input', pintarBotonModal);
+  modalCerrar.addEventListener('click', cerrarModalCancelar);
+  modalCancelar.addEventListener('click', (e) => { if (e.target === modalCancelar) cerrarModalCancelar(); });
+
+  modalConfirmar.addEventListener('click', async () => {
+    if (modalInput.value.trim() !== 'CANCELAR' || !pendiente) return;
+    const { r, boton } = pendiente;
+    modalConfirmar.disabled = true;
+    modalConfirmar.textContent = 'Cancelando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&cancelar=1&fecha=' + encodeURIComponent(r.fecha) +
+        '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
+        '&hora=' + encodeURIComponent(r.hora);
+      const resp = await fetch(url);
+      const data = await resp.json();
+      if (data.ok) {
+        reservas = reservas.filter(x => !(x.fecha === r.fecha && x.oftalmologo === r.oftalmologo && x.hora === r.hora));
+        cerrarModalCancelar();
+        render();
+        updatedNote.textContent = 'Reserva cancelada · ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
+      } else {
+        alert('No pudimos cancelarla. Probá de nuevo.');
+      }
+    } catch (e) {
+      alert('No pudimos conectar. Probá de nuevo.');
+    } finally {
+      modalConfirmar.textContent = 'Cancelar reserva';
+      pintarBotonModal();
+    }
+  });
+
+  function cancelarReserva(r, boton) {
+    abrirModalCancelar(r, boton);
   }
 
   function capitalizar(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
