@@ -3,335 +3,753 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel de reservas · Consultorio Oftalmológico</title>
-<meta name="robots" content="noindex, nofollow">
+<title>Consultorio Oftalmológico · San José de Mayo</title>
+<meta name="description" content="Consultas y estudios oftalmológicos en San José de Mayo. Agendá tu hora online sin espera.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;background:#F1F0EB;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0F2230}
-  *{box-sizing:border-box}
-  a{color:#14496E}
-  button{font-family:inherit}
-  input,select{font-family:inherit}
-
-  .topbar{position:sticky;top:0;z-index:20;background:#14496E;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px}
-  .topbar .brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:-0.01em}
-  .topbar .brand span.sub{display:block;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
-  .topbar .actions{display:flex;align-items:center;gap:14px;font-size:12.5px}
-  .topbar .actions button{background:none;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:600;letter-spacing:.03em}
-  .topbar .actions button:hover{background:rgba(255,255,255,.12)}
-
-  /* ---- Login ---- */
-  #login-screen{min-height:calc(100vh - 66px);display:flex;align-items:center;justify-content:center;padding:24px}
-  .login-card{background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(15,34,48,.10);padding:40px 36px;width:100%;max-width:380px}
-  .login-card h1{margin:0 0 8px;font-size:26px;font-weight:700;letter-spacing:-0.02em}
-  .login-card p{margin:0 0 24px;font-size:14.5px;color:#64757F;line-height:1.5}
-  .login-card label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64757F;margin-bottom:7px}
-  .login-card input[type="password"]{width:100%;border:1px solid #DCE2E5;border-radius:10px;padding:13px 14px;font-size:15px;color:#0F2230}
-  .login-card input[type="password"]:focus{outline:2px solid #14496E;outline-offset:1px;border-color:#14496E}
-  .login-row-check{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;color:#42545E;text-transform:none;font-weight:400;letter-spacing:normal}
-  .login-card button{width:100%;margin-top:20px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:15px;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
-  .login-card button:hover{background:#0C3450}
-  .login-error{margin-top:14px;font-size:13.5px;color:#C22A12;font-weight:600}
-
-  /* ---- Dashboard ---- */
-  #dashboard{display:none;max-width:1100px;margin:0 auto;padding:28px 20px 80px}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-  .stat-card{background:#fff;border-radius:16px;padding:20px 22px}
-  .stat-card .num{font-size:34px;font-weight:700;letter-spacing:-0.02em;line-height:1}
-  .stat-card .label{margin-top:6px;font-size:12.5px;font-weight:600;letter-spacing:.04em;color:#64757F;text-transform:uppercase}
-
-  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px}
-  .tabs{display:flex;gap:6px;background:#fff;border-radius:999px;padding:4px}
-  .tabs button{border:none;background:none;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.03em;color:#64757F;cursor:pointer}
-  .tabs button.active{background:#14496E;color:#fff}
-  .toolbar select,.toolbar input[type="search"]{border:1px solid #DCE2E5;border-radius:10px;padding:10px 14px;font-size:13.5px;color:#0F2230;background:#fff}
-  .toolbar select{cursor:pointer}
-  .toolbar input[type="search"]{flex:1;min-width:180px}
-  .toolbar input[type="search"]:focus,.toolbar select:focus{outline:2px solid #14496E;outline-offset:1px;border-color:#14496E}
-  .refresh-btn{border:1px solid #DCE2E5;background:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:#42545E;cursor:pointer;display:flex;align-items:center;gap:7px}
-  .refresh-btn:hover{border-color:#14496E;color:#14496E}
-  .refresh-btn.loading svg{animation:spin .8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .updated-note{font-size:12px;color:#93A5AF;margin:-10px 0 20px}
-
-  .day-group{margin-bottom:28px}
-  .day-heading{font-size:15px;font-weight:700;letter-spacing:-0.01em;color:#14496E;margin:0 0 10px;padding-left:2px;display:flex;align-items:center;gap:10px}
-  .day-heading .count{font-size:11.5px;font-weight:600;color:#93A5AF;text-transform:none;letter-spacing:0}
-  .appt-card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:8px;display:flex;gap:16px;align-items:flex-start}
-  .appt-time{flex:none;width:64px;font-size:17px;font-weight:700;color:#14496E;letter-spacing:-0.01em;padding-top:1px}
-  .appt-body{flex:1;min-width:0}
-  .appt-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:4px}
-  .appt-name{font-size:15.5px;font-weight:700;letter-spacing:-0.01em}
-  .badge{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
-  .badge-diabetes{background:#FBE7E1;color:#B4361A}
-  .appt-meta{font-size:13.5px;color:#4C5E68;line-height:1.6}
-  .appt-meta b{color:#0F2230;font-weight:600}
-  .appt-extra{margin-top:6px;font-size:12.5px;color:#93A5AF}
-
-  .empty-state{background:#fff;border-radius:16px;padding:48px 24px;text-align:center;color:#93A5AF;font-size:14.5px}
-  .empty-state svg{margin-bottom:14px;opacity:.5}
-
-  @media (max-width:720px){
-    .topbar{padding:12px 16px}
-    .stats{grid-template-columns:1fr}
-    #dashboard{padding:20px 14px 60px}
-    .appt-card{gap:12px;padding:14px}
-    .appt-time{width:52px;font-size:15px}
-  }
+body{margin:0;background:#F1F0EB;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0F2230}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{-webkit-overflow-scrolling:touch}
+a{color:#14496E;text-decoration:none}
+a:hover{color:#0C3450}
+input,select,textarea,button{font-family:inherit}
+@keyframes cnsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reveal-on-scroll{opacity:0;transform:translate3d(-56px,0,0);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.reveal-on-scroll.is-visible{opacity:1;transform:none}
+@keyframes marqueeScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.marquee-band:hover .marquee-track{animation-play-state:paused}
+.reveal-on-scroll:nth-child(2){transition-delay:.08s}
+.reveal-on-scroll:nth-child(3){transition-delay:.16s}
+.clinic-gallery{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:220px 220px;gap:14px}
+.clinic-gallery figure{position:relative;margin:0;overflow:hidden;border-radius:16px;background:#DDE8ED}
+.clinic-gallery figure:first-child{grid-row:span 2}
+.clinic-gallery img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s ease}
+.clinic-gallery figure:hover img{transform:scale(1.035)}
+.clinic-gallery figcaption{position:absolute;left:14px;bottom:14px;padding:7px 10px;background:rgba(15,34,48,.78);color:#fff;border-radius:999px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+nav a{color:#fff}
+nav a:hover{color:#A8D8EE}
+nav a[href="#agendar"]{background:#A8D8EE;color:#0F2230}
+nav a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
+header a:hover{background:rgba(255,255,255,.12);color:#fff}
+header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
+.btn-nav-icon:hover{background:#E7F0F5;border-color:#14496E;color:#14496E}
+.medico-btn:hover{border-color:#14496E}
+.slot-btn:hover{border-color:#14496E;color:#14496E;background:#EFF5F9}
+.mesvacio-btn:hover{background:#14496E;color:#fff}
+.link-back:hover{color:#0C3450}
+.btn-primary:hover{background:#0C3450}
+.btn-outline:hover{background:#E7F0F5}
+#contacto a:hover{color:#CBEAF8}
+.footer-access{color:#A8B7BF;font-size:11px;opacity:.45}
+@media (max-width: 940px){
+  [data-m="bookgrid"]{grid-template-columns:1fr !important;min-height:0 !important}
+  [data-m="aside"]{border-right:none !important;border-bottom:1px solid #E2E7E9 !important}
+  [data-m="slots"]{border-left:none !important;border-top:1px solid #E2E7E9 !important}
+  [data-m="cols3"],[data-m="cols2"]{grid-template-columns:1fr !important}
+  [data-m="cols2"]{gap:36px !important}
+}
+@media (max-width: 720px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  nav{padding:12px 16px !important;gap:10px !important}
+  [data-m="navlinks"]{display:none !important}
+  nav a[href="#agendar"]{padding:12px 18px !important;font-size:12px !important}
+  nav svg{width:24px !important;height:24px !important}
+  header{padding:44px 18px 52px !important}
+  header h1{font-size:38px !important;letter-spacing:-0.02em !important;max-width:none !important}
+  header p{font-size:16px !important;margin-top:22px !important}
+  header > div > div:first-child{font-size:11px !important;letter-spacing:0.14em !important}
+  header > div > div:nth-child(4){gap:10px !important;margin-top:30px !important}
+  header a{width:100% !important;text-align:center !important;padding:15px 18px !important;font-size:13px !important}
+  section{padding-left:16px !important;padding-right:16px !important;padding-bottom:52px !important}
+  section:first-of-type{padding-top:52px !important}
+  section h2{font-size:30px !important;letter-spacing:-0.02em !important}
+  section p{font-size:16px !important}
+  [data-m="cardwrap"]{padding:6px !important;border-radius:18px !important;box-shadow:0 10px 26px rgba(15,34,48,.10) !important}
+  [data-m="bookgrid"]{border-radius:12px !important;width:100% !important;min-width:0 !important}
+  [data-m="bookgrid"] > *{min-width:0 !important;width:100% !important}
+  [data-m="aside"]{padding:20px 16px !important;gap:16px !important}
+  [data-m="calcol"]{padding:20px 14px 24px !important}
+  [data-m="slots"]{padding:20px 16px !important}
+  [data-m="slothead"]{width:100% !important}
+  [data-m="calgrid"],[data-m="calhead"]{gap:4px !important}
+  [data-m="calgrid"] button{height:42px !important;font-size:14px !important;border-radius:8px !important}
+  [data-m="calhead"] div{font-size:9.5px !important;letter-spacing:0.04em !important}
+  [data-m="slots"] > div > div{max-height:none !important}
+  [data-m="slots"] button{max-width:100% !important}
+  [data-m="slots"] button{min-height:46px !important}
+  [data-eq="1"] > div > div:first-child{height:230px !important}
+  .clinic-gallery{grid-template-columns:1fr 1fr;grid-template-rows:220px 150px;gap:10px}
+  .clinic-gallery figure:first-child{grid-column:span 2;grid-row:auto}
+  .clinic-gallery figcaption{left:10px;bottom:10px;font-size:10px;padding:6px 8px}
+  [data-m="servlist"] > div{font-size:16px !important;padding:15px 0 !important}
+  footer{padding:22px 16px !important;font-size:12px !important;flex-direction:column !important}
+  #contacto{padding:52px 18px !important}
+  #contacto h2{font-size:34px !important}
+}
+@media (max-width: 720px){
+  [data-m="slothead"]{flex-direction:column !important;align-items:stretch !important;gap:12px !important}
+  [data-m="slots"]{overflow-x:hidden !important;min-width:0 !important}
+  [data-m="cols2"] > *{min-width:0 !important;max-width:100% !important}
+  #contacto [data-m="cols2"] > div:last-child > div{align-items:flex-start !important;flex-wrap:wrap !important}
+  #contacto [data-m="cols2"] > div:last-child > div > span:last-child,
+  #contacto [data-m="cols2"] > div:last-child > a{max-width:100% !important;overflow-wrap:anywhere !important;text-align:left !important}
+  #contacto [data-m="cols2"] > div:last-child > a{align-self:stretch !important;text-align:center !important}
+}
+@media (max-width: 460px){
+  [data-m="brandname"]{font-size:13.5px !important;letter-spacing:0 !important}
+  [data-m="brandsub"]{display:none !important}
+  nav{padding:11px 13px !important}
+  nav svg{width:21px !important;height:21px !important}
+  nav a[href="#agendar"]{padding:11px 14px !important;font-size:11.5px !important;letter-spacing:0.05em !important;white-space:nowrap !important}
+  nav > span:first-child{gap:9px !important;min-width:0 !important}
+}
+@media (max-width: 400px){
+  header h1{font-size:32px !important}
+  section h2{font-size:26px !important}
+  [data-m="calgrid"] button{height:38px !important;font-size:13px !important}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal-on-scroll{opacity:1;transform:none;transition:none}
+  .marquee-track{animation:none !important}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
 </style>
 </head>
 <body>
+<div style="min-height:100%;background:#F1F0EB">
 
-<div class="topbar">
-  <span class="brand">
-    <img src="logo-consultorio.png.jpeg" alt="" style="height:30px;width:auto;object-fit:contain;background:#fff;border-radius:5px;padding:2px" onerror="this.style.display='none'">
-    <span>Panel de reservas<span class="sub">Consultorio Oftalmológico</span></span>
-  </span>
-  <span class="actions">
-    <a href="index.html" style="color:#fff;opacity:.85;text-decoration:none;font-weight:600">← Sitio</a>
-    <button id="btn-logout" type="button" style="display:none">Cerrar sesión</button>
-  </span>
-</div>
-
-<div id="login-screen">
-  <div class="login-card">
-    <h1>Ingresar</h1>
-    <p>Ingresá la clave del consultorio para ver las reservas.</p>
-    <label for="in-clave">Clave</label>
-    <input id="in-clave" type="password" placeholder="••••••••" autocomplete="off">
-    <label class="login-row-check"><input id="in-recordar" type="checkbox" checked style="width:16px;height:16px"> Recordar en este dispositivo</label>
-    <button id="btn-entrar" type="button">Entrar</button>
-    <div id="login-error" class="login-error" style="display:none"></div>
-  </div>
-</div>
-
-<div id="dashboard">
-  <div class="stats">
-    <div class="stat-card"><div class="num" id="stat-hoy">–</div><div class="label">Hoy</div></div>
-    <div class="stat-card"><div class="num" id="stat-proximas">–</div><div class="label">Próximas</div></div>
-    <div class="stat-card"><div class="num" id="stat-total">–</div><div class="label">Total</div></div>
-  </div>
-
-  <div class="toolbar">
-    <div class="tabs" id="tabs-periodo">
-      <button data-periodo="hoy" type="button">Hoy</button>
-      <button data-periodo="proximas" type="button" class="active">Próximas</button>
-      <button data-periodo="todas" type="button">Todas</button>
+  <nav style="position:sticky;top:0;z-index:60;background:#14496E;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 40px">
+    <span style="display:flex;align-items:center;gap:12px">
+      <img src="logo-consultorio.png.jpeg" alt="Consultorio Oftalmológico" style="height:42px;width:auto;max-width:220px;object-fit:contain;display:block;background:#fff;border-radius:6px;padding:3px">
+      <span style="display:flex;flex-direction:column;line-height:1.15">
+        <span data-m="brandname" style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Consultorio Oftalmológico</span>
+        <span data-m="brandsub" style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;opacity:.7">San José de Mayo</span>
+      </span>
+    </span>
+    <div data-m="navlinks" style="display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="#equipo">Oftalmólogos</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#contacto">Contacto</a>
     </div>
-    <select id="filtro-medico"><option value="">Todos los oftalmólogos</option></select>
-    <input id="buscar" type="search" placeholder="Buscar por nombre o cédula…">
-    <button id="btn-refresh" class="refresh-btn" type="button">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg>
-      Actualizar
-    </button>
-  </div>
-  <div class="updated-note" id="updated-note"></div>
+    <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px">Agendar</a>
+  </nav>
 
-  <div id="lista"></div>
+  <header style="background:linear-gradient(120deg,#14496E 0%,#14496E 45%,#2C7BA8 100%);color:#fff;padding:104px 40px 112px">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#A8D8EE">Consultorio Oftalmológico · San José de Mayo</div>
+      <h1 class="reveal-on-scroll" style="margin:26px 0 0;font-size:96px;line-height:0.95;font-weight:700;letter-spacing:-0.035em;max-width:16ch;text-wrap:pretty">Consultas <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h1>
+      <p style="margin:32px 0 0;font-size:20px;line-height:1.5;opacity:.88;max-width:52ch">Consultas y estudios oftalmológicos con profesionales especializados. Elegí el oftalmólogo, el servicio y solicitá el día y horario que prefieras.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:42px">
+        <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px">Agendar sin espera</a>
+        <a href="#equipo" style="border:1.5px solid rgba(255,255,255,.6);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px">Conocé al equipo</a>
+        <a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="border:1.5px solid rgba(255,255,255,.6);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:17px 32px;border-radius:999px">WhatsApp</a>
+      </div>
+      <div style="margin-top:40px;font-size:15px;letter-spacing:0.04em;opacity:.8">Sarandí 575 · San José de Mayo</div>
+    </div>
+  </header>
+
+  <div class="marquee-band" aria-hidden="true" style="overflow:hidden;background:#A8D8EE;border-top:1px solid #14496E;border-bottom:1px solid #14496E;padding:16px 0">
+    <div class="marquee-track" style="display:flex;width:max-content;white-space:nowrap;animation:marqueeScroll 26s linear infinite">
+      <span class="marquee-set" style="display:flex;align-items:center">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">San José, <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">Uruguay</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Cuidamos tu <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">visión</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Reserva online, <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">sin esperas</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Sarandí <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">575</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+      </span>
+      <span class="marquee-set" style="display:flex;align-items:center" aria-hidden="true">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">San José, <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">Uruguay</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Cuidamos tu <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">visión</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Reserva online, <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">sin esperas</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">Sarandí <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">575</span></span>
+        <img src="assets/eye-icon.png" alt="" style="height:20px;width:auto;flex:none">
+      </span>
+    </div>
+  </div>
+
+  <section id="agendar" style="padding:88px 40px 36px">
+    <div style="max-width:1180px;margin:0 auto;text-align:center">
+      <div style="font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#14496E">Agenda online</div>
+      <h2 class="reveal-on-scroll" style="margin:20px 0 0;font-size:72px;line-height:1;font-weight:700;letter-spacing:-0.035em">Agendá <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h2>
+      <p style="margin:22px 0 0;font-size:19px;color:#4C5E68">Elegí oftalmólogo, servicio, día y horario. Completás tus datos y te confirmamos la reserva.</p>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div data-m="cardwrap" style="max-width:1180px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 24px 60px rgba(15,34,48,.10);padding:14px">
+      <div data-m="bookgrid" style="display:grid;grid-template-columns:330px 1fr 320px;border:1px solid #E2E7E9;border-radius:16px;overflow:hidden;min-height:600px">
+
+        <aside data-m="aside" style="padding:30px 26px;border-right:1px solid #E2E7E9;display:flex;flex-direction:column;gap:20px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Oftalmólogo</div>
+          <div id="medicos-list" style="display:flex;flex-direction:column;gap:8px"></div>
+          <label style="display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Servicio
+            <select id="servicio-select" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">
+              <option>Receta para lentes convencionales y lentes de contacto</option>
+              <option>Paquimetría</option>
+              <option>Curva de Pío</option>
+              <option>OCT</option>
+              <option>Fondo de ojo</option>
+            </select>
+          </label>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14px;color:#42545E;margin-top:auto">
+            <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>Sarandí 575, San José de Mayo</div>
+            <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg>America/Montevideo</div>
+          </div>
+        </aside>
+
+        <div data-m="calcol" style="padding:28px 30px 32px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div style="font-size:22px;font-weight:600;letter-spacing:-0.01em"><span id="mes-label"></span> <span id="anio-label" style="color:#93A5AF"></span></div>
+            <div style="display:flex;gap:6px">
+              <button id="mes-anterior" type="button" class="btn-nav-icon" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px">‹</button>
+              <button id="mes-siguiente" type="button" class="btn-nav-icon" style="width:36px;height:36px;border:1px solid #DFE5E8;background:#fff;border-radius:9px;cursor:pointer;color:#42545E;font-size:15px">›</button>
+            </div>
+          </div>
+          <div data-m="calhead" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">DOM</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">LUN</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MAR</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">MIÉ</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">JUE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">VIE</div>
+            <div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#93A5AF">SÁB</div>
+          </div>
+          <div id="cal-grid" data-m="calgrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+          <p style="margin:20px 0 0;font-size:12.5px;color:#93A5AF;line-height:1.5">Los días y horarios disponibles se definen por profesional y pueden variar semana a semana.</p>
+        </div>
+
+        <div data-m="slots" style="padding:28px 24px;border-left:1px solid #E2E7E9;background:#FBFBFC;display:flex;flex-direction:column">
+
+          <div id="panel-elegir" style="display:flex;flex-direction:column;height:100%">
+            <div data-m="slothead" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+              <div id="dia-elegido-label" style="font-size:16px;font-weight:600"></div>
+            </div>
+            <div id="sin-dia-msg" style="display:none;margin:0;font-size:14px;color:#93A5AF;line-height:1.5"></div>
+            <div id="mes-vacio-box" style="display:none;margin-top:14px;background:#E7F0F5;border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.5;color:#14496E">
+              <div id="mes-vacio-texto" style="font-weight:600"></div>
+              <button id="ir-proximo-mes" type="button" class="mesvacio-btn" style="margin-top:10px;border:1px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">Ver próximo mes</button>
+            </div>
+            <div id="horarios-list" style="display:flex;flex-direction:column;gap:8px;overflow-y:auto;max-height:450px;padding-right:2px"></div>
+            <p id="sin-horarios-msg" style="display:none;margin:0;font-size:14px;color:#93A5AF;line-height:1.5">No hay horarios disponibles ese día. Probá con otra fecha o escribinos al 092 49 49 61.</p>
+          </div>
+
+          <div id="panel-datos" style="display:none;animation:cnsIn .25s ease both;flex-direction:column;gap:13px"></div>
+
+          <div id="panel-listo" style="display:none;animation:cnsIn .25s ease both;flex-direction:column;gap:16px;justify-content:center;height:100%"></div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="equipo" style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 class="reveal-on-scroll" style="margin:0 0 32px;font-size:44px;font-weight:700;letter-spacing:-0.03em">Nuestros oftalmólogos</h2>
+      <div data-m="cols3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" data-eq="1">
+        <div class="reveal-on-scroll" style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dr-rivas.jpg" alt="Dr. Rodrigo Rivas" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover;object-position:center top"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dr. Rodrigo Rivas</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujano Oftalmólogo</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+        <div class="reveal-on-scroll" style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dra-saldana.jpg" alt="Dra. Rosario Saldaña" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dra. Rosario Saldaña</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujana Oftalmóloga</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+        <div class="reveal-on-scroll" style="background:#fff;border-radius:16px;overflow:hidden">
+          <div style="height:300px"><img src="assets/dr-perez.jpg" alt="Dr. Tomás Pérez" loading="lazy" style="width:100%;height:100%;display:block;object-fit:cover;object-position:center top"></div>
+          <div style="padding:22px 24px 26px">
+            <h3 style="margin:0;font-size:23px;font-weight:700;letter-spacing:-0.02em">Dr. Tomás Pérez</h3>
+            <div style="margin-top:6px;font-size:15px;color:#14496E;font-weight:600">Cirujano Oftalmólogo</div>
+            <div style="margin-top:4px;font-size:14px;color:#64757F">Consultorio Oftalmológico</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicios" style="padding:0 40px 88px">
+    <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:start">
+      <h2 class="reveal-on-scroll" style="margin:0;font-size:44px;font-weight:700;letter-spacing:-0.03em">Servicios</h2>
+      <div data-m="servlist" style="display:flex;flex-direction:column">
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Receta para lentes convencionales y lentes de contacto</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Paquimetría</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Curva de Pío</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>OCT</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Control de presión intraocular</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Fondo de ojo</div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;border-bottom:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Refractometrías</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 class="reveal-on-scroll" style="margin:0 0 28px;font-size:44px;font-weight:700;letter-spacing:-0.03em">El consultorio</h2>
+      <div class="clinic-gallery reveal-on-scroll">
+        <figure><img src="a06ef200-1d7f-4df1-bb3c-33fe596c7e7b.JPG" alt="Equipamiento oftalmológico del consultorio" loading="lazy"><figcaption>Equipamiento preciso</figcaption></figure>
+        <figure><img src="47f00d69-e809-4d13-beef-bbb7f1e594e6.JPG" alt="Atención oftalmológica en el consultorio" loading="lazy"><figcaption>Atención profesional</figcaption></figure>
+        <figure><img src="7b3d87ec-92e0-461a-9a3e-b7ecdf832bd6.JPG" alt="Tecnología del consultorio oftalmológico" loading="lazy"><figcaption>Tecnología clínica</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" style="background:#14496E;color:#fff;padding:80px 40px">
+    <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start">
+      <div>
+        <h2 class="reveal-on-scroll" style="margin:0;font-size:54px;line-height:1;font-weight:700;letter-spacing:-0.035em">Te esperamos en <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">Sarandí 575.</span></h2>
+        <p style="margin:26px 0 0;font-size:18px;line-height:1.55;opacity:.85">San José de Mayo · Uruguay</p>
+        <div style="margin-top:28px;border-radius:14px;overflow:hidden;background:#E7F0F5;aspect-ratio:16/10;min-height:240px">
+          <iframe title="Mapa de ubicación del Consultorio Oftalmológico" src="https://www.google.com/maps?q=Sarand%C3%AD+575%2C+San+Jos%C3%A9+de+Mayo%2C+Uruguay&z=16&output=embed&iwloc=near" style="width:100%;height:100%;min-height:240px;border:0;display:block" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-size:16px">
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Dirección</span><span style="font-weight:600">Sarandí 575</span></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">Teléfono</span><a href="tel:+59892494961" style="color:#A8D8EE;font-weight:600">092 494 961</a></div>
+        <div style="display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.25)"><span style="opacity:.7">WhatsApp</span><a href="https://wa.me/59892494961" target="_blank" rel="noopener" style="color:#A8D8EE;font-weight:600">092 494 961</a></div>
+        <a href="#agendar" style="margin-top:10px;align-self:flex-start;background:#A8D8EE;color:#0F2230;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:16px 30px;border-radius:999px">Agendar sin espera</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 40px 88px">
+    <div style="max-width:1180px;margin:0 auto;background:#E7F0F5;border-radius:18px;padding:34px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#14496E">Después de tu consulta</div>
+        <h2 style="margin:10px 0 0;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.025em">Tu opinión nos ayuda a mejorar.</h2>
+        <p style="margin:12px 0 0;font-size:15px;line-height:1.5;color:#4C5E68">Escribinos por WhatsApp y contanos cómo fue tu experiencia en el consultorio.</p>
+      </div>
+      <a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="flex:none;background:#25D366;color:#073B22;border-radius:999px;padding:16px 24px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase">Enviar opinión</a>
+    </div>
+  </section>
+
+  <footer style="padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#64757F">
+    <span>Consultorio Oftalmológico · San José de Mayo</span>
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 494 961 <a href="admin.html" class="footer-access" title="Acceso al panel de reservas">Acceso</a></span>
+  </footer>
 </div>
 
 <script>
 (() => {
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzklZw6a6et58cFmr2xROjMdtFO9FqQuYqqH71vUA3qazfaU2mOw74DL3wpIRdrtalD_Q/exec';
-  const LS_KEY = 'consultorio_clave';
+  const activate = () => {
+    const items = document.querySelectorAll('.reveal-on-scroll');
+    if (!items.length) return false;
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      items.forEach((item) => item.classList.add('is-visible'));
+      return true;
+    }
+    const observer = new IntersectionObserver((entries, currentObserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        currentObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    items.forEach((item) => observer.observe(item));
+    return true;
+  };
+  const start = () => { if (!activate()) window.setTimeout(activate, 250); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+
+<script>
+(() => {
+  // Pegá acá la URL de la app web de Google Apps Script (termina en /exec)
+  const ENDPOINT_SHEETS = 'https://script.google.com/macros/s/AKfycbyArHa2213mzivo_I9IoiXuNlE6ShYQp9A3Pi_6AhQLglR8hDomV7OpaWBNq3bVxt0RDg/exec';
+  const INTERVALO = 20; // minutos
 
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const DIAS_CORTOS = ['dom','lun','mar','mié','jue','vie','sáb'];
+  const NOMS = ['dom','lun','mar','mié','jue','vie','sáb'];
 
-  const loginScreen = document.getElementById('login-screen');
-  const dashboard = document.getElementById('dashboard');
-  const inClave = document.getElementById('in-clave');
-  const inRecordar = document.getElementById('in-recordar');
-  const btnEntrar = document.getElementById('btn-entrar');
-  const loginError = document.getElementById('login-error');
-  const btnLogout = document.getElementById('btn-logout');
-  const btnRefresh = document.getElementById('btn-refresh');
-  const updatedNote = document.getElementById('updated-note');
-  const filtroMedico = document.getElementById('filtro-medico');
-  const buscar = document.getElementById('buscar');
-  const lista = document.getElementById('lista');
-  const tabsPeriodo = document.getElementById('tabs-periodo');
+  const MEDICOS = [
+    { nombre: 'Dr. Rodrigo Rivas', especialidad: 'Cirujano Oftalmólogo', dias: [1, 3, 5], rangos: [[540, 750], [870, 1080]] },
+    { nombre: 'Dra. Rosario Saldaña', especialidad: 'Cirujana Oftalmóloga', dias: [2, 4], rangos: [[600, 780], [900, 1140]] },
+    { nombre: 'Dr. Tomás Pérez', especialidad: 'Cirujano Oftalmólogo', dias: [1, 2, 4, 6], rangos: [[570, 780], [900, 1110]] }
+  ];
 
-  let reservas = [];
-  let periodo = 'proximas';
-  let claveActual = '';
+  const hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
 
-  function hoyStr() {
-    const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  }
+  const state = {
+    medico: 0,
+    servicio: 'Receta para lentes convencionales y lentes de contacto',
+    mes: new Date().getMonth(),
+    anio: new Date().getFullYear(),
+    sel: null,
+    hora: null,
+    etapa: 'elegir',
+    nombre: '', apellido: '', cedula: '', nacimiento: '', diabetes: '', error: '',
+    enviando: false, canal: null, ocupadas: []
+  };
 
-  function fechaLabel(fechaStr) {
-    const [y, m, d] = fechaStr.split('-').map(Number);
-    const fecha = new Date(y, m - 1, d);
-    return DIAS[fecha.getDay()] + ' ' + d + ' de ' + MESES[m - 1];
-  }
-
-  async function cargar(clave) {
-    loginError.style.display = 'none';
-    btnEntrar.disabled = true;
-    btnEntrar.textContent = 'Entrando…';
+  // ---------- Horas ya reservadas ----------
+  const ocupadosCache = {};
+  let ocupadosToken = 0;
+  async function cargarOcupados(oftalmologo, fecha) {
+    const key = oftalmologo + '|' + fecha;
+    if (ocupadosCache[key]) return ocupadosCache[key];
     try {
-      const resp = await fetch(ENDPOINT + '?clave=' + encodeURIComponent(clave));
+      const resp = await fetch(ENDPOINT_SHEETS + '?ocupados=1&fecha=' + encodeURIComponent(fecha) + '&oftalmologo=' + encodeURIComponent(oftalmologo));
       const data = await resp.json();
-      if (!data.ok) {
-        loginError.textContent = 'Clave incorrecta.';
-        loginError.style.display = 'block';
-        btnEntrar.disabled = false;
-        btnEntrar.textContent = 'Entrar';
+      const horas = Array.isArray(data.horas) ? data.horas : [];
+      ocupadosCache[key] = horas;
+      return horas;
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function fmt(mins) {
+    const h = Math.floor(mins / 60), mm = String(mins % 60).padStart(2, '0');
+    return String(h).padStart(2, '0') + ':' + mm;
+  }
+  function etiqueta(d) {
+    return d ? DIAS_CORTOS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] : '';
+  }
+  function horariosDe(d) {
+    if (!d) return [];
+    const m = MEDICOS[state.medico];
+    if (!m.dias.includes(d.getDay())) return [];
+    const rangos = d.getDay() === 6 ? [m.rangos[0]] : m.rangos;
+    const out = [];
+    for (const [a, b] of rangos) for (let t = a; t <= b - INTERVALO; t += INTERVALO) out.push(t);
+    return out;
+  }
+
+  // ---------- Médicos ----------
+  const medicosList = document.getElementById('medicos-list');
+  function renderMedicos() {
+    medicosList.innerHTML = '';
+    MEDICOS.forEach((m, i) => {
+      const active = i === state.medico;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'medico-btn';
+      btn.style.cssText = 'text-align:left;padding:14px 16px;border-radius:12px;cursor:pointer;border:1px solid ' +
+        (active ? '#14496E' : '#DCE2E5') + ';background:' + (active ? '#14496E' : '#fff') + ';color:' + (active ? '#fff' : '#0F2230');
+      btn.innerHTML =
+        '<span style="display:block;font-size:15.5px;font-weight:700;letter-spacing:-0.01em">' + m.nombre + '</span>' +
+        '<span style="display:block;font-size:12.5px;margin-top:3px;opacity:.75">' + m.especialidad + '</span>' +
+        '<span style="display:block;font-size:11.5px;margin-top:6px;opacity:.6">Atiende ' + m.dias.map(d => NOMS[d]).join(' · ') + '</span>';
+      btn.addEventListener('click', () => {
+        state.medico = i; state.sel = null; state.hora = null; state.etapa = 'elegir';
+        renderMedicos(); renderCalendar(); renderElegirPanel(); showPanel('elegir');
+      });
+      medicosList.appendChild(btn);
+    });
+  }
+
+  const servicioSelect = document.getElementById('servicio-select');
+  servicioSelect.value = state.servicio;
+  servicioSelect.addEventListener('change', (e) => { state.servicio = e.target.value; });
+
+  // ---------- Calendario ----------
+  const mesLabelEl = document.getElementById('mes-label');
+  const anioLabelEl = document.getElementById('anio-label');
+  const calGrid = document.getElementById('cal-grid');
+
+  function renderCalendar() {
+    mesLabelEl.textContent = MESES[state.mes];
+    anioLabelEl.textContent = String(state.anio);
+    calGrid.innerHTML = '';
+    const m = MEDICOS[state.medico];
+    const primero = new Date(state.anio, state.mes, 1);
+    const total = new Date(state.anio, state.mes + 1, 0).getDate();
+
+    for (let i = 0; i < primero.getDay(); i++) {
+      const cell = document.createElement('button');
+      cell.type = 'button'; cell.disabled = true;
+      cell.style.cssText = 'visibility:hidden;border:none;background:none;height:46px';
+      calGrid.appendChild(cell);
+    }
+    for (let n = 1; n <= total; n++) {
+      const d = new Date(state.anio, state.mes, n);
+      const activo = d >= hoy0 && m.dias.includes(d.getDay());
+      const elegido = state.sel && state.sel.getTime() === d.getTime();
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = String(n);
+      btn.disabled = !activo;
+      btn.style.cssText = 'height:46px;border-radius:10px;font-size:15px;font-family:inherit;font-weight:' + (elegido ? 700 : 500) +
+        ';border:1px solid transparent;background:' + (elegido ? '#14496E' : activo ? '#E4EDF3' : 'transparent') +
+        ';color:' + (elegido ? '#fff' : activo ? '#14496E' : '#C2CBD0') +
+        ';cursor:' + (activo ? 'pointer' : 'default') + ';transition:background .15s ease';
+      if (activo) {
+        btn.addEventListener('click', () => {
+          state.sel = d; state.hora = null; state.etapa = 'elegir'; state.ocupadas = [];
+          renderCalendar(); renderElegirPanel(); showPanel('elegir');
+          const fechaStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          const medicoNombre = MEDICOS[state.medico].nombre;
+          const miToken = ++ocupadosToken;
+          cargarOcupados(medicoNombre, fechaStr).then((horas) => {
+            if (miToken !== ocupadosToken || state.sel !== d) return;
+            state.ocupadas = horas;
+            renderHorarios();
+          });
+        });
+      }
+      calGrid.appendChild(btn);
+    }
+  }
+
+  document.getElementById('mes-anterior').addEventListener('click', () => {
+    state.mes = state.mes === 0 ? 11 : state.mes - 1;
+    if (state.mes === 11) state.anio -= 1;
+    renderCalendar(); renderElegirPanel();
+  });
+  document.getElementById('mes-siguiente').addEventListener('click', avanzarMes);
+  document.getElementById('ir-proximo-mes').addEventListener('click', avanzarMes);
+  function avanzarMes() {
+    state.mes = state.mes === 11 ? 0 : state.mes + 1;
+    if (state.mes === 0) state.anio += 1;
+    renderCalendar(); renderElegirPanel();
+  }
+
+  // ---------- Panel "elegir" (horarios) ----------
+  const diaElegidoLabel = document.getElementById('dia-elegido-label');
+  const sinDiaMsg = document.getElementById('sin-dia-msg');
+  const mesVacioBox = document.getElementById('mes-vacio-box');
+  const mesVacioTexto = document.getElementById('mes-vacio-texto');
+  const horariosList = document.getElementById('horarios-list');
+  const sinHorariosMsg = document.getElementById('sin-horarios-msg');
+
+  function renderElegirPanel() {
+    diaElegidoLabel.textContent = state.sel ? etiqueta(state.sel) : 'Elegí un día';
+
+    const sinDia = state.etapa === 'elegir' && !state.sel;
+    sinDiaMsg.style.display = sinDia ? 'block' : 'none';
+    if (sinDia) sinDiaMsg.textContent = 'Elegí un día en el calendario para ver los horarios disponibles con ' + MEDICOS[state.medico].nombre + '.';
+
+    // ¿hay algún día habilitado en el mes actual?
+    const m = MEDICOS[state.medico];
+    const total = new Date(state.anio, state.mes + 1, 0).getDate();
+    let hayDiasHabiles = false;
+    for (let n = 1; n <= total; n++) {
+      const d = new Date(state.anio, state.mes, n);
+      if (d >= hoy0 && m.dias.includes(d.getDay())) { hayDiasHabiles = true; break; }
+    }
+    const mesVacio = state.etapa === 'elegir' && !state.sel && !hayDiasHabiles;
+    mesVacioBox.style.display = mesVacio ? 'block' : 'none';
+    if (mesVacio) mesVacioTexto.textContent = 'Sin días disponibles en ' + MESES[state.mes] + ' con ' + m.nombre + '.';
+
+    renderHorarios();
+  }
+
+  function renderHorarios() {
+    const mins = horariosDe(state.sel);
+    const ocupadas = state.ocupadas || [];
+    horariosList.innerHTML = '';
+    mins.forEach((x) => {
+      const hhmm = fmt(x);
+      const ocupado = ocupadas.includes(hhmm);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'slot-btn';
+      btn.textContent = ocupado ? (hhmm + ' · Ocupado') : hhmm;
+      btn.disabled = ocupado;
+      if (ocupado) {
+        btn.style.cssText = 'width:100%;padding:13px 0;border:1px solid #0B3355;background:#0B3355;border-radius:10px;font-size:15px;font-weight:600;color:#7FA6C2;cursor:not-allowed;opacity:.95';
+      } else {
+        btn.style.cssText = 'width:100%;padding:13px 0;border:1px solid #DCE2E5;background:#fff;border-radius:10px;font-size:15px;font-weight:600;color:#0F2230;cursor:pointer';
+        btn.addEventListener('click', () => {
+          state.hora = x; state.etapa = 'datos'; state.error = '';
+          renderDatosPanel(); showPanel('datos');
+        });
+      }
+      horariosList.appendChild(btn);
+    });
+
+    const sinHorarios = state.etapa === 'elegir' && !!state.sel && mins.length === 0;
+    sinHorariosMsg.style.display = sinHorarios ? 'block' : 'none';
+  }
+
+  // ---------- Panel "datos" ----------
+  const panelDatos = document.getElementById('panel-datos');
+
+  function renderDatosPanel() {
+    const m = MEDICOS[state.medico];
+    const resumen = (state.sel && state.hora != null)
+      ? m.nombre + ' · ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' · ' + state.servicio
+      : '';
+
+    panelDatos.innerHTML =
+      '<button type="button" id="btn-volver" class="link-back" style="align-self:flex-start;border:none;background:none;padding:0;font-size:13px;font-weight:600;color:#14496E;cursor:pointer">‹ Cambiar horario</button>' +
+      '<div style="background:#E7F0F5;border-radius:12px;padding:14px 16px">' +
+        '<div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#14496E">Tu solicitud</div>' +
+        '<div style="font-size:15.5px;font-weight:600;margin-top:6px;line-height:1.4">' + resumen + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px">' +
+        '<label style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Nombre *' +
+          '<input id="in-nombre" type="text" placeholder="María" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400;width:100%">' +
+        '</label>' +
+        '<label style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Apellido *' +
+          '<input id="in-apellido" type="text" placeholder="Pérez" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400;width:100%">' +
+        '</label>' +
+      '</div>' +
+      '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Cédula *' +
+        '<input id="in-cedula" type="text" placeholder="1.234.567-8" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
+      '</label>' +
+      '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Fecha de nacimiento *' +
+        '<input id="in-nacimiento" type="date" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
+      '</label>' +
+      '<div style="display:flex;flex-direction:column;gap:7px">' +
+        '<span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">¿Tenés diabetes? *</span>' +
+        '<div style="display:flex;gap:8px">' +
+          '<button type="button" id="btn-diabetes-si" style="flex:1;padding:12px 0;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;border:1px solid #DCE2E5;background:#fff;color:#42545E">Sí</button>' +
+          '<button type="button" id="btn-diabetes-no" style="flex:1;padding:12px 0;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;border:1px solid #DCE2E5;background:#fff;color:#42545E">No</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="form-error" style="display:none;font-size:13px;color:#C22A12;font-weight:600"></div>' +
+      '<button type="button" id="btn-confirmar" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Solicitar hora</button>';
+
+    const inNombre = document.getElementById('in-nombre');
+    const inApellido = document.getElementById('in-apellido');
+    const inCedula = document.getElementById('in-cedula');
+    const inNacimiento = document.getElementById('in-nacimiento');
+    const btnSi = document.getElementById('btn-diabetes-si');
+    const btnNo = document.getElementById('btn-diabetes-no');
+    const errorDiv = document.getElementById('form-error');
+    const btnConfirmar = document.getElementById('btn-confirmar');
+
+    inNombre.value = state.nombre;
+    inApellido.value = state.apellido;
+    inCedula.value = state.cedula;
+    inNacimiento.value = state.nacimiento;
+
+    inNombre.addEventListener('input', (e) => { state.nombre = e.target.value; });
+    inApellido.addEventListener('input', (e) => { state.apellido = e.target.value; });
+    inCedula.addEventListener('input', (e) => { state.cedula = e.target.value; });
+    inNacimiento.addEventListener('change', (e) => { state.nacimiento = e.target.value; });
+
+    function pintarDiabetes() {
+      const si = state.diabetes === 'si', no = state.diabetes === 'no';
+      btnSi.style.border = '1px solid ' + (si ? '#14496E' : '#DCE2E5');
+      btnSi.style.background = si ? '#14496E' : '#fff';
+      btnSi.style.color = si ? '#fff' : '#42545E';
+      btnNo.style.border = '1px solid ' + (no ? '#14496E' : '#DCE2E5');
+      btnNo.style.background = no ? '#14496E' : '#fff';
+      btnNo.style.color = no ? '#fff' : '#42545E';
+    }
+    btnSi.addEventListener('click', () => { state.diabetes = 'si'; pintarDiabetes(); });
+    btnNo.addEventListener('click', () => { state.diabetes = 'no'; pintarDiabetes(); });
+    pintarDiabetes();
+
+    function setError(msg) {
+      state.error = msg;
+      errorDiv.style.display = msg ? 'block' : 'none';
+      errorDiv.textContent = msg;
+    }
+
+    document.getElementById('btn-volver').addEventListener('click', () => {
+      state.etapa = 'elegir'; state.hora = null;
+      renderCalendar(); renderElegirPanel(); showPanel('elegir');
+    });
+
+    btnConfirmar.addEventListener('click', async () => {
+      if (state.nombre.trim().length < 2) return setError('Escribí tu nombre.');
+      if (state.apellido.trim().length < 2) return setError('Escribí tu apellido.');
+      if (state.cedula.replace(/\D/g, '').length < 7) return setError('Ingresá tu cédula.');
+      if (!state.nacimiento) return setError('Ingresá tu fecha de nacimiento.');
+      if (!state.diabetes) return setError('Indicá si tenés diabetes.');
+      setError('');
+
+      const m2 = MEDICOS[state.medico];
+      const hh = fmt(state.hora);
+      const f = state.sel;
+      const fecha = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
+      const nombreCompleto = (state.nombre.trim() + ' ' + state.apellido.trim()).trim();
+      const datos = {
+        enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }), nombre: nombreCompleto, cedula: state.cedula.trim(),
+        nacimiento: state.nacimiento, oftalmologo: m2.nombre, servicio: state.servicio,
+        fecha, hora: hh, diabetes: state.diabetes === 'si' ? 'Sí' : 'No', origen: 'web'
+      };
+
+      state.enviando = true;
+      btnConfirmar.disabled = true;
+      btnConfirmar.textContent = 'Verificando…';
+
+      const keyOcupado = m2.nombre + '|' + fecha;
+      delete ocupadosCache[keyOcupado]; // forzamos a repreguntarle al Sheet, no usar la caché
+      const ocupadasAhora = await cargarOcupados(m2.nombre, fecha);
+      if (ocupadasAhora.includes(hh)) {
+        state.ocupadas = ocupadasAhora;
+        state.enviando = false;
+        state.etapa = 'elegir'; state.hora = null;
+        renderCalendar(); renderElegirPanel(); showPanel('elegir');
+        sinHorariosMsg.style.display = 'none';
+        diaElegidoLabel.textContent = etiqueta(state.sel) + ' — esa hora se acaba de ocupar, elegí otra';
         return;
       }
-      claveActual = clave;
-      reservas = data.reservas || [];
-      if (inRecordar.checked) {
-        try { localStorage.setItem(LS_KEY, clave); } catch (e) {}
+
+      btnConfirmar.textContent = 'Enviando…';
+
+      try {
+        await fetch(ENDPOINT_SHEETS, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+        ocupadosCache[keyOcupado] = ocupadasAhora.concat([hh]);
+        state.etapa = 'listo'; state.canal = 'planilla'; state.enviando = false; setError('');
+        renderListoPanel(); showPanel('listo');
+      } catch (e) {
+        state.enviando = false;
+        btnConfirmar.disabled = false;
+        btnConfirmar.textContent = 'Solicitar hora';
+        setError('No pudimos enviar la solicitud. Probá de nuevo o escribinos al 092 49 49 61.');
       }
-      mostrarDashboard();
-    } catch (e) {
-      loginError.textContent = 'No pudimos conectar. Probá de nuevo.';
-      loginError.style.display = 'block';
-      btnEntrar.disabled = false;
-      btnEntrar.textContent = 'Entrar';
-    }
-  }
-
-  async function refrescar() {
-    btnRefresh.classList.add('loading');
-    try {
-      const resp = await fetch(ENDPOINT + '?clave=' + encodeURIComponent(claveActual));
-      const data = await resp.json();
-      if (data.ok) {
-        reservas = data.reservas || [];
-        render();
-        updatedNote.textContent = 'Actualizado a las ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
-      }
-    } catch (e) {}
-    btnRefresh.classList.remove('loading');
-  }
-
-  function mostrarDashboard() {
-    loginScreen.style.display = 'none';
-    dashboard.style.display = 'block';
-    btnLogout.style.display = 'inline-block';
-
-    const medicos = Array.from(new Set(reservas.map(r => r.oftalmologo).filter(Boolean))).sort();
-    filtroMedico.innerHTML = '<option value="">Todos los oftalmólogos</option>' +
-      medicos.map(m => '<option value="' + m.replace(/"/g, '&quot;') + '">' + m + '</option>').join('');
-
-    updatedNote.textContent = 'Actualizado a las ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
-    render();
-  }
-
-  function render() {
-    const hoy = hoyStr();
-    let filtradas = reservas.filter(r => r.fecha);
-
-    if (periodo === 'hoy') filtradas = filtradas.filter(r => r.fecha === hoy);
-    else if (periodo === 'proximas') filtradas = filtradas.filter(r => r.fecha > hoy);
-    // 'todas' = sin filtro de fecha
-
-    const medico = filtroMedico.value;
-    if (medico) filtradas = filtradas.filter(r => r.oftalmologo === medico);
-
-    const q = buscar.value.trim().toLowerCase();
-    if (q) {
-      filtradas = filtradas.filter(r =>
-        (r.nombre || '').toLowerCase().includes(q) ||
-        (r.cedula || '').toLowerCase().includes(q)
-      );
-    }
-
-    filtradas.sort((a, b) => (a.fecha + ' ' + a.hora).localeCompare(b.fecha + ' ' + b.hora));
-
-    document.getElementById('stat-hoy').textContent = reservas.filter(r => r.fecha === hoy).length;
-    document.getElementById('stat-proximas').textContent = reservas.filter(r => r.fecha > hoy).length;
-    document.getElementById('stat-total').textContent = reservas.length;
-
-    lista.innerHTML = '';
-
-    if (filtradas.length === 0) {
-      lista.innerHTML =
-        '<div class="empty-state">' +
-        '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 9h18"></path><path d="M8 3v4M16 3v4"></path></svg>' +
-        '<div>No hay reservas para mostrar con estos filtros.</div>' +
-        '</div>';
-      return;
-    }
-
-    const grupos = {};
-    const orden = [];
-    filtradas.forEach(r => {
-      if (!grupos[r.fecha]) { grupos[r.fecha] = []; orden.push(r.fecha); }
-      grupos[r.fecha].push(r);
-    });
-
-    orden.forEach(fecha => {
-      const items = grupos[fecha];
-      const esHoy = fecha === hoy;
-      const grupoEl = document.createElement('div');
-      grupoEl.className = 'day-group';
-
-      const heading = document.createElement('div');
-      heading.className = 'day-heading';
-      heading.innerHTML = (esHoy ? 'Hoy · ' : '') + capitalizar(fechaLabel(fecha)) +
-        ' <span class="count">(' + items.length + (items.length === 1 ? ' turno' : ' turnos') + ')</span>';
-      grupoEl.appendChild(heading);
-
-      items.forEach(r => {
-        const card = document.createElement('div');
-        card.className = 'appt-card';
-        const diabetesBadge = r.diabetes === 'Sí' ? '<span class="badge badge-diabetes">Diabetes</span>' : '';
-        card.innerHTML =
-          '<div class="appt-time">' + (r.hora || '') + '</div>' +
-          '<div class="appt-body">' +
-            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + '</div>' +
-            '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
-            '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + '</div>' +
-          '</div>';
-        grupoEl.appendChild(card);
-      });
-
-      lista.appendChild(grupoEl);
     });
   }
 
-  function capitalizar(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // ---------- Panel "listo" ----------
+  const panelListo = document.getElementById('panel-listo');
+
+  function renderListoPanel() {
+    const m = MEDICOS[state.medico];
+    const resumenFinal = (state.sel && state.hora != null)
+      ? ((state.nombre + ' ' + state.apellido).trim() || 'Paciente') + ' — ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '. ' + state.servicio + '.'
+      : '';
+    const notaEnvio = 'Enviamos tu solicitud al consultorio. Te confirman la hora por WhatsApp al 092 49 49 61.';
+
+    panelListo.innerHTML =
+      '<div style="width:44px;height:44px;border-radius:50%;background:#14496E;color:#A8D8EE;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">✓</div>' +
+      '<h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Solicitud <span style="font-family:\'Instrument Serif\',Georgia,serif;font-style:italic;font-weight:400">enviada.</span></h3>' +
+      '<div style="font-size:15px;line-height:1.6;color:#4C5E68">' + resumenFinal + '</div>' +
+      '<p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">' + notaEnvio + '</p>' +
+      '<a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>' +
+      '<button type="button" id="btn-reiniciar" class="btn-outline" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Agendar otra hora</button>';
+
+    document.getElementById('btn-reiniciar').addEventListener('click', () => {
+      state.etapa = 'elegir'; state.sel = null; state.hora = null;
+      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.nacimiento = ''; state.diabetes = ''; state.error = '';
+      renderCalendar(); renderElegirPanel(); showPanel('elegir');
+    });
   }
 
-  tabsPeriodo.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-periodo]');
-    if (!btn) return;
-    periodo = btn.dataset.periodo;
-    tabsPeriodo.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
-    render();
-  });
-  filtroMedico.addEventListener('change', render);
-  buscar.addEventListener('input', render);
-  btnRefresh.addEventListener('click', refrescar);
-  btnEntrar.addEventListener('click', () => {
-    const clave = inClave.value.trim();
-    if (!clave) return;
-    cargar(clave);
-  });
-  inClave.addEventListener('keydown', (e) => { if (e.key === 'Enter') btnEntrar.click(); });
-  btnLogout.addEventListener('click', () => {
-    try { localStorage.removeItem(LS_KEY); } catch (e) {}
-    reservas = []; claveActual = '';
-    dashboard.style.display = 'none';
-    loginScreen.style.display = 'flex';
-    btnLogout.style.display = 'none';
-    inClave.value = '';
-  });
+  function showPanel(which) {
+    document.getElementById('panel-elegir').style.display = which === 'elegir' ? 'flex' : 'none';
+    document.getElementById('panel-datos').style.display = which === 'datos' ? 'flex' : 'none';
+    document.getElementById('panel-listo').style.display = which === 'listo' ? 'flex' : 'none';
+  }
 
-  // Auto-login si hay clave guardada
-  try {
-    const guardada = localStorage.getItem(LS_KEY);
-    if (guardada) { inClave.value = guardada; cargar(guardada); }
-  } catch (e) {}
+  renderMedicos();
+  renderCalendar();
+  renderElegirPanel();
+  showPanel('elegir');
 })();
 </script>
 </body>
