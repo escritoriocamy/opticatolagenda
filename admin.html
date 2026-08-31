@@ -283,10 +283,11 @@
         const card = document.createElement('div');
         card.className = 'appt-card';
         const diabetesBadge = r.diabetes === 'Sí' ? '<span class="badge badge-diabetes">Diabetes</span>' : '';
+        const lentesBadge = r.lentesContacto === 'Sí' ? '<span class="badge badge-diabetes">Usa lentes de contacto</span>' : '';
         card.innerHTML =
           '<div class="appt-time">' + (r.hora || '') + '</div>' +
           '<div class="appt-body">' +
-            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + '</div>' +
+            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
             '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + '</div>' +
           '</div>';
