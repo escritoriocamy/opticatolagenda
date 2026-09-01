@@ -993,14 +993,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
     const nombreCompletoWa = (state.nombre + ' ' + state.apellido).trim() || 'Paciente';
     const mensajeWa =
-      'Hola! Quiero confirmar mi seña para la consulta.\n' +
+      'Hola! Quiero confirmar mi consulta.\n' +
       'Paciente: ' + nombreCompletoWa + '\n' +
       (state.sel && state.hora != null ? 'Turno: ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '\n' : '') +
-      '\nDatos para la transferencia:\n' +
-      'Titular: Consultorio Oftalmológico Maragato SAS\n' +
-      'Banco: BROU\n' +
-      'N° de cuenta: 110586782-00001\n\n' +
-      'Ya hice la transferencia, adjunto el comprobante.';
+      (state.servicio ? 'Servicio: ' + state.servicio : '');
     const linkWaSeña = 'https://wa.me/59892494961?text=' + encodeURIComponent(mensajeWa);
 
     panelListo.innerHTML =
@@ -1008,7 +1004,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       '<h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Solicitud <span style="font-family:\'Instrument Serif\',Georgia,serif;font-style:italic;font-weight:400">enviada.</span></h3>' +
       '<div style="font-size:15px;line-height:1.6;color:#4C5E68">' + resumenFinal + '</div>' +
       '<p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">' + notaEnvio + '</p>' +
-      '<a href="' + linkWaSeña + '" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Confirmar seña por WhatsApp</a>' +
+      '<a href="' + linkWaSeña + '" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Confirmar tu consulta por WhatsApp</a>' +
       '<a href="#resena-form" style="align-self:stretch;text-align:center;background:#14496E;color:#fff;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>' +
       '<button type="button" id="btn-reiniciar" class="btn-outline" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Agendar otra hora</button>';
 
