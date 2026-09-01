@@ -464,6 +464,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
           <span id="resena-msg" style="display:none;font-size:13.5px"></span>
         </div>
       </div>
+
+      <div id="resena-resumen" style="display:none;margin-top:34px;padding-top:28px;border-top:1px solid #C7D6DC;align-items:center;gap:12px"></div>
+      <div id="resena-lista" style="margin-top:18px;display:flex;flex-direction:column;gap:14px"></div>
     </div>
   </section>
 
@@ -1016,6 +1019,48 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     resenaMsg.style.color = tipo === 'error' ? '#B4361A' : '#14496E';
   }
 
+  const resenaResumenEl = document.getElementById('resena-resumen');
+  const resenaListaEl = document.getElementById('resena-lista');
+
+  function estrellasReadonly(n) {
+    let html = '<div style="display:flex;gap:2px">';
+    for (let i = 1; i <= 5; i++) {
+      html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="' + (i <= n ? '#F5A623' : 'none') + '" stroke="#F5A623" stroke-width="1.5"><path d="M12 2.5l2.9 6.06 6.6.73-4.9 4.53 1.28 6.6L12 17.3l-5.88 3.12 1.28-6.6-4.9-4.53 6.6-.73L12 2.5z"/></svg>';
+    }
+    return html + '</div>';
+  }
+
+  function pintarResena(r, alPrincipio) {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:#fff;border:1px solid #DEDCD5;border-radius:12px;padding:16px 18px';
+    card.innerHTML =
+      estrellasReadonly(r.estrellas) +
+      (r.comentario ? '<p style="margin:10px 0 0;font-size:14.5px;line-height:1.5;color:#42545E">' + escapeHtmlResena(r.comentario) + '</p>' : '');
+    if (alPrincipio) resenaListaEl.prepend(card); else resenaListaEl.appendChild(card);
+  }
+
+  function escapeHtmlResena(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  async function cargarResenas() {
+    try {
+      const resp = await fetch(ENDPOINT_SHEETS + '?resenas=1');
+      const data = await resp.json();
+      const resenas = (data && data.resenas) || [];
+      if (resenas.length > 0) {
+        const promedio = resenas.reduce((a, r) => a + r.estrellas, 0) / resenas.length;
+        resenaResumenEl.style.display = 'flex';
+        resenaResumenEl.innerHTML =
+          estrellasReadonly(Math.round(promedio)) +
+          '<span style="font-size:15px;font-weight:700;color:#0F2230">' + promedio.toFixed(1) + '</span>' +
+          '<span style="font-size:13.5px;color:#64757F">· ' + resenas.length + (resenas.length === 1 ? ' opinión' : ' opiniones') + '</span>';
+      }
+      resenas.forEach(r => pintarResena(r, false));
+    } catch (e) {}
+  }
+  cargarResenas();
+
   resenaEnviarBtn.addEventListener('click', async () => {
     if (resenaValor === 0) { mostrarMsgResena('Elegí una cantidad de estrellas.', 'error'); return; }
     resenaEnviarBtn.disabled = true;
@@ -1034,6 +1079,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       resenaComentario.style.display = 'none';
       resenaEnviarBtn.style.display = 'none';
       mostrarMsgResena('¡Gracias por tu opinión!', 'ok');
+      pintarResena({ estrellas: resenaValor, comentario: resenaComentario.value.trim() }, true);
     } catch (e) {
       resenaEnviarBtn.disabled = false;
       resenaEnviarBtn.textContent = 'Enviar opinión';
