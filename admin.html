@@ -314,7 +314,7 @@
           '<div class="appt-body">' +
             '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + pagadoBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
-            '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="tel:' + escapeHtml(r.telefono.replace(/\s/g, '')) + '" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
+            '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="https://wa.me/' + escapeHtml(r.telefono.replace(/\D/g, '')) + '" target="_blank" rel="noopener" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
             '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">' +
               '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado') + '</button>' +
               '<button type="button" class="btn-cancelar" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
