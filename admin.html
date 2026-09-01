@@ -302,7 +302,7 @@
           '<div class="appt-body">' +
             '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
-            '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + '</div>' +
+            '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="tel:' + escapeHtml(r.telefono.replace(/\s/g, '')) + '" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
             '<button type="button" class="btn-cancelar" style="margin-top:10px;background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
           '</div>';
         const btnCancelar = card.querySelector('.btn-cancelar');
