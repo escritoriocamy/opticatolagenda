@@ -111,6 +111,24 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   section h2{font-size:26px !important}
   [data-m="calgrid"] button{height:38px !important;font-size:13px !important}
 }
+
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:#DEDCD5;border:1px solid #DEDCD5}
+.pgroup-title{margin:0 0 4px;font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:34px;line-height:1.05;letter-spacing:-0.01em;color:#14496E}
+.pcell{background:#fff;padding:22px 22px 26px;display:flex;flex-direction:column;transition:background .35s ease}
+.pcell:hover{background:#FAFAF8}
+.pname{font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#64757F;line-height:1.4}
+.pprice{margin-top:12px;display:flex;align-items:baseline;gap:3px;font-size:40px;font-weight:700;line-height:.95;letter-spacing:-0.04em;color:#0F2230;font-variant-numeric:tabular-nums}
+.pcur{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:26px;letter-spacing:0;color:#14496E;transform:translateY(-1px)}
+.pnote{margin-top:10px;font-size:13px;letter-spacing:0.01em;color:#8A7A54}
+[data-m="servlist"] .sname{font-size:19px;font-weight:500;letter-spacing:-0.012em}
+[data-m="servlist"] .snote{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:16px;letter-spacing:0;color:#8A7A54}
+@media (max-width: 720px){
+  .pprice{font-size:34px !important}
+  .pcur{font-size:23px !important}
+  .pgroup-title{font-size:27px !important}
+  [data-m="servlist"] .sname{font-size:17px !important}
+}
+@media (prefers-reduced-motion: reduce){.pcell{transition:none}}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .reveal-on-scroll{opacity:1;transform:none;transition:none}
@@ -292,15 +310,15 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     <div data-m="cols2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:start">
       <h2 class="reveal-on-scroll" style="margin:0;font-size:44px;font-weight:700;letter-spacing:-0.03em">Servicios</h2>
       <div data-m="servlist" style="display:flex;flex-direction:column">
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Consulta oftalmológica integral</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Receta para lentes convencionales y lentes de contacto</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Paquimetría</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Curva de Pío <span style="font-size:13px;color:#8A7A54;font-weight:600">— se agenda por WhatsApp</span></div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>OCT</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Control de presión intraocular</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Fondo de ojo</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Refractometrías</div>
-        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;border-bottom:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span>Urgencias <span style="font-size:13px;color:#8A7A54;font-weight:600">— de 18:00 a 21:00, previa coordinación por celular</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Consulta oftalmológica integral</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Receta para lentes convencionales y lentes de contacto</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Paquimetría</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Curva de Pío </span><span class="snote">— se agenda por WhatsApp</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">OCT</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Control de presión intraocular</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Fondo de ojo</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Refractometrías</span></div>
+        <div class="reveal-on-scroll" style="display:flex;gap:14px;align-items:baseline;padding:18px 0;border-top:1px solid #DEDCD5;border-bottom:1px solid #DEDCD5;font-size:18px"><span style="color:#14496E;font-weight:700">✓</span><span class="sname">Urgencias </span><span class="snote">— de 18:00 a 21:00, previa coordinación por celular</span></div>
       </div>
     </div>
   </section>
@@ -311,68 +329,68 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       <p class="reveal-on-scroll" style="margin:0 0 40px;font-size:16px;color:#64757F;max-width:60ch">Valores de referencia. Ante cualquier duda, consultanos por WhatsApp antes de tu consulta.</p>
 
       <div class="reveal-on-scroll" style="margin-bottom:44px">
-        <h3 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#14496E">Consulta oftalmológica integral</h3>
-        <p style="margin:0 0 18px;font-size:14px;color:#8A7A54">El fondo de ojo se realiza dentro de esta consulta.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:#DEDCD5;border:1px solid #DEDCD5">
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Convenio Óptica Tol</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.800</div>
-            <div style="font-size:13px;color:#64757F;margin-top:4px">+ OCT: $3.000</div>
+        <h3 class="pgroup-title">Consulta oftalmológica integral</h3>
+        <p style="margin:8px 0 20px;font-size:14px;color:#8A7A54">El fondo de ojo se realiza dentro de esta consulta.</p>
+        <div class="price-grid">
+          <div class="pcell">
+            <div class="pname">Convenio Óptica Tol</div>
+            <div class="pprice"><span class="pcur">$</span>1.800</div>
+            <div class="pnote">+ OCT: $3.000</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Convenio Óptica Tol Empresarial</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.500</div>
-            <div style="font-size:13px;color:#64757F;margin-top:4px">Consultar convenios activos</div>
+          <div class="pcell">
+            <div class="pname">Convenio Óptica Tol Empresarial</div>
+            <div class="pprice"><span class="pcur">$</span>1.500</div>
+            <div class="pnote">Consultar convenios activos</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Convenio Óptica Tol INALER</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$500</div>
+          <div class="pcell">
+            <div class="pname">Convenio Óptica Tol INALER</div>
+            <div class="pprice"><span class="pcur">$</span>500</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Particular — Asistencia Privada</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$3.000</div>
-            <div style="font-size:13px;color:#64757F;margin-top:4px">+ OCT: $4.500</div>
+          <div class="pcell">
+            <div class="pname">Particular — Asistencia Privada</div>
+            <div class="pprice"><span class="pcur">$</span>3.000</div>
+            <div class="pnote">+ OCT: $4.500</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Particular — Asistencia Pública</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$2.000</div>
-            <div style="font-size:13px;color:#64757F;margin-top:4px">+ OCT: $3.500</div>
+          <div class="pcell">
+            <div class="pname">Particular — Asistencia Pública</div>
+            <div class="pprice"><span class="pcur">$</span>2.000</div>
+            <div class="pnote">+ OCT: $3.500</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Particular — Socios ANDA</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$2.700</div>
-            <div style="font-size:13px;color:#64757F;margin-top:4px">+ OCT: $4.200</div>
+          <div class="pcell">
+            <div class="pname">Particular — Socios ANDA</div>
+            <div class="pprice"><span class="pcur">$</span>2.700</div>
+            <div class="pnote">+ OCT: $4.200</div>
           </div>
         </div>
       </div>
 
       <div class="reveal-on-scroll">
-        <h3 style="margin:0 0 18px;font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#14496E">Otros estudios</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:#DEDCD5;border:1px solid #DEDCD5">
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">OCT</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$2.000</div>
+        <h3 class="pgroup-title" style="margin-bottom:18px">Otros estudios</h3>
+        <div class="price-grid">
+          <div class="pcell">
+            <div class="pname">OCT</div>
+            <div class="pprice"><span class="pcur">$</span>2.000</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">OCT — Consulta AMSJ/ASSE</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.500</div>
+          <div class="pcell">
+            <div class="pname">OCT — Consulta AMSJ/ASSE</div>
+            <div class="pprice"><span class="pcur">$</span>1.500</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Curva de Pío</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.800</div>
-            <div style="font-size:13px;color:#8A7A54;margin-top:4px">Se agenda por WhatsApp</div>
+          <div class="pcell">
+            <div class="pname">Curva de Pío</div>
+            <div class="pprice"><span class="pcur">$</span>1.800</div>
+            <div class="pnote">Se agenda por WhatsApp</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Paquimetría</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.500</div>
+          <div class="pcell">
+            <div class="pname">Paquimetría</div>
+            <div class="pprice"><span class="pcur">$</span>1.500</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Paquimetría ASSE</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.100</div>
+          <div class="pcell">
+            <div class="pname">Paquimetría ASSE</div>
+            <div class="pprice"><span class="pcur">$</span>1.100</div>
           </div>
-          <div style="background:#fff;padding:18px 20px">
-            <div style="font-weight:700;font-size:16px">Refractometría</div>
-            <div style="font-size:22px;font-weight:700;color:#14496E;margin-top:6px">$1.000</div>
+          <div class="pcell">
+            <div class="pname">Refractometría</div>
+            <div class="pprice"><span class="pcur">$</span>1.000</div>
           </div>
         </div>
       </div>
