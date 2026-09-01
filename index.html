@@ -134,6 +134,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       <a href="#equipo">Oftalmólogos</a>
       <a href="#servicios">Servicios</a>
       <a href="#precios">Precios</a>
+      <a href="#cancelar">Cancelar turno</a>
       <a href="#contacto">Contacto</a>
     </div>
     <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px">Agendar</a>
@@ -153,7 +154,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     </div>
   </header>
 
-  <div class="marquee-band" aria-hidden="true" style="overflow:hidden;background:#A8D8EE;border-top:1px solid #14496E;border-bottom:1px solid #14496E;padding:16px 0">
+  <div class="marquee-band" aria-hidden="true" style="overflow:hidden;background:#A8D8EE;border-top:1px solid #14496E;border-bottom:1px solid #14496E;padding:16px 0;margin-top:28px">
     <div class="marquee-track" style="display:flex;width:max-content;white-space:nowrap;animation:marqueeScroll 26s linear infinite">
       <span class="marquee-set" style="display:flex;align-items:center">
         <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em;color:#0F2230;padding:0 28px">San José, <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:21px">Uruguay</span></span>
@@ -183,9 +184,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       <div style="font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#14496E">Agenda online</div>
       <h2 class="reveal-on-scroll" style="margin:20px 0 0;font-size:72px;line-height:1;font-weight:700;letter-spacing:-0.035em">Agendá <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h2>
       <p style="margin:22px 0 0;font-size:19px;color:#4C5E68">Elegí oftalmólogo, servicio, día y horario. Completás tus datos y te confirmamos la reserva.</p>
-      <div class="reveal-on-scroll" style="margin:36px auto 0;max-width:640px;background:#FBE7E1;border:1px solid #F0C6B7;border-radius:14px;padding:18px 24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-        <span style="font-size:15px;color:#7A2B10;text-align:left"><b>Urgencias</b> · de 18:00 a 21:00, previa coordinación por celular.</span>
-        <a href="https://wa.me/59892494961?text=Hola%2C%20tengo%20una%20urgencia%20oftalmol%C3%B3gica" target="_blank" rel="noopener" style="background:#14496E;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:11px 20px;border-radius:999px;white-space:nowrap">Escribir por WhatsApp</a>
+      <div class="reveal-on-scroll" style="margin:36px auto 0;max-width:640px;background:#1D6FD1;border:1px solid #1558A8;border-radius:14px;padding:18px 24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+        <span style="font-size:15px;color:#fff;text-align:left"><b>Urgencias</b> · de 18:00 a 21:00, previa coordinación por celular.</span>
+        <a href="https://wa.me/59892494961?text=Hola%2C%20tengo%20una%20urgencia%20oftalmol%C3%B3gica" target="_blank" rel="noopener" style="background:#fff;color:#1558A8;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:11px 20px;border-radius:999px;white-space:nowrap">Escribir por WhatsApp</a>
       </div>
     </div>
   </section>
@@ -386,6 +387,19 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         <figure><img src="47f00d69-e809-4d13-beef-bbb7f1e594e6.JPG" alt="Atención oftalmológica en el consultorio" loading="lazy"><figcaption>Atención profesional</figcaption></figure>
         <figure><img src="7b3d87ec-92e0-461a-9a3e-b7ecdf832bd6.JPG" alt="Tecnología del consultorio oftalmológico" loading="lazy"><figcaption>Tecnología clínica</figcaption></figure>
       </div>
+    </div>
+  </section>
+
+  <section id="cancelar" style="padding:0 40px 88px">
+    <div style="max-width:640px;margin:0 auto;background:#F4F6F5;border:1px solid #DEDCD5;border-radius:16px;padding:36px 32px">
+      <h3 class="reveal-on-scroll" style="margin:0 0 8px;font-size:24px;font-weight:700;letter-spacing:-0.02em">¿Necesitás cancelar tu turno?</h3>
+      <p class="reveal-on-scroll" style="margin:0 0 22px;font-size:14.5px;color:#64757F">Ingresá tu cédula para ver tus próximos turnos y cancelarlos si hace falta.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input id="cancel-cedula" type="text" inputmode="numeric" placeholder="Tu cédula, sin puntos ni guión" style="flex:1;min-width:220px;border:1px solid #DCE2E5;border-radius:10px;padding:12px 14px;font-size:15px;box-sizing:border-box">
+        <button type="button" id="cancel-buscar" style="background:#14496E;color:#fff;font-size:14px;font-weight:700;padding:12px 22px;border-radius:10px;border:none;cursor:pointer">Buscar mis turnos</button>
+      </div>
+      <div id="cancel-msg" style="display:none;font-size:13.5px;margin-top:14px;padding:10px 12px;border-radius:8px"></div>
+      <div id="cancel-lista" style="margin-top:18px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </section>
 
@@ -867,6 +881,84 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   renderCalendar();
   renderElegirPanel();
   showPanel('elegir');
+
+  // --- Cancelar mi turno (paciente) ---
+  const cancelCedula = document.getElementById('cancel-cedula');
+  const cancelBuscarBtn = document.getElementById('cancel-buscar');
+  const cancelMsg = document.getElementById('cancel-msg');
+  const cancelLista = document.getElementById('cancel-lista');
+
+  function mostrarMsgCancel(texto, tipo) {
+    cancelMsg.textContent = texto;
+    cancelMsg.style.display = 'block';
+    cancelMsg.style.background = tipo === 'error' ? '#FBE7E1' : '#E7F0F5';
+    cancelMsg.style.color = tipo === 'error' ? '#B4361A' : '#14496E';
+  }
+
+  async function buscarMisTurnos() {
+    const cedula = cancelCedula.value.trim();
+    if (!cedula) { mostrarMsgCancel('Ingresá tu cédula para buscar tus turnos.', 'error'); return; }
+    cancelMsg.style.display = 'none';
+    cancelLista.innerHTML = '';
+    cancelBuscarBtn.disabled = true;
+    cancelBuscarBtn.textContent = 'Buscando…';
+    try {
+      const resp = await fetch(ENDPOINT_SHEETS + '?misTurnos=1&cedula=' + encodeURIComponent(cedula));
+      const data = await resp.json();
+      const turnos = (data && data.turnos) || [];
+      if (turnos.length === 0) {
+        mostrarMsgCancel('No encontramos turnos próximos con esa cédula.', 'error');
+      } else {
+        turnos.forEach(t => pintarTurnoCancelable(t, cedula));
+      }
+    } catch (e) {
+      mostrarMsgCancel('No pudimos conectar. Probá de nuevo.', 'error');
+    } finally {
+      cancelBuscarBtn.disabled = false;
+      cancelBuscarBtn.textContent = 'Buscar mis turnos';
+    }
+  }
+
+  function pintarTurnoCancelable(t, cedula) {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:#fff;border:1px solid #DEDCD5;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap';
+    card.innerHTML =
+      '<div style="font-size:14px;color:#42545E">' +
+        '<b>' + t.fecha + ' · ' + t.hora + '</b><br>' +
+        '<span style="opacity:.75">' + t.oftalmologo + ' — ' + t.servicio + '</span>' +
+      '</div>' +
+      '<button type="button" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer">Cancelar</button>';
+    const boton = card.querySelector('button');
+    boton.addEventListener('click', async () => {
+      const ok = confirm('¿Cancelar tu turno del ' + t.fecha + ' a las ' + t.hora + ' con ' + t.oftalmologo + '?');
+      if (!ok) return;
+      boton.disabled = true;
+      boton.textContent = 'Cancelando…';
+      try {
+        const url = ENDPOINT_SHEETS + '?cancelarPropio=1&cedula=' + encodeURIComponent(cedula) +
+          '&fecha=' + encodeURIComponent(t.fecha) + '&oftalmologo=' + encodeURIComponent(t.oftalmologo) +
+          '&hora=' + encodeURIComponent(t.hora);
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.ok) {
+          card.remove();
+          mostrarMsgCancel('Listo, tu turno fue cancelado.', 'ok');
+        } else {
+          boton.disabled = false;
+          boton.textContent = 'Cancelar';
+          mostrarMsgCancel('No pudimos cancelarlo. Probá de nuevo.', 'error');
+        }
+      } catch (e) {
+        boton.disabled = false;
+        boton.textContent = 'Cancelar';
+        mostrarMsgCancel('No pudimos conectar. Probá de nuevo.', 'error');
+      }
+    });
+    cancelLista.appendChild(card);
+  }
+
+  cancelBuscarBtn.addEventListener('click', buscarMisTurnos);
+  cancelCedula.addEventListener('keydown', (e) => { if (e.key === 'Enter') buscarMisTurnos(); });
 })();
 </script>
 </body>
