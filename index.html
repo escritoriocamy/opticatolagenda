@@ -451,13 +451,19 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   </section>
 
   <section style="padding:0 40px 88px">
-    <div style="max-width:1180px;margin:0 auto;background:#E7F0F5;border-radius:18px;padding:34px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#14496E">Después de tu consulta</div>
-        <h2 style="margin:10px 0 0;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.025em">Tu opinión nos ayuda a mejorar.</h2>
-        <p style="margin:12px 0 0;font-size:15px;line-height:1.5;color:#4C5E68">Escribinos por WhatsApp y contanos cómo fue tu experiencia en el consultorio.</p>
+    <div style="max-width:1180px;margin:0 auto;background:#E7F0F5;border-radius:18px;padding:34px 36px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#14496E">Después de tu consulta</div>
+      <h2 style="margin:10px 0 0;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.025em">Tu opinión nos ayuda a mejorar.</h2>
+      <p style="margin:12px 0 26px;font-size:15px;line-height:1.5;color:#4C5E68;max-width:52ch">Contanos cómo fue tu experiencia en el consultorio.</p>
+
+      <div id="resena-form">
+        <div style="display:flex;gap:6px" id="resena-estrellas"></div>
+        <textarea id="resena-comentario" rows="3" placeholder="Contanos tu experiencia (opcional)" style="width:100%;max-width:560px;margin-top:16px;border:1px solid #C7D6DC;border-radius:12px;padding:13px 15px;font-size:14.5px;box-sizing:border-box;resize:vertical;background:#fff"></textarea>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <button type="button" id="resena-enviar" style="background:#14496E;color:#fff;border:none;border-radius:999px;padding:14px 28px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer">Enviar opinión</button>
+          <span id="resena-msg" style="display:none;font-size:13.5px"></span>
+        </div>
       </div>
-      <a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="flex:none;background:#25D366;color:#073B22;border-radius:999px;padding:16px 24px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase">Enviar opinión</a>
     </div>
   </section>
 
@@ -881,7 +887,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       '<h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Solicitud <span style="font-family:\'Instrument Serif\',Georgia,serif;font-style:italic;font-weight:400">enviada.</span></h3>' +
       '<div style="font-size:15px;line-height:1.6;color:#4C5E68">' + resumenFinal + '</div>' +
       '<p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">' + notaEnvio + '</p>' +
-      '<a href="https://wa.me/59892494961?text=Hola%2C%20ya%20tuve%20mi%20consulta%20y%20quiero%20dejar%20mi%20opini%C3%B3n%3A%20" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>' +
+      '<a href="#resena-form" style="align-self:stretch;text-align:center;background:#14496E;color:#fff;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>' +
       '<button type="button" id="btn-reiniciar" class="btn-outline" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Agendar otra hora</button>';
 
     document.getElementById('btn-reiniciar').addEventListener('click', () => {
@@ -979,6 +985,61 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   cancelBuscarBtn.addEventListener('click', buscarMisTurnos);
   cancelCedula.addEventListener('keydown', (e) => { if (e.key === 'Enter') buscarMisTurnos(); });
+
+  // --- Reseñas (estrellas + comentario, se guardan en la planilla) ---
+  const resenaEstrellasEl = document.getElementById('resena-estrellas');
+  const resenaComentario = document.getElementById('resena-comentario');
+  const resenaEnviarBtn = document.getElementById('resena-enviar');
+  const resenaMsg = document.getElementById('resena-msg');
+  let resenaValor = 0;
+
+  function svgEstrella(llena) {
+    return '<svg width="32" height="32" viewBox="0 0 24 24" fill="' + (llena ? '#F5A623' : 'none') + '" stroke="#F5A623" stroke-width="1.5"><path d="M12 2.5l2.9 6.06 6.6.73-4.9 4.53 1.28 6.6L12 17.3l-5.88 3.12 1.28-6.6-4.9-4.53 6.6-.73L12 2.5z"/></svg>';
+  }
+
+  function renderEstrellas() {
+    resenaEstrellasEl.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.style.cssText = 'background:none;border:none;padding:2px;cursor:pointer;line-height:0';
+      btn.innerHTML = svgEstrella(i <= resenaValor);
+      btn.addEventListener('click', () => { resenaValor = i; renderEstrellas(); });
+      resenaEstrellasEl.appendChild(btn);
+    }
+  }
+  renderEstrellas();
+
+  function mostrarMsgResena(texto, tipo) {
+    resenaMsg.textContent = texto;
+    resenaMsg.style.display = 'inline';
+    resenaMsg.style.color = tipo === 'error' ? '#B4361A' : '#14496E';
+  }
+
+  resenaEnviarBtn.addEventListener('click', async () => {
+    if (resenaValor === 0) { mostrarMsgResena('Elegí una cantidad de estrellas.', 'error'); return; }
+    resenaEnviarBtn.disabled = true;
+    resenaEnviarBtn.textContent = 'Enviando…';
+    try {
+      await fetch(ENDPOINT_SHEETS, {
+        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          tipo: 'resena',
+          enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }),
+          estrellas: resenaValor,
+          comentario: resenaComentario.value.trim()
+        })
+      });
+      resenaEstrellasEl.style.display = 'none';
+      resenaComentario.style.display = 'none';
+      resenaEnviarBtn.style.display = 'none';
+      mostrarMsgResena('¡Gracias por tu opinión!', 'ok');
+    } catch (e) {
+      resenaEnviarBtn.disabled = false;
+      resenaEnviarBtn.textContent = 'Enviar opinión';
+      mostrarMsgResena('No pudimos enviarla. Probá de nuevo.', 'error');
+    }
+  });
 })();
 </script>
 </body>
