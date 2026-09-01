@@ -122,6 +122,11 @@
       <button data-periodo="todas" type="button">Todas</button>
     </div>
     <select id="filtro-medico"><option value="">Todos los oftalmólogos</option></select>
+    <select id="filtro-pago">
+      <option value="">Todos (pagos)</option>
+      <option value="si">Solo pagados</option>
+      <option value="no">Solo no pagados</option>
+    </select>
     <input id="buscar" type="search" placeholder="Buscar por nombre o cédula…">
     <button id="btn-refresh" class="refresh-btn" type="button">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg>
@@ -164,6 +169,7 @@
   const btnRefresh = document.getElementById('btn-refresh');
   const updatedNote = document.getElementById('updated-note');
   const filtroMedico = document.getElementById('filtro-medico');
+  const filtroPago = document.getElementById('filtro-pago');
   const buscar = document.getElementById('buscar');
   const lista = document.getElementById('lista');
   const tabsPeriodo = document.getElementById('tabs-periodo');
@@ -248,6 +254,10 @@
 
     const medico = filtroMedico.value;
     if (medico) filtradas = filtradas.filter(r => r.oftalmologo === medico);
+
+    const pago = filtroPago.value;
+    if (pago === 'si') filtradas = filtradas.filter(r => r.pagado === 'Sí');
+    else if (pago === 'no') filtradas = filtradas.filter(r => r.pagado !== 'Sí');
 
     const q = buscar.value.trim().toLowerCase();
     if (q) {
@@ -426,6 +436,7 @@
     render();
   });
   filtroMedico.addEventListener('change', render);
+  filtroPago.addEventListener('change', render);
   buscar.addEventListener('input', render);
   btnRefresh.addEventListener('click', refrescar);
   btnEntrar.addEventListener('click', () => {
