@@ -534,7 +534,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     sel: null,
     hora: null,
     etapa: 'elegir',
-    nombre: '', apellido: '', cedula: '', nacimiento: '', diabetes: '', lentesContacto: '', error: '',
+    nombre: '', apellido: '', cedula: '', telefono: '', nacimiento: '', diabetes: '', lentesContacto: '', error: '',
     enviando: false, canal: null, ocupadas: []
   };
 
@@ -820,6 +820,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Cédula *' +
         '<input id="in-cedula" type="text" placeholder="1.234.567-8" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
       '</label>' +
+      '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Celular *' +
+        '<div style="display:flex;border:1px solid #DCE2E5;border-radius:10px;background:#fff;overflow:hidden">' +
+          '<span style="display:flex;align-items:center;gap:6px;padding:12px 12px;background:#F1F0EB;border-right:1px solid #DCE2E5;font-size:14.5px;color:#42545E;white-space:nowrap">🇺🇾 +598</span>' +
+          '<input id="in-telefono" type="tel" inputmode="numeric" placeholder="99 123 456" style="border:none;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400;width:100%;outline:none">' +
+        '</div>' +
+      '</label>' +
       '<label style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64757F">Fecha de nacimiento *' +
         '<input id="in-nacimiento" type="date" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">' +
       '</label>' +
@@ -845,6 +851,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const inNombre = document.getElementById('in-nombre');
     const inApellido = document.getElementById('in-apellido');
     const inCedula = document.getElementById('in-cedula');
+    const inTelefono = document.getElementById('in-telefono');
     const inNacimiento = document.getElementById('in-nacimiento');
     const btnSi = document.getElementById('btn-diabetes-si');
     const btnNo = document.getElementById('btn-diabetes-no');
@@ -858,11 +865,13 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     inNombre.value = state.nombre;
     inApellido.value = state.apellido;
     inCedula.value = state.cedula;
+    inTelefono.value = state.telefono;
     inNacimiento.value = state.nacimiento;
 
     inNombre.addEventListener('input', (e) => { state.nombre = e.target.value; });
     inApellido.addEventListener('input', (e) => { state.apellido = e.target.value; });
     inCedula.addEventListener('input', (e) => { state.cedula = e.target.value; });
+    inTelefono.addEventListener('input', (e) => { state.telefono = e.target.value; });
     inNacimiento.addEventListener('change', (e) => { state.nacimiento = e.target.value; });
 
     function pintarDiabetes() {
@@ -908,6 +917,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       if (state.nombre.trim().length < 2) return setError('Escribí tu nombre.');
       if (state.apellido.trim().length < 2) return setError('Escribí tu apellido.');
       if (state.cedula.replace(/\D/g, '').length < 7) return setError('Ingresá tu cédula.');
+      if (state.telefono.replace(/\D/g, '').length < 7) return setError('Ingresá tu celular.');
       if (!state.nacimiento) return setError('Ingresá tu fecha de nacimiento.');
       if (!state.diabetes) return setError('Indicá si tenés diabetes.');
       if (!state.lentesContacto) return setError('Indicá si usás lentes de contacto.');
@@ -918,8 +928,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       const f = state.sel;
       const fecha = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
       const nombreCompleto = (state.nombre.trim() + ' ' + state.apellido.trim()).trim();
+      const telefonoCompleto = '+598 ' + state.telefono.trim();
       const datos = {
         enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }), nombre: nombreCompleto, cedula: state.cedula.trim(),
+        telefono: telefonoCompleto,
         nacimiento: state.nacimiento, oftalmologo: m2.nombre, servicio: state.servicio,
         fecha, hora: hh, diabetes: state.diabetes === 'si' ? 'Sí' : 'No',
         lentesContacto: state.lentesContacto === 'si' ? 'Sí' : 'No', origen: 'web'
@@ -1002,7 +1014,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
     document.getElementById('btn-reiniciar').addEventListener('click', () => {
       state.etapa = 'elegir'; state.sel = null; state.hora = null;
-      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.nacimiento = ''; state.diabetes = ''; state.lentesContacto = ''; state.error = '';
+      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.telefono = ''; state.nacimiento = ''; state.diabetes = ''; state.lentesContacto = ''; state.error = '';
       renderCalendar(); renderElegirPanel(); showPanel('elegir');
     });
   }
