@@ -538,7 +538,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const key = oftalmologo + '|' + fecha;
     if (ocupadosCache[key]) return ocupadosCache[key];
     try {
-      const resp = await fetch(ENDPOINT_SHEETS + '?ocupados=1&fecha=' + encodeURIComponent(fecha) + '&oftalmologo=' + encodeURIComponent(oftalmologo));
+      const resp = await fetch(ENDPOINT_SHEETS + '?ocupados=1&fecha=' + encodeURIComponent(fecha) + '&oftalmologo=' + encodeURIComponent(oftalmologo) + '&_=' + Date.now(), { cache: 'no-store' });
       const data = await resp.json();
       const horas = Array.isArray(data.horas) ? data.horas : [];
       ocupadosCache[key] = horas;
@@ -932,7 +932,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     cancelBuscarBtn.disabled = true;
     cancelBuscarBtn.textContent = 'Buscando…';
     try {
-      const resp = await fetch(ENDPOINT_SHEETS + '?misTurnos=1&cedula=' + encodeURIComponent(cedula));
+      const resp = await fetch(ENDPOINT_SHEETS + '?misTurnos=1&cedula=' + encodeURIComponent(cedula) + '&_=' + Date.now(), { cache: 'no-store' });
       const data = await resp.json();
       const turnos = (data && data.turnos) || [];
       if (turnos.length === 0) {
@@ -966,8 +966,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       try {
         const url = ENDPOINT_SHEETS + '?cancelarPropio=1&cedula=' + encodeURIComponent(cedula) +
           '&fecha=' + encodeURIComponent(t.fecha) + '&oftalmologo=' + encodeURIComponent(t.oftalmologo) +
-          '&hora=' + encodeURIComponent(t.hora);
-        const resp = await fetch(url);
+          '&hora=' + encodeURIComponent(t.hora) + '&_=' + Date.now();
+        const resp = await fetch(url, { cache: 'no-store' });
         const data = await resp.json();
         if (data.ok) {
           card.remove();
@@ -1045,7 +1045,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   async function cargarResenas() {
     try {
-      const resp = await fetch(ENDPOINT_SHEETS + '?resenas=1');
+      const resp = await fetch(ENDPOINT_SHEETS + '?resenas=1&_=' + Date.now(), { cache: 'no-store' });
       const data = await resp.json();
       const resenas = (data && data.resenas) || [];
       if (resenas.length > 0) {
