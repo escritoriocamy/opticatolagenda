@@ -220,9 +220,11 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
           <div id="medicos-list" style="display:flex;flex-direction:column;gap:8px"></div>
           <label style="display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Servicio
             <select id="servicio-select" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400">
+              <option>Consulta oftalmológica integral</option>
               <option>Receta para lentes convencionales y lentes de contacto</option>
               <option>Paquimetría</option>
               <option>OCT</option>
+              <option>Refractometría</option>
             </select>
           </label>
           <div id="convenio-wrap" style="display:none;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Convenio
@@ -598,12 +600,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
     { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
     { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
-    { nombre: 'Consulta oftalmológica integral (particular)', precio: 3000, oct: null },
     { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
     { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
     { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
   ];
-  const SERVICIO_CON_CONVENIO = 'Receta para lentes convencionales y lentes de contacto';
+  const SERVICIOS_CON_CONVENIO = ['Consulta oftalmológica integral', 'Receta para lentes convencionales y lentes de contacto'];
+  function esServicioConConvenio(v) { return SERVICIOS_CON_CONVENIO.indexOf(v) !== -1; }
 
   const OCT_PRECIO_BASE = 2000;
 
@@ -619,7 +621,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function convenioActual() { return CONVENIOS[convenioSelect.selectedIndex] || CONVENIOS[0]; }
 
   function octPrecioActual() {
-    if (servicioSelect.value === SERVICIO_CON_CONVENIO) {
+    if (esServicioConConvenio(servicioSelect.value)) {
       const c = convenioActual();
       return c.oct || OCT_PRECIO_BASE;
     }
@@ -628,9 +630,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   function actualizarServicioFinal() {
     let texto;
-    if (servicioSelect.value === SERVICIO_CON_CONVENIO) {
+    if (esServicioConConvenio(servicioSelect.value)) {
       const c = convenioActual();
-      texto = SERVICIO_CON_CONVENIO + ' — ' + c.nombre + ' (' + fmtPesos(c.precio) + ')';
+      texto = servicioSelect.value + ' — ' + c.nombre + ' (' + fmtPesos(c.precio) + ')';
       if (c.nota) texto += ' — ' + c.nota;
     } else {
       texto = servicioSelect.value;
@@ -662,12 +664,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     pintarOctPlus();
   }
 
-  servicioSelect.value = state.servicio.split(' — ')[0] === SERVICIO_CON_CONVENIO ? SERVICIO_CON_CONVENIO : state.servicio;
-  convenioWrap.style.display = servicioSelect.value === SERVICIO_CON_CONVENIO ? 'flex' : 'none';
-  if (servicioSelect.value === SERVICIO_CON_CONVENIO) renderConvenios(); else pintarOctPlus();
+  servicioSelect.value = esServicioConConvenio(state.servicio.split(' — ')[0]) ? state.servicio.split(' — ')[0] : state.servicio;
+  convenioWrap.style.display = esServicioConConvenio(servicioSelect.value) ? 'flex' : 'none';
+  if (esServicioConConvenio(servicioSelect.value)) renderConvenios(); else pintarOctPlus();
 
   servicioSelect.addEventListener('change', (e) => {
-    const esConvenio = e.target.value === SERVICIO_CON_CONVENIO;
+    const esConvenio = esServicioConConvenio(e.target.value);
     convenioWrap.style.display = esConvenio ? 'flex' : 'none';
     if (esConvenio) renderConvenios(); else pintarOctPlus();
   });
