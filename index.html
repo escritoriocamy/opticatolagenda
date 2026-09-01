@@ -152,10 +152,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       <a href="#equipo">Oftalmólogos</a>
       <a href="#servicios">Servicios</a>
       <a href="#precios">Precios</a>
-      <a href="#cancelar">Cancelar turno</a>
       <a href="#contacto">Contacto</a>
     </div>
-    <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px">Agendar</a>
+    <div style="display:flex;flex-direction:column;align-items:stretch;gap:6px">
+      <a href="#agendar" style="background:#A8D8EE;color:#0F2230;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 26px;border-radius:999px;text-align:center">Agendar</a>
+      <a href="#cancelar" style="color:#CBEAF8;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;opacity:.85">Cancelar turno</a>
+    </div>
   </nav>
 
   <header style="background:linear-gradient(120deg,#14496E 0%,#14496E 45%,#2C7BA8 100%);color:#fff;padding:104px 40px 112px">
@@ -271,6 +273,19 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="cancelar" style="padding:0 40px 88px">
+    <div style="max-width:640px;margin:0 auto;background:#F4F6F5;border:1px solid #DEDCD5;border-radius:16px;padding:36px 32px">
+      <h3 class="reveal-on-scroll" style="margin:0 0 8px;font-size:24px;font-weight:700;letter-spacing:-0.02em">¿Necesitás cancelar tu turno?</h3>
+      <p class="reveal-on-scroll" style="margin:0 0 22px;font-size:14.5px;color:#64757F">Ingresá tu cédula para ver tus próximos turnos y cancelarlos si hace falta.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input id="cancel-cedula" type="text" inputmode="numeric" placeholder="Tu cédula, sin puntos ni guión" style="flex:1;min-width:220px;border:1px solid #DCE2E5;border-radius:10px;padding:12px 14px;font-size:15px;box-sizing:border-box">
+        <button type="button" id="cancel-buscar" style="background:#14496E;color:#fff;font-size:14px;font-weight:700;padding:12px 22px;border-radius:10px;border:none;cursor:pointer">Buscar mis turnos</button>
+      </div>
+      <div id="cancel-msg" style="display:none;font-size:13.5px;margin-top:14px;padding:10px 12px;border-radius:8px"></div>
+      <div id="cancel-lista" style="margin-top:18px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </section>
 
@@ -405,19 +420,6 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         <figure><img src="47f00d69-e809-4d13-beef-bbb7f1e594e6.JPG" alt="Atención oftalmológica en el consultorio" loading="lazy"><figcaption>Atención profesional</figcaption></figure>
         <figure><img src="7b3d87ec-92e0-461a-9a3e-b7ecdf832bd6.JPG" alt="Tecnología del consultorio oftalmológico" loading="lazy"><figcaption>Tecnología clínica</figcaption></figure>
       </div>
-    </div>
-  </section>
-
-  <section id="cancelar" style="padding:0 40px 88px">
-    <div style="max-width:640px;margin:0 auto;background:#F4F6F5;border:1px solid #DEDCD5;border-radius:16px;padding:36px 32px">
-      <h3 class="reveal-on-scroll" style="margin:0 0 8px;font-size:24px;font-weight:700;letter-spacing:-0.02em">¿Necesitás cancelar tu turno?</h3>
-      <p class="reveal-on-scroll" style="margin:0 0 22px;font-size:14.5px;color:#64757F">Ingresá tu cédula para ver tus próximos turnos y cancelarlos si hace falta.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <input id="cancel-cedula" type="text" inputmode="numeric" placeholder="Tu cédula, sin puntos ni guión" style="flex:1;min-width:220px;border:1px solid #DCE2E5;border-radius:10px;padding:12px 14px;font-size:15px;box-sizing:border-box">
-        <button type="button" id="cancel-buscar" style="background:#14496E;color:#fff;font-size:14px;font-weight:700;padding:12px 22px;border-radius:10px;border:none;cursor:pointer">Buscar mis turnos</button>
-      </div>
-      <div id="cancel-msg" style="display:none;font-size:13.5px;margin-top:14px;padding:10px 12px;border-radius:8px"></div>
-      <div id="cancel-lista" style="margin-top:18px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </section>
 
