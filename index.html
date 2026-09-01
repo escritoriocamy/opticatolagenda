@@ -989,7 +989,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const resumenFinal = (state.sel && state.hora != null)
       ? ((state.nombre + ' ' + state.apellido).trim() || 'Paciente') + ' — ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '. ' + state.servicio + '.'
       : '';
-    const notaEnvio = 'Enviamos tu solicitud al consultorio. Te confirman la hora por WhatsApp al 092 49 49 61.';
+    const notaEnvio = 'Tu consulta debe quedar paga 48 horas antes de tu cita.';
 
     const nombreCompletoWa = (state.nombre + ' ' + state.apellido).trim() || 'Paciente';
     const mensajeWa =
