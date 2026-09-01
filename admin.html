@@ -66,6 +66,7 @@
   .appt-name{font-size:15.5px;font-weight:700;letter-spacing:-0.01em}
   .badge{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
   .badge-diabetes{background:#FBE7E1;color:#B4361A}
+  .badge-pagado{background:#DFF3E6;color:#1F7A45}
   .appt-meta{font-size:13.5px;color:#4C5E68;line-height:1.6}
   .appt-meta b{color:#0F2230;font-weight:600}
   .appt-extra{margin-top:6px;font-size:12.5px;color:#93A5AF}
@@ -297,16 +298,22 @@
         card.className = 'appt-card';
         const diabetesBadge = r.diabetes === 'Sí' ? '<span class="badge badge-diabetes">Diabetes</span>' : '';
         const lentesBadge = r.lentesContacto === 'Sí' ? '<span class="badge badge-diabetes">Usa lentes de contacto</span>' : '';
+        const pagadoBadge = r.pagado === 'Sí' ? '<span class="badge badge-pagado">Pagado</span>' : '';
         card.innerHTML =
           '<div class="appt-time">' + (r.hora || '') + '</div>' +
           '<div class="appt-body">' +
-            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + '</div>' +
+            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + pagadoBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
             '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="tel:' + escapeHtml(r.telefono.replace(/\s/g, '')) + '" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
-            '<button type="button" class="btn-cancelar" style="margin-top:10px;background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">' +
+              '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado') + '</button>' +
+              '<button type="button" class="btn-cancelar" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
+            '</div>' +
           '</div>';
         const btnCancelar = card.querySelector('.btn-cancelar');
         btnCancelar.addEventListener('click', () => cancelarReserva(r, btnCancelar));
+        const btnPagado = card.querySelector('.btn-pagado');
+        btnPagado.addEventListener('click', () => togglePagado(r, btnPagado));
         grupoEl.appendChild(card);
       });
 
@@ -376,6 +383,34 @@
 
   function cancelarReserva(r, boton) {
     abrirModalCancelar(r, boton);
+  }
+
+  async function togglePagado(r, boton) {
+    const nuevoValor = r.pagado === 'Sí' ? 'no' : 'si';
+    boton.disabled = true;
+    boton.textContent = 'Guardando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&marcarPagado=1&pagado=' + nuevoValor +
+        '&fecha=' + encodeURIComponent(r.fecha) +
+        '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
+        '&hora=' + encodeURIComponent(r.hora) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        r.pagado = nuevoValor === 'si' ? 'Sí' : 'No';
+        render();
+        updatedNote.textContent = 'Actualizado · ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
+      } else {
+        boton.disabled = false;
+        boton.textContent = r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado';
+        alert('No pudimos guardarlo. Probá de nuevo.');
+      }
+    } catch (e) {
+      boton.disabled = false;
+      boton.textContent = r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado';
+      alert('No pudimos conectar. Probá de nuevo.');
+    }
   }
 
   function capitalizar(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
