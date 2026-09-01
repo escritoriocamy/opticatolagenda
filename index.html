@@ -225,6 +225,13 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
               <option>OCT</option>
             </select>
           </label>
+          <div id="convenio-wrap" style="display:none;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Convenio
+            <select id="convenio-select" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400"></select>
+          </div>
+          <label id="oct-plus-wrap" style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:normal;color:#42545E">
+            <input type="checkbox" id="oct-plus-check" style="width:16px;height:16px">
+            <span id="oct-plus-label"></span>
+          </label>
           <div style="display:flex;flex-direction:column;gap:11px;font-size:14px;color:#42545E;margin-top:auto">
             <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>Sarandí 575, San José de Mayo</div>
             <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#93A5AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg>America/Montevideo</div>
@@ -587,9 +594,85 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     });
   }
 
+  const CONVENIOS = [
+    { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
+    { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
+    { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
+    { nombre: 'Consulta oftalmológica integral (particular)', precio: 3000, oct: null },
+    { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
+    { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
+    { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
+  ];
+  const SERVICIO_CON_CONVENIO = 'Receta para lentes convencionales y lentes de contacto';
+
+  const OCT_PRECIO_BASE = 2000;
+
   const servicioSelect = document.getElementById('servicio-select');
-  servicioSelect.value = state.servicio;
-  servicioSelect.addEventListener('change', (e) => { state.servicio = e.target.value; });
+  const convenioWrap = document.getElementById('convenio-wrap');
+  const convenioSelect = document.getElementById('convenio-select');
+  const octPlusWrap = document.getElementById('oct-plus-wrap');
+  const octPlusCheck = document.getElementById('oct-plus-check');
+  const octPlusLabel = document.getElementById('oct-plus-label');
+
+  function fmtPesos(n) { return '$' + n.toLocaleString('es-UY'); }
+
+  function convenioActual() { return CONVENIOS[convenioSelect.selectedIndex] || CONVENIOS[0]; }
+
+  function octPrecioActual() {
+    if (servicioSelect.value === SERVICIO_CON_CONVENIO) {
+      const c = convenioActual();
+      return c.oct || OCT_PRECIO_BASE;
+    }
+    return OCT_PRECIO_BASE;
+  }
+
+  function actualizarServicioFinal() {
+    let texto;
+    if (servicioSelect.value === SERVICIO_CON_CONVENIO) {
+      const c = convenioActual();
+      texto = SERVICIO_CON_CONVENIO + ' — ' + c.nombre + ' (' + fmtPesos(c.precio) + ')';
+      if (c.nota) texto += ' — ' + c.nota;
+    } else {
+      texto = servicioSelect.value;
+    }
+    if (octPlusCheck.checked && servicioSelect.value !== 'OCT') {
+      texto += ' + OCT (' + fmtPesos(octPrecioActual()) + ')';
+    }
+    state.servicio = texto;
+  }
+
+  function pintarOctPlus() {
+    if (servicioSelect.value === 'OCT') {
+      octPlusWrap.style.display = 'none';
+      octPlusCheck.checked = false;
+    } else {
+      octPlusWrap.style.display = 'flex';
+      octPlusLabel.textContent = 'Agregar OCT como estudio plus (' + fmtPesos(octPrecioActual()) + ')';
+    }
+    actualizarServicioFinal();
+  }
+
+  function renderConvenios() {
+    convenioSelect.innerHTML = '';
+    CONVENIOS.forEach(c => {
+      const opt = document.createElement('option');
+      opt.textContent = c.nombre + ' — ' + fmtPesos(c.precio);
+      convenioSelect.appendChild(opt);
+    });
+    pintarOctPlus();
+  }
+
+  servicioSelect.value = state.servicio.split(' — ')[0] === SERVICIO_CON_CONVENIO ? SERVICIO_CON_CONVENIO : state.servicio;
+  convenioWrap.style.display = servicioSelect.value === SERVICIO_CON_CONVENIO ? 'flex' : 'none';
+  if (servicioSelect.value === SERVICIO_CON_CONVENIO) renderConvenios(); else pintarOctPlus();
+
+  servicioSelect.addEventListener('change', (e) => {
+    const esConvenio = e.target.value === SERVICIO_CON_CONVENIO;
+    convenioWrap.style.display = esConvenio ? 'flex' : 'none';
+    if (esConvenio) renderConvenios(); else pintarOctPlus();
+  });
+  convenioSelect.addEventListener('change', pintarOctPlus);
+  octPlusCheck.addEventListener('change', actualizarServicioFinal);
 
   // ---------- Calendario ----------
   const mesLabelEl = document.getElementById('mes-label');
