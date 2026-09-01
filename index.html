@@ -993,7 +993,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
     const nombreCompletoWa = (state.nombre + ' ' + state.apellido).trim() || 'Paciente';
     const mensajeWa =
-      'Hola! Quiero confirmar mi consulta.\n' +
+      'Hola! Quiero confirmar mi consulta.\n\n' +
       'Paciente: ' + nombreCompletoWa + '\n' +
       (state.sel && state.hora != null ? 'Turno: ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '\n' : '') +
       (state.servicio ? 'Servicio: ' + state.servicio : '');
