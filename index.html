@@ -945,7 +945,18 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       btnConfirmar.textContent = 'Enviando…';
 
       try {
-        await fetch(ENDPOINT_SHEETS, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+        const resp = await fetch(ENDPOINT_SHEETS, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+        const data = await resp.json();
+        if (!data.ok) {
+          if (data.error === 'ocupado') {
+            state.enviando = false;
+            state.etapa = 'elegir'; state.hora = null;
+            renderCalendar(); renderElegirPanel(); showPanel('elegir');
+            diaElegidoLabel.textContent = etiqueta(state.sel) + ' — esa hora se acaba de ocupar, elegí otra';
+            return;
+          }
+          throw new Error('no guardada');
+        }
         ocupadosCache[keyOcupado] = ocupadasAhora.concat([hh]);
         state.etapa = 'listo'; state.canal = 'planilla'; state.enviando = false; setError('');
         renderListoPanel(); showPanel('listo');
@@ -1149,8 +1160,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     resenaEnviarBtn.disabled = true;
     resenaEnviarBtn.textContent = 'Enviando…';
     try {
-      await fetch(ENDPOINT_SHEETS, {
-        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      const resp = await fetch(ENDPOINT_SHEETS, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           tipo: 'resena',
           enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }),
@@ -1158,6 +1169,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
           comentario: resenaComentario.value.trim()
         })
       });
+      const data = await resp.json();
+      if (!data.ok) throw new Error('no guardada');
       resenaEstrellasEl.style.display = 'none';
       resenaComentario.style.display = 'none';
       resenaEnviarBtn.style.display = 'none';
