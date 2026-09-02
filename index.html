@@ -526,6 +526,34 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     { nombre: 'Dr. Tomás Pérez', especialidad: 'Cirujano Oftalmólogo', dias: [1, 2, 4, 6], rangos: [[570, 780], [900, 1110]] }
   ];
 
+  const TURNOS_BLOQUEADOS = [
+    { fecha: '2026-09-03', oftalmologo: 'Dra. Rosario Saldaña', desde: 540, hasta: 690 },
+    { fecha: '2026-09-10', oftalmologo: 'Dra. Rosario Saldaña', desde: 540, hasta: 690 },
+    { fecha: '2026-09-11', oftalmologo: 'Dra. Rosario Saldaña', desde: 900, hasta: 1080 },
+    { fecha: '2026-09-12', oftalmologo: 'Dr. Rodrigo Rivas', desde: 540, hasta: 750 },
+    { fecha: '2026-09-17', oftalmologo: 'Dra. Rosario Saldaña', desde: 540, hasta: 690 },
+    { fecha: '2026-09-22', oftalmologo: 'Dr. Tomás Pérez', desde: 860, hasta: 1020 },
+    { fecha: '2026-09-24', oftalmologo: 'Dra. Rosario Saldaña', desde: 540, hasta: 690 },
+    { fecha: '2026-09-25', oftalmologo: 'Dra. Rosario Saldaña', desde: 900, hasta: 1080 },
+    { fecha: '2026-09-26', oftalmologo: 'Dra. Rosario Saldaña', desde: 540, hasta: 720 },
+    { fecha: '2026-09-29', oftalmologo: 'Dr. Tomás Pérez', desde: 870, hasta: 1020 }
+  ];
+
+  function estaBloqueado(oftalmologo, fecha, minutos) {
+    return TURNOS_BLOQUEADOS.some((turno) =>
+      turno.oftalmologo === oftalmologo && turno.fecha === fecha &&
+      minutos >= turno.desde && minutos < turno.hasta
+    );
+  }
+
+  function fechaDe(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function tieneTurnoBloqueado(oftalmologo, fecha) {
+    return TURNOS_BLOQUEADOS.some((turno) => turno.oftalmologo === oftalmologo && turno.fecha === fecha);
+  }
+
   const hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
 
   const state = {
@@ -567,8 +595,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function horariosDe(d) {
     if (!d) return [];
     const m = MEDICOS[state.medico];
-    if (!m.dias.includes(d.getDay())) return [];
-    const rangos = d.getDay() === 6 ? [m.rangos[0]] : m.rangos;
+    const bloqueos = TURNOS_BLOQUEADOS.filter((turno) => turno.oftalmologo === m.nombre && turno.fecha === fechaDe(d));
+    if (!m.dias.includes(d.getDay()) && bloqueos.length === 0) return [];
+    const rangos = bloqueos.length ? bloqueos.map((turno) => [turno.desde, turno.hasta]) : d.getDay() === 6 ? [m.rangos[0]] : m.rangos;
     const out = [];
     for (const [a, b] of rangos) for (let t = a; t <= b - INTERVALO; t += INTERVALO) out.push(t);
     return out;
@@ -697,7 +726,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     }
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
-      const activo = d >= hoy0 && m.dias.includes(d.getDay());
+      const activo = d >= hoy0 && (m.dias.includes(d.getDay()) || tieneTurnoBloqueado(m.nombre, fechaDe(d)));
       const elegido = state.sel && state.sel.getTime() === d.getTime();
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -771,10 +800,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function renderHorarios() {
     const mins = horariosDe(state.sel);
     const ocupadas = state.ocupadas || [];
+    const fecha = state.sel ? fechaDe(state.sel) : '';
+    const oftalmologo = MEDICOS[state.medico].nombre;
     horariosList.innerHTML = '';
     mins.forEach((x) => {
       const hhmm = fmt(x);
-      const ocupado = ocupadas.includes(hhmm);
+      const ocupado = ocupadas.includes(hhmm) || estaBloqueado(oftalmologo, fecha, x);
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'slot-btn';
