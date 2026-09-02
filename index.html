@@ -521,10 +521,43 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   const NOMS = ['dom','lun','mar','mié','jue','vie','sáb'];
 
   const MEDICOS = [
-    { nombre: 'Dr. Rodrigo Rivas', especialidad: 'Cirujano Oftalmólogo', dias: [1, 3, 5], rangos: [[540, 750], [870, 1080]] },
-    { nombre: 'Dra. Rosario Saldaña', especialidad: 'Cirujana Oftalmóloga', dias: [2, 4], rangos: [[600, 780], [900, 1140]] },
-    { nombre: 'Dr. Tomás Pérez', especialidad: 'Cirujano Oftalmólogo', dias: [1, 2, 4, 6], rangos: [[570, 780], [900, 1110]] }
+    { nombre: 'Dr. Rodrigo Rivas', especialidad: 'Cirujano Oftalmólogo' },
+    { nombre: 'Dra. Rosario Saldaña', especialidad: 'Cirujana Oftalmóloga' },
+    { nombre: 'Dr. Tomás Pérez', especialidad: 'Cirujano Oftalmólogo' }
   ];
+
+  // Días y horarios en que atiende cada médico. Se actualiza mes a mes según
+  // la agenda que manda el consultorio (no es un horario fijo semanal: cada
+  // médico puede tener días distintos cada mes). Mientras un mes no tenga
+  // franjas cargadas acá, el sitio no deja agendar en él.
+  const DISPONIBILIDAD = {
+    'Dra. Rosario Saldaña': [
+      { fecha: '2026-09-03', inicio: 540, fin: 690 },  // 09:00 a 11:30
+      { fecha: '2026-09-10', inicio: 540, fin: 690 },
+      { fecha: '2026-09-11', inicio: 900, fin: 1080 }, // 15:00 a 18:00
+      { fecha: '2026-09-17', inicio: 540, fin: 690 },
+      { fecha: '2026-09-24', inicio: 540, fin: 690 },
+      { fecha: '2026-09-25', inicio: 900, fin: 1080 },
+      { fecha: '2026-09-26', inicio: 540, fin: 720 }   // 09:00 a 12:00
+    ],
+    'Dr. Rodrigo Rivas': [
+      { fecha: '2026-09-12', inicio: 540, fin: 750 }   // 09:00 a 12:30
+    ],
+    'Dr. Tomás Pérez': [
+      { fecha: '2026-09-22', inicio: 870, fin: 1020 }, // 14:30 a 17:00
+      { fecha: '2026-09-29', inicio: 870, fin: 1020 }
+    ]
+  };
+
+  function fechaISO(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function disponibilidadDia(d, medico) {
+    const m = medico || MEDICOS[state.medico];
+    const lista = DISPONIBILIDAD[m.nombre] || [];
+    const fechaStr = fechaISO(d);
+    return lista.find(function (x) { return x.fecha === fechaStr; }) || null;
+  }
 
   const hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
 
@@ -566,11 +599,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   }
   function horariosDe(d) {
     if (!d) return [];
-    const m = MEDICOS[state.medico];
-    if (!m.dias.includes(d.getDay())) return [];
-    const rangos = d.getDay() === 6 ? [m.rangos[0]] : m.rangos;
+    const disp = disponibilidadDia(d);
+    if (!disp) return [];
     const out = [];
-    for (const [a, b] of rangos) for (let t = a; t <= b - INTERVALO; t += INTERVALO) out.push(t);
+    for (let t = disp.inicio; t <= disp.fin - INTERVALO; t += INTERVALO) out.push(t);
     return out;
   }
 
@@ -697,7 +729,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     }
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
-      const activo = d >= hoy0 && m.dias.includes(d.getDay());
+      const activo = d >= hoy0 && !!disponibilidadDia(d, m);
       const elegido = state.sel && state.sel.getTime() === d.getTime();
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -711,7 +743,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         btn.addEventListener('click', () => {
           state.sel = d; state.hora = null; state.etapa = 'elegir'; state.ocupadas = [];
           renderCalendar(); renderElegirPanel(); showPanel('elegir');
-          const fechaStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          const fechaStr = fechaISO(d);
           const medicoNombre = MEDICOS[state.medico].nombre;
           const miToken = ++ocupadosToken;
           cargarOcupados(medicoNombre, fechaStr).then((horas) => {
@@ -759,7 +791,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     let hayDiasHabiles = false;
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
-      if (d >= hoy0 && m.dias.includes(d.getDay())) { hayDiasHabiles = true; break; }
+      if (d >= hoy0 && disponibilidadDia(d, m)) { hayDiasHabiles = true; break; }
     }
     const mesVacio = state.etapa === 'elegir' && !state.sel && !hayDiasHabiles;
     mesVacioBox.style.display = mesVacio ? 'block' : 'none';
