@@ -930,7 +930,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       const f = state.sel;
       const fecha = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
       const nombreCompleto = (state.nombre.trim() + ' ' + state.apellido.trim()).trim();
-      const telefonoCompleto = '+598 ' + state.telefono.trim();
+      const telefonoCompleto = '(+598) ' + state.telefono.trim();
       const datos = {
         enviado: new Date().toLocaleString('sv-SE', { timeZone: 'America/Montevideo' }), nombre: nombreCompleto, cedula: state.cedula.trim(),
         telefono: telefonoCompleto,
