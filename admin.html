@@ -299,9 +299,17 @@
 
       const heading = document.createElement('div');
       heading.className = 'day-heading';
-      heading.innerHTML = (esHoy ? 'Hoy · ' : '') + capitalizar(fechaLabel(fecha)) +
-        ' <span class="count">(' + items.length + (items.length === 1 ? ' turno' : ' turnos') + ')</span>';
+      heading.style.justifyContent = 'space-between';
+      heading.style.flexWrap = 'wrap';
+      heading.innerHTML =
+        '<span>' + (esHoy ? 'Hoy · ' : '') + capitalizar(fechaLabel(fecha)) +
+        ' <span class="count">(' + items.length + (items.length === 1 ? ' turno' : ' turnos') + ')</span></span>' +
+        '<button type="button" class="btn-descargar-dia" style="background:none;border:1px solid #C7D6DC;color:#14496E;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;letter-spacing:.02em;display:flex;align-items:center;gap:6px">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"></path><path d="M6 11l6 6 6-6"></path><path d="M4 20h16"></path></svg>' +
+          'Descargar planilla' +
+        '</button>';
       grupoEl.appendChild(heading);
+      heading.querySelector('.btn-descargar-dia').addEventListener('click', () => descargarPlanillaDia(fecha, items));
 
       items.forEach(r => {
         const card = document.createElement('div');
@@ -426,6 +434,31 @@
   function capitalizar(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Descarga, como planilla (.csv, se abre con Excel), los turnos de un solo
+  // día — para llevarle al oftalmólogo justo los pacientes de esa consulta,
+  // sin mezclarlos con los de otros días.
+  function csvCelda(v) {
+    const s = v == null ? '' : String(v);
+    return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function descargarPlanillaDia(fecha, items) {
+    const encabezados = ['Hora', 'Nombre', 'Cédula', 'Teléfono', 'Nacimiento', 'Oftalmólogo', 'Servicio', 'Diabetes', 'Lentes de contacto', 'Pagado'];
+    const filas = items
+      .slice()
+      .sort((a, b) => (a.hora || '').localeCompare(b.hora || ''))
+      .map(r => [r.hora, r.nombre, r.cedula, r.telefono, r.nacimiento, r.oftalmologo, r.servicio, r.diabetes, r.lentesContacto, r.pagado]);
+    const csv = [encabezados, ...filas].map(fila => fila.map(csvCelda).join(';')).join('\r\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'turnos_' + fecha + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   tabsPeriodo.addEventListener('click', (e) => {
