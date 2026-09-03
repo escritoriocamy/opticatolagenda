@@ -357,20 +357,6 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         <p style="margin:8px 0 20px;font-size:14px;color:#8A7A54">El fondo de ojo se realiza dentro de esta consulta.</p>
         <div class="price-grid">
           <div class="pcell">
-            <div class="pname">Convenio Óptica Tol</div>
-            <div class="pprice"><span class="pcur">$</span>1.800</div>
-            <div class="pnote">+ OCT: $3.000</div>
-          </div>
-          <div class="pcell">
-            <div class="pname">Convenio Óptica Tol Empresarial</div>
-            <div class="pprice"><span class="pcur">$</span>1.500</div>
-            <div class="pnote">Consultar convenios activos</div>
-          </div>
-          <div class="pcell">
-            <div class="pname">Convenio Óptica Tol INALER</div>
-            <div class="pprice"><span class="pcur">$</span>500</div>
-          </div>
-          <div class="pcell">
             <div class="pname">Particular — Asistencia Privada</div>
             <div class="pprice"><span class="pcur">$</span>3.000</div>
             <div class="pnote">+ OCT: $4.500</div>
@@ -538,7 +524,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       { fecha: '2026-09-17', inicio: 540, fin: 690 },
       { fecha: '2026-09-24', inicio: 540, fin: 690 },
       { fecha: '2026-09-25', inicio: 900, fin: 1080 },
-      { fecha: '2026-09-26', inicio: 540, fin: 720 }   // 09:00 a 12:00
+      { fecha: '2026-09-26', inicio: 540, fin: 735 }   // 09:00 a 12:00 (incluye el turno de las 12:00)
     ],
     'Dr. Rodrigo Rivas': [
       { fecha: '2026-09-12', inicio: 540, fin: 750 }   // 09:00 a 12:30
@@ -549,20 +535,36 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     ]
   };
 
+  // Selección especial: "cualquier oftalmólogo" — el paciente ve la
+  // disponibilidad combinada de los tres médicos y, al elegir un día, el
+  // sitio determina solo cuál lo atiende ese día (hoy no hay fechas en que
+  // atienda más de un médico a la vez).
+  const TODOS = 'todos';
+
   function fechaISO(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
   function disponibilidadDia(d, medico) {
-    const m = medico || MEDICOS[state.medico];
-    const lista = DISPONIBILIDAD[m.nombre] || [];
+    const lista = DISPONIBILIDAD[medico.nombre] || [];
     const fechaStr = fechaISO(d);
     return lista.find(function (x) { return x.fecha === fechaStr; }) || null;
+  }
+  function medicoDeFecha(fechaStr) {
+    for (const nombreDoc in DISPONIBILIDAD) {
+      if (DISPONIBILIDAD[nombreDoc].some(function (x) { return x.fecha === fechaStr; })) return nombreDoc;
+    }
+    return null;
+  }
+  function disponibilidadDiaTodos(d) {
+    const nombreDoc = medicoDeFecha(fechaISO(d));
+    if (!nombreDoc) return null;
+    return { nombreDoc: nombreDoc, disp: disponibilidadDia(d, { nombre: nombreDoc }) };
   }
 
   const hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
 
   const state = {
-    medico: 0,
+    medico: TODOS,
     servicio: 'Receta para lentes convencionales y lentes de contacto',
     mes: new Date().getMonth(),
     anio: new Date().getFullYear(),
@@ -598,8 +600,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     return d ? DIAS_CORTOS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] : '';
   }
   function horariosDe(d) {
-    if (!d) return [];
-    const disp = disponibilidadDia(d);
+    if (!d || state.medico === TODOS) return [];
+    const disp = disponibilidadDia(d, MEDICOS[state.medico]);
     if (!disp) return [];
     const out = [];
     for (let t = disp.inicio; t <= disp.fin - INTERVALO; t += INTERVALO) out.push(t);
@@ -610,6 +612,22 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   const medicosList = document.getElementById('medicos-list');
   function renderMedicos() {
     medicosList.innerHTML = '';
+
+    const activoTodos = state.medico === TODOS;
+    const btnTodos = document.createElement('button');
+    btnTodos.type = 'button';
+    btnTodos.className = 'medico-btn';
+    btnTodos.style.cssText = 'text-align:left;padding:14px 16px;border-radius:12px;cursor:pointer;border:1px solid ' +
+      (activoTodos ? '#14496E' : '#DCE2E5') + ';background:' + (activoTodos ? '#14496E' : '#fff') + ';color:' + (activoTodos ? '#fff' : '#0F2230');
+    btnTodos.innerHTML =
+      '<span style="display:block;font-size:15.5px;font-weight:700;letter-spacing:-0.01em">Cualquier oftalmólogo</span>' +
+      '<span style="display:block;font-size:12.5px;margin-top:3px;opacity:.75">Elegís el día y te asignamos el que atienda</span>';
+    btnTodos.addEventListener('click', () => {
+      state.medico = TODOS; state.sel = null; state.hora = null; state.etapa = 'elegir'; state.ocupadas = [];
+      renderMedicos(); renderCalendar(); renderElegirPanel(); showPanel('elegir');
+    });
+    medicosList.appendChild(btnTodos);
+
     MEDICOS.forEach((m, i) => {
       const active = i === state.medico;
       const btn = document.createElement('button');
@@ -629,9 +647,6 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   }
 
   const CONVENIOS = [
-    { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
-    { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
-    { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
     { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
     { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
     { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
@@ -717,7 +732,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     mesLabelEl.textContent = MESES[state.mes];
     anioLabelEl.textContent = String(state.anio);
     calGrid.innerHTML = '';
-    const m = MEDICOS[state.medico];
+    const enTodos = state.medico === TODOS;
+    const m = enTodos ? null : MEDICOS[state.medico];
     const primero = new Date(state.anio, state.mes, 1);
     const total = new Date(state.anio, state.mes + 1, 0).getDate();
 
@@ -729,7 +745,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     }
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
-      const activo = d >= hoy0 && !!disponibilidadDia(d, m);
+      const resuelto = enTodos ? disponibilidadDiaTodos(d) : null;
+      const activo = d >= hoy0 && (enTodos ? !!resuelto : !!disponibilidadDia(d, m));
       const elegido = state.sel && state.sel.getTime() === d.getTime();
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -741,8 +758,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         ';cursor:' + (activo ? 'pointer' : 'default') + ';transition:background .15s ease';
       if (activo) {
         btn.addEventListener('click', () => {
+          if (enTodos && resuelto) {
+            const idx = MEDICOS.findIndex(function (x) { return x.nombre === resuelto.nombreDoc; });
+            if (idx !== -1) state.medico = idx;
+          }
           state.sel = d; state.hora = null; state.etapa = 'elegir'; state.ocupadas = [];
-          renderCalendar(); renderElegirPanel(); showPanel('elegir');
+          renderMedicos(); renderCalendar(); renderElegirPanel(); showPanel('elegir');
           const fechaStr = fechaISO(d);
           const medicoNombre = MEDICOS[state.medico].nombre;
           const miToken = ++ocupadosToken;
@@ -781,21 +802,25 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function renderElegirPanel() {
     diaElegidoLabel.textContent = state.sel ? etiqueta(state.sel) : 'Elegí un día';
 
+    const enTodos = state.medico === TODOS;
+    const nombreActual = enTodos ? 'cualquiera de nuestros oftalmólogos' : MEDICOS[state.medico].nombre;
+
     const sinDia = state.etapa === 'elegir' && !state.sel;
     sinDiaMsg.style.display = sinDia ? 'block' : 'none';
-    if (sinDia) sinDiaMsg.textContent = 'Elegí un día en el calendario para ver los horarios disponibles con ' + MEDICOS[state.medico].nombre + '.';
+    if (sinDia) sinDiaMsg.textContent = 'Elegí un día en el calendario para ver los horarios disponibles con ' + nombreActual + '.';
 
     // ¿hay algún día habilitado en el mes actual?
-    const m = MEDICOS[state.medico];
+    const m = enTodos ? null : MEDICOS[state.medico];
     const total = new Date(state.anio, state.mes + 1, 0).getDate();
     let hayDiasHabiles = false;
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
-      if (d >= hoy0 && disponibilidadDia(d, m)) { hayDiasHabiles = true; break; }
+      if (d < hoy0) continue;
+      if (enTodos ? disponibilidadDiaTodos(d) : disponibilidadDia(d, m)) { hayDiasHabiles = true; break; }
     }
     const mesVacio = state.etapa === 'elegir' && !state.sel && !hayDiasHabiles;
     mesVacioBox.style.display = mesVacio ? 'block' : 'none';
-    if (mesVacio) mesVacioTexto.textContent = 'Sin días disponibles en ' + MESES[state.mes] + ' con ' + m.nombre + '.';
+    if (mesVacio) mesVacioTexto.textContent = 'Sin días disponibles en ' + MESES[state.mes] + ' con ' + nombreActual + '.';
 
     renderHorarios();
   }
