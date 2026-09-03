@@ -357,6 +357,20 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         <p style="margin:8px 0 20px;font-size:14px;color:#8A7A54">El fondo de ojo se realiza dentro de esta consulta.</p>
         <div class="price-grid">
           <div class="pcell">
+            <div class="pname">Convenio Óptica Tol</div>
+            <div class="pprice"><span class="pcur">$</span>1.800</div>
+            <div class="pnote">+ OCT: $3.000</div>
+          </div>
+          <div class="pcell">
+            <div class="pname">Convenio Óptica Tol Empresarial</div>
+            <div class="pprice"><span class="pcur">$</span>1.500</div>
+            <div class="pnote">Consultar convenios activos</div>
+          </div>
+          <div class="pcell">
+            <div class="pname">Convenio Óptica Tol INALER</div>
+            <div class="pprice"><span class="pcur">$</span>500</div>
+          </div>
+          <div class="pcell">
             <div class="pname">Particular — Asistencia Privada</div>
             <div class="pprice"><span class="pcur">$</span>3.000</div>
             <div class="pnote">+ OCT: $4.500</div>
@@ -647,11 +661,17 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   }
 
   const CONVENIOS = [
+    { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
+    { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
+    { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
     { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
     { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
     { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
   ];
-  const SERVICIOS_CON_CONVENIO = ['Consulta oftalmológica integral', 'Receta para lentes convencionales y lentes de contacto'];
+  // Los convenios de Óptica Tol solo aplican al servicio de "Receta para
+  // lentes" — la consulta oftalmológica integral se cobra aparte, sin
+  // convenio (confirmado con Giorgina).
+  const SERVICIOS_CON_CONVENIO = ['Receta para lentes convencionales y lentes de contacto'];
   function esServicioConConvenio(v) { return SERVICIOS_CON_CONVENIO.indexOf(v) !== -1; }
 
   const OCT_PRECIO_BASE = 2000;
