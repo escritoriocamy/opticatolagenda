@@ -67,6 +67,7 @@
   .badge{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
   .badge-diabetes{background:#FBE7E1;color:#B4361A}
   .badge-pagado{background:#DFF3E6;color:#1F7A45}
+  .badge-sincosto{background:#EAE3F5;color:#5B3A9E}
   .appt-meta{font-size:13.5px;color:#4C5E68;line-height:1.6}
   .appt-meta b{color:#0F2230;font-weight:600}
   .appt-extra{margin-top:6px;font-size:12.5px;color:#93A5AF}
@@ -317,14 +318,16 @@
         const diabetesBadge = r.diabetes === 'Sí' ? '<span class="badge badge-diabetes">Diabetes</span>' : '';
         const lentesBadge = r.lentesContacto === 'Sí' ? '<span class="badge badge-diabetes">Usa lentes de contacto</span>' : '';
         const pagadoBadge = r.pagado === 'Sí' ? '<span class="badge badge-pagado">Pagado</span>' : '';
+        const sinCostoBadge = r.sinCosto === 'Sí' ? '<span class="badge badge-sincosto">Sin costo</span>' : '';
         card.innerHTML =
           '<div class="appt-time">' + (r.hora || '') + '</div>' +
           '<div class="appt-body">' +
-            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + pagadoBadge + '</div>' +
+            '<div class="appt-top"><span class="appt-name">' + escapeHtml(r.nombre || 'Sin nombre') + '</span>' + diabetesBadge + lentesBadge + pagadoBadge + sinCostoBadge + '</div>' +
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
             '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="https://wa.me/' + escapeHtml(r.telefono.replace(/\D/g, '')) + '" target="_blank" rel="noopener" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
             '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">' +
               '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado') + '</button>' +
+              '<button type="button" class="btn-sincosto" style="background:none;border:1px solid ' + (r.sinCosto === 'Sí' ? '#D4C4EC' : '#C7D6DC') + ';color:' + (r.sinCosto === 'Sí' ? '#5B3A9E' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.sinCosto === 'Sí' ? '✓ Sin costo — desmarcar' : 'Marcar sin costo') + '</button>' +
               '<button type="button" class="btn-cancelar" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
             '</div>' +
           '</div>';
@@ -332,6 +335,8 @@
         btnCancelar.addEventListener('click', () => cancelarReserva(r, btnCancelar));
         const btnPagado = card.querySelector('.btn-pagado');
         btnPagado.addEventListener('click', () => togglePagado(r, btnPagado));
+        const btnSinCosto = card.querySelector('.btn-sincosto');
+        btnSinCosto.addEventListener('click', () => toggleSinCosto(r, btnSinCosto));
         grupoEl.appendChild(card);
       });
 
@@ -431,6 +436,34 @@
     }
   }
 
+  async function toggleSinCosto(r, boton) {
+    const nuevoValor = r.sinCosto === 'Sí' ? 'no' : 'si';
+    boton.disabled = true;
+    boton.textContent = 'Guardando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&marcarSinCosto=1&sinCosto=' + nuevoValor +
+        '&fecha=' + encodeURIComponent(r.fecha) +
+        '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
+        '&hora=' + encodeURIComponent(r.hora) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        r.sinCosto = nuevoValor === 'si' ? 'Sí' : 'No';
+        render();
+        updatedNote.textContent = 'Actualizado · ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
+      } else {
+        boton.disabled = false;
+        boton.textContent = r.sinCosto === 'Sí' ? '✓ Sin costo — desmarcar' : 'Marcar sin costo';
+        alert('No pudimos guardarlo. Probá de nuevo.');
+      }
+    } catch (e) {
+      boton.disabled = false;
+      boton.textContent = r.sinCosto === 'Sí' ? '✓ Sin costo — desmarcar' : 'Marcar sin costo';
+      alert('No pudimos conectar. Probá de nuevo.');
+    }
+  }
+
   function capitalizar(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -444,11 +477,11 @@
     return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
   }
   function descargarPlanillaDia(fecha, items) {
-    const encabezados = ['Hora', 'Nombre', 'Cédula', 'Teléfono', 'Nacimiento', 'Oftalmólogo', 'Servicio', 'Diabetes', 'Lentes de contacto', 'Pagado'];
+    const encabezados = ['Hora', 'Nombre', 'Cédula', 'Teléfono', 'Nacimiento', 'Oftalmólogo', 'Servicio', 'Diabetes', 'Lentes de contacto', 'Pagado', 'Sin costo'];
     const filas = items
       .slice()
       .sort((a, b) => (a.hora || '').localeCompare(b.hora || ''))
-      .map(r => [r.hora, r.nombre, r.cedula, r.telefono, r.nacimiento, r.oftalmologo, r.servicio, r.diabetes, r.lentesContacto, r.pagado]);
+      .map(r => [r.hora, r.nombre, r.cedula, r.telefono, r.nacimiento, r.oftalmologo, r.servicio, r.diabetes, r.lentesContacto, r.pagado, r.sinCosto]);
     const csv = [encabezados, ...filas].map(fila => fila.map(csvCelda).join(';')).join('\r\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
