@@ -530,6 +530,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   // la agenda que manda el consultorio (no es un horario fijo semanal: cada
   // médico puede tener días distintos cada mes). Mientras un mes no tenga
   // franjas cargadas acá, el sitio no deja agendar en él.
+  // "inicio" y "fin" son minutos desde las 00:00 (9:00 = 540, 12:30 = 750,
+  // etc.) tal cual figuran en la agenda del consultorio — "fin" es el último
+  // horario que se puede agendar, INCLUSIVE (de 14:30 a 17:00 permite
+  // agendar a las 17:00 como último turno).
   const DISPONIBILIDAD = {
     'Dra. Rosario Saldaña': [
       { fecha: '2026-09-03', inicio: 540, fin: 690 },  // 09:00 a 11:30
@@ -538,7 +542,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       { fecha: '2026-09-17', inicio: 540, fin: 690 },
       { fecha: '2026-09-24', inicio: 540, fin: 690 },
       { fecha: '2026-09-25', inicio: 900, fin: 1080 },
-      { fecha: '2026-09-26', inicio: 540, fin: 735 }   // 09:00 a 12:00 (incluye el turno de las 12:00)
+      { fecha: '2026-09-26', inicio: 540, fin: 720 }   // 09:00 a 12:00
     ],
     'Dr. Rodrigo Rivas': [
       { fecha: '2026-09-12', inicio: 540, fin: 750 }   // 09:00 a 12:30
@@ -618,7 +622,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const disp = disponibilidadDia(d, MEDICOS[state.medico]);
     if (!disp) return [];
     const out = [];
-    for (let t = disp.inicio; t <= disp.fin - INTERVALO; t += INTERVALO) out.push(t);
+    for (let t = disp.inicio; t <= disp.fin; t += INTERVALO) out.push(t); // "fin" es el último horario agendable, inclusive
     return out;
   }
 
