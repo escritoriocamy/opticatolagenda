@@ -3,8 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Consultorio Oftalmológico · San José de Mayo</title>
-<meta name="description" content="Consultas y estudios oftalmológicos en San José de Mayo. Agendá tu hora online sin espera.">
+<title>Consultorio Oftalmológico San José de Mayo | Agendá tu hora online</title>
+<meta name="description" content="Consultorio Oftalmológico en San José de Mayo, Uruguay. Consultas y estudios oftalmológicos, agenda de turnos online. Sarandí 575.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://escritoriocamy.github.io/opticatolagenda/">
+
+<!-- Open Graph / redes sociales y WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_UY">
+<meta property="og:site_name" content="Consultorio Oftalmológico">
+<meta property="og:title" content="Consultorio Oftalmológico San José de Mayo">
+<meta property="og:description" content="Consultas y estudios oftalmológicos en San José de Mayo, Uruguay. Agendá tu hora online sin espera.">
+<meta property="og:url" content="https://escritoriocamy.github.io/opticatolagenda/">
+<meta property="og:image" content="https://escritoriocamy.github.io/opticatolagenda/logo-consultorio.png.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Consultorio Oftalmológico San José de Mayo">
+<meta name="twitter:description" content="Consultas y estudios oftalmológicos en San José de Mayo, Uruguay. Agendá tu hora online sin espera.">
+<meta name="twitter:image" content="https://escritoriocamy.github.io/opticatolagenda/logo-consultorio.png.jpeg">
+
+<!-- Datos estructurados para Google (ficha local: dirección, teléfono, horarios) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Consultorio Oftalmológico",
+  "image": "https://escritoriocamy.github.io/opticatolagenda/logo-consultorio.png.jpeg",
+  "url": "https://escritoriocamy.github.io/opticatolagenda/",
+  "telephone": "+598 92 494 961",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Sarandí 575",
+    "addressLocality": "San José de Mayo",
+    "addressRegion": "San José",
+    "addressCountry": "UY"
+  },
+  "medicalSpecialty": "Ophthalmologic",
+  "areaServed": "San José de Mayo, Uruguay"
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -481,7 +519,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   <footer style="padding:26px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#64757F">
     <span>Consultorio Oftalmológico · San José de Mayo</span>
-    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 494 961 <a href="admin.html" class="footer-access" title="Acceso al panel de reservas">Acceso</a></span>
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Sarandí 575 · 092 494 961 · <a href="privacidad.html" style="color:#64757F;text-decoration:underline">Política de Privacidad</a> <a href="admin.html" class="footer-access" title="Acceso al panel de reservas">Acceso</a></span>
   </footer>
 </div>
 
@@ -589,7 +627,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     sel: null,
     hora: null,
     etapa: 'elegir',
-    nombre: '', apellido: '', cedula: '', telefono: '', nacimiento: '', diabetes: '', lentesContacto: '', error: '',
+    nombre: '', apellido: '', cedula: '', telefono: '', nacimiento: '', diabetes: '', lentesContacto: '', aceptaPrivacidad: false, error: '',
     enviando: false, canal: null, ocupadas: []
   };
 
@@ -928,6 +966,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         '</div>' +
         '<div id="aviso-lentes" style="display:none;font-size:13px;color:#14496E;background:#E7F0F5;border-radius:8px;padding:10px 12px;margin-top:2px">Sacate los lentes de contacto 12 horas antes de la consulta.</div>' +
       '</div>' +
+      '<label style="display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:400;text-transform:none;letter-spacing:normal;color:#42545E;line-height:1.5">' +
+        '<input type="checkbox" id="in-privacidad" style="width:16px;height:16px;margin-top:2px;flex:none">' +
+        '<span>Acepto la <a href="privacidad.html" target="_blank" rel="noopener" style="color:#14496E;font-weight:600">Política de Privacidad</a> y el uso de mis datos para gestionar este turno. *</span>' +
+      '</label>' +
       '<div id="form-error" style="display:none;font-size:13px;color:#C22A12;font-weight:600"></div>' +
       '<button type="button" id="btn-confirmar" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Solicitar hora</button>';
 
@@ -944,6 +986,9 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     const avisoLentes = document.getElementById('aviso-lentes');
     const errorDiv = document.getElementById('form-error');
     const btnConfirmar = document.getElementById('btn-confirmar');
+    const inPrivacidad = document.getElementById('in-privacidad');
+    inPrivacidad.checked = state.aceptaPrivacidad;
+    inPrivacidad.addEventListener('change', (e) => { state.aceptaPrivacidad = e.target.checked; });
 
     inNombre.value = state.nombre;
     inApellido.value = state.apellido;
@@ -1004,6 +1049,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       if (!state.nacimiento) return setError('Ingresá tu fecha de nacimiento.');
       if (!state.diabetes) return setError('Indicá si tenés diabetes.');
       if (!state.lentesContacto) return setError('Indicá si usás lentes de contacto.');
+      if (!state.aceptaPrivacidad) return setError('Aceptá la Política de Privacidad para continuar.');
       setError('');
 
       const m2 = MEDICOS[state.medico];
@@ -1093,7 +1139,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
     document.getElementById('btn-reiniciar').addEventListener('click', () => {
       state.etapa = 'elegir'; state.sel = null; state.hora = null;
-      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.telefono = ''; state.nacimiento = ''; state.diabetes = ''; state.lentesContacto = ''; state.error = '';
+      state.nombre = ''; state.apellido = ''; state.cedula = ''; state.telefono = ''; state.nacimiento = ''; state.diabetes = ''; state.lentesContacto = ''; state.aceptaPrivacidad = false; state.error = '';
       renderCalendar(); renderElegirPanel(); showPanel('elegir');
     });
   }
