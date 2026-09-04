@@ -573,11 +573,14 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   // "inicio" y "fin" son minutos desde las 00:00 (9:00 = 540, 12:30 = 750,
   // etc.) tal cual figuran en la agenda del consultorio — "fin" es el último
   // horario que se puede agendar, INCLUSIVE (de 14:30 a 17:00 permite
-  // agendar a las 17:00 como último turno).
+  // agendar a las 17:00 como último turno). Un mismo médico puede tener más
+  // de una franja el mismo día (ej: mañana y tarde) — solo hay que agregar
+  // otro objeto con la misma "fecha".
   const DISPONIBILIDAD = {
     'Dra. Rosario Saldaña': [
       { fecha: '2026-09-03', inicio: 540, fin: 690 },  // 09:00 a 11:30
       { fecha: '2026-09-10', inicio: 540, fin: 690 },
+      { fecha: '2026-09-11', inicio: 540, fin: 690 },  // 09:00 a 11:30 (consulta agregada)
       { fecha: '2026-09-11', inicio: 900, fin: 1080 }, // 15:00 a 18:00
       { fecha: '2026-09-17', inicio: 540, fin: 690 },
       { fecha: '2026-09-24', inicio: 540, fin: 690 },
@@ -602,10 +605,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function fechaISO(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
+  // Devuelve TODAS las franjas de ese médico en ese día (puede ser más de
+  // una, ej: mañana y tarde). Siempre un array — vacío si no atiende ese día.
   function disponibilidadDia(d, medico) {
     const lista = DISPONIBILIDAD[medico.nombre] || [];
     const fechaStr = fechaISO(d);
-    return lista.find(function (x) { return x.fecha === fechaStr; }) || null;
+    return lista.filter(function (x) { return x.fecha === fechaStr; });
   }
   function medicoDeFecha(fechaStr) {
     for (const nombreDoc in DISPONIBILIDAD) {
@@ -659,10 +664,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   }
   function horariosDe(d) {
     if (!d || state.medico === TODOS) return [];
-    const disp = disponibilidadDia(d, MEDICOS[state.medico]);
-    if (!disp) return [];
+    const disps = disponibilidadDia(d, MEDICOS[state.medico]);
     const out = [];
-    for (let t = disp.inicio; t <= disp.fin; t += INTERVALO) out.push(t); // "fin" es el último horario agendable, inclusive
+    disps.forEach(function (disp) {
+      for (let t = disp.inicio; t <= disp.fin; t += INTERVALO) out.push(t); // "fin" es el último horario agendable, inclusive
+    });
+    out.sort(function (a, b) { return a - b; });
     return out;
   }
 
@@ -847,7 +854,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
       const resuelto = enTodos ? disponibilidadDiaTodos(d) : null;
-      const activo = d >= hoy0 && (enTodos ? !!resuelto : !!disponibilidadDia(d, m));
+      const activo = d >= hoy0 && (enTodos ? !!resuelto : disponibilidadDia(d, m).length > 0);
       const elegido = state.sel && state.sel.getTime() === d.getTime();
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -917,7 +924,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     for (let n = 1; n <= total; n++) {
       const d = new Date(state.anio, state.mes, n);
       if (d < hoy0) continue;
-      if (enTodos ? disponibilidadDiaTodos(d) : disponibilidadDia(d, m)) { hayDiasHabiles = true; break; }
+      if (enTodos ? disponibilidadDiaTodos(d) : disponibilidadDia(d, m).length > 0) { hayDiasHabiles = true; break; }
     }
     const mesVacio = state.etapa === 'elegir' && !state.sel && !hayDiasHabiles;
     mesVacioBox.style.display = mesVacio ? 'block' : 'none';
