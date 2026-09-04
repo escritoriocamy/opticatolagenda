@@ -265,8 +265,11 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
               <option>Refractometría</option>
             </select>
           </label>
-          <div id="convenio-wrap" style="display:none;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Convenio
+          <div id="convenio-wrap" style="display:none;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F"><span id="tarifa-label">Convenio</span>
             <select id="convenio-select" style="border:1px solid #DCE2E5;border-radius:10px;padding:12px;font-size:14.5px;color:#0F2230;background:#fff;text-transform:none;letter-spacing:normal;font-weight:400"></select>
+          </div>
+          <div id="precio-fijo-wrap" style="display:none;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64757F">Precio
+            <div id="precio-fijo-valor" style="font-size:14.5px;color:#0F2230;text-transform:none;letter-spacing:normal;font-weight:600;padding:12px;border:1px solid #DCE2E5;border-radius:10px;background:#F7F9FA"></div>
           </div>
           <label id="oct-plus-wrap" style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:normal;color:#42545E">
             <input type="checkbox" id="oct-plus-check" style="width:16px;height:16px">
@@ -701,47 +704,73 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     });
   }
 
-  const CONVENIOS = [
-    { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
-    { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
-    { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
-    { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
-    { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
-    { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
-  ];
-  // Los convenios de Óptica Tol solo aplican al servicio de "Receta para
-  // lentes" — la consulta oftalmológica integral se cobra aparte, sin
-  // convenio (confirmado con Giorgina).
-  const SERVICIOS_CON_CONVENIO = ['Receta para lentes convencionales y lentes de contacto'];
-  function esServicioConConvenio(v) { return SERVICIOS_CON_CONVENIO.indexOf(v) !== -1; }
+  // Tarifas por servicio. Cada servicio que tiene más de un precio (según
+  // convenio o tipo de asistencia) tiene su propia lista acá — así el
+  // desplegable de precio que aparece al reservar muestra solo las opciones
+  // que corresponden a ese servicio (ej: "Convenio Óptica Tol" solo en
+  // Receta, nunca en Consulta integral — confirmado con Giorgina).
+  const TARIFAS_POR_SERVICIO = {
+    'Receta para lentes convencionales y lentes de contacto': [
+      { nombre: 'Convenio Óptica Tol', precio: 1800, oct: 3000 },
+      { nombre: 'Convenio Óptica Tol Empresarial', precio: 1500, oct: null, nota: 'Consultar convenios activos' },
+      { nombre: 'Convenio Óptica Tol INALER', precio: 500, oct: null },
+      { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
+      { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
+      { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
+    ],
+    'Consulta oftalmológica integral': [
+      { nombre: 'Particular — Asistencia Privada', precio: 3000, oct: 4500 },
+      { nombre: 'Particular — Asistencia Pública', precio: 2000, oct: 3500 },
+      { nombre: 'Particular — Socios ANDA', precio: 2700, oct: 4200 }
+    ],
+    'Paquimetría': [
+      { nombre: 'Salud pública', precio: 1100 },
+      { nombre: 'Otros', precio: 1500 }
+    ],
+    'OCT': [
+      { nombre: 'Consulta — Socios AMSJ — Salud Pública', precio: 1500 },
+      { nombre: 'Otros', precio: 2000 }
+    ]
+  };
+  // Servicios con un único precio fijo (no hace falta elegir nada).
+  const PRECIOS_FIJOS = {
+    'Refractometría': 1000
+  };
 
   const OCT_PRECIO_BASE = 2000;
 
   const servicioSelect = document.getElementById('servicio-select');
   const convenioWrap = document.getElementById('convenio-wrap');
+  const tarifaLabel = document.getElementById('tarifa-label');
   const convenioSelect = document.getElementById('convenio-select');
+  const precioFijoWrap = document.getElementById('precio-fijo-wrap');
+  const precioFijoValor = document.getElementById('precio-fijo-valor');
   const octPlusWrap = document.getElementById('oct-plus-wrap');
   const octPlusCheck = document.getElementById('oct-plus-check');
   const octPlusLabel = document.getElementById('oct-plus-label');
 
   function fmtPesos(n) { return '$' + n.toLocaleString('es-UY'); }
 
-  function convenioActual() { return CONVENIOS[convenioSelect.selectedIndex] || CONVENIOS[0]; }
+  function tieneTarifas(v) { return v in TARIFAS_POR_SERVICIO; }
+  function tarifasDe(v) { return TARIFAS_POR_SERVICIO[v] || []; }
+  function tarifaActual() { const lista = tarifasDe(servicioSelect.value); return lista[convenioSelect.selectedIndex] || lista[0]; }
 
   function octPrecioActual() {
-    if (esServicioConConvenio(servicioSelect.value)) {
-      const c = convenioActual();
-      return c.oct || OCT_PRECIO_BASE;
+    if (tieneTarifas(servicioSelect.value)) {
+      const c = tarifaActual();
+      return (c && c.oct) || OCT_PRECIO_BASE;
     }
     return OCT_PRECIO_BASE;
   }
 
   function actualizarServicioFinal() {
     let texto;
-    if (esServicioConConvenio(servicioSelect.value)) {
-      const c = convenioActual();
+    if (tieneTarifas(servicioSelect.value)) {
+      const c = tarifaActual();
       texto = servicioSelect.value + ' — ' + c.nombre + ' (' + fmtPesos(c.precio) + ')';
       if (c.nota) texto += ' — ' + c.nota;
+    } else if (servicioSelect.value in PRECIOS_FIJOS) {
+      texto = servicioSelect.value + ' (' + fmtPesos(PRECIOS_FIJOS[servicioSelect.value]) + ')';
     } else {
       texto = servicioSelect.value;
     }
@@ -764,7 +793,8 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   function renderConvenios() {
     convenioSelect.innerHTML = '';
-    CONVENIOS.forEach(c => {
+    tarifaLabel.textContent = servicioSelect.value === 'Receta para lentes convencionales y lentes de contacto' ? 'Convenio' : 'Tarifa';
+    tarifasDe(servicioSelect.value).forEach(c => {
       const opt = document.createElement('option');
       opt.textContent = c.nombre + ' — ' + fmtPesos(c.precio);
       convenioSelect.appendChild(opt);
@@ -772,15 +802,25 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     pintarOctPlus();
   }
 
-  servicioSelect.value = esServicioConConvenio(state.servicio.split(' — ')[0]) ? state.servicio.split(' — ')[0] : state.servicio;
-  convenioWrap.style.display = esServicioConConvenio(servicioSelect.value) ? 'flex' : 'none';
-  if (esServicioConConvenio(servicioSelect.value)) renderConvenios(); else pintarOctPlus();
+  function pintarPrecioFijo() {
+    precioFijoValor.textContent = fmtPesos(PRECIOS_FIJOS[servicioSelect.value]);
+    pintarOctPlus();
+  }
 
-  servicioSelect.addEventListener('change', (e) => {
-    const esConvenio = esServicioConConvenio(e.target.value);
-    convenioWrap.style.display = esConvenio ? 'flex' : 'none';
-    if (esConvenio) renderConvenios(); else pintarOctPlus();
-  });
+  function actualizarPanelPrecio() {
+    const conTarifas = tieneTarifas(servicioSelect.value);
+    const conPrecioFijo = servicioSelect.value in PRECIOS_FIJOS;
+    convenioWrap.style.display = conTarifas ? 'flex' : 'none';
+    precioFijoWrap.style.display = conPrecioFijo ? 'flex' : 'none';
+    if (conTarifas) renderConvenios();
+    else if (conPrecioFijo) pintarPrecioFijo();
+    else pintarOctPlus();
+  }
+
+  servicioSelect.value = tieneTarifas(state.servicio.split(' — ')[0]) ? state.servicio.split(' — ')[0] : state.servicio;
+  actualizarPanelPrecio();
+
+  servicioSelect.addEventListener('change', actualizarPanelPrecio);
   convenioSelect.addEventListener('change', pintarOctPlus);
   octPlusCheck.addEventListener('change', actualizarServicioFinal);
 
