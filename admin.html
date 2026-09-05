@@ -317,8 +317,9 @@
         card.className = 'appt-card';
         const diabetesBadge = r.diabetes === 'Sí' ? '<span class="badge badge-diabetes">Diabetes</span>' : '';
         const lentesBadge = r.lentesContacto === 'Sí' ? '<span class="badge badge-diabetes">Usa lentes de contacto</span>' : '';
-        const pagadoBadge = r.pagado === 'Sí' ? '<span class="badge badge-pagado">Pagado</span>' : '';
+        const pagadoBadge = r.pagado === 'Sí' ? '<span class="badge badge-pagado">Pagado' + (r.metodoPago ? ' · ' + escapeHtml(r.metodoPago) : '') + '</span>' : '';
         const sinCostoBadge = r.sinCosto === 'Sí' ? '<span class="badge badge-sincosto">Sin costo</span>' : '';
+        const textoPagado = r.pagado === 'Sí' ? ('✓ Pagado' + (r.metodoPago ? ' (' + r.metodoPago + ')' : '') + ' — desmarcar') : 'Marcar como pagado';
         card.innerHTML =
           '<div class="appt-time">' + (r.hora || '') + '</div>' +
           '<div class="appt-body">' +
@@ -326,17 +327,42 @@
             '<div class="appt-meta"><b>' + escapeHtml(r.oftalmologo || '') + '</b> · ' + escapeHtml(r.servicio || '') + '</div>' +
             '<div class="appt-extra">Cédula ' + escapeHtml(r.cedula || '—') + ' · Nac. ' + escapeHtml(r.nacimiento || '—') + (r.telefono ? ' · <a href="https://wa.me/' + escapeHtml(r.telefono.replace(/\D/g, '')) + '" target="_blank" rel="noopener" style="color:#14496E;font-weight:600">' + escapeHtml(r.telefono) + '</a>' : '') + '</div>' +
             '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">' +
-              '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado') + '</button>' +
+              '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + textoPagado + '</button>' +
               '<button type="button" class="btn-sincosto" style="background:none;border:1px solid ' + (r.sinCosto === 'Sí' ? '#D4C4EC' : '#C7D6DC') + ';color:' + (r.sinCosto === 'Sí' ? '#5B3A9E' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.sinCosto === 'Sí' ? '✓ Sin costo — desmarcar' : 'Marcar sin costo') + '</button>' +
               '<button type="button" class="btn-cancelar" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
+            '</div>' +
+            '<div class="metodo-pago-row" style="display:none;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">' +
+              '<span style="font-size:12px;color:#64757F">¿Cómo pagó?</span>' +
+              '<button type="button" class="btn-metodo" data-metodo="Efectivo" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer">Efectivo</button>' +
+              '<button type="button" class="btn-metodo" data-metodo="Tarjeta" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer">Tarjeta</button>' +
+              '<button type="button" class="btn-metodo" data-metodo="Transferencia" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer">Transferencia</button>' +
+              '<button type="button" class="btn-metodo-cancelar" style="background:none;border:none;color:#93A5AF;font-size:13px;padding:6px 8px;cursor:pointer" title="Cancelar">✕</button>' +
+            '</div>' +
+            '<div style="display:flex;gap:8px;margin-top:8px;align-items:center">' +
+              '<input type="text" class="obs-input" placeholder="Observaciones (opcional)" value="' + escapeHtml(r.observaciones || '') + '" style="flex:1;min-width:150px;border:1px solid #DCE2E5;border-radius:8px;padding:8px 10px;font-size:12.5px;color:#0F2230">' +
+              '<button type="button" class="btn-obs-guardar" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;white-space:nowrap">Guardar</button>' +
             '</div>' +
           '</div>';
         const btnCancelar = card.querySelector('.btn-cancelar');
         btnCancelar.addEventListener('click', () => cancelarReserva(r, btnCancelar));
         const btnPagado = card.querySelector('.btn-pagado');
-        btnPagado.addEventListener('click', () => togglePagado(r, btnPagado));
+        const metodoPagoRow = card.querySelector('.metodo-pago-row');
+        btnPagado.addEventListener('click', () => {
+          if (r.pagado === 'Sí') {
+            togglePagado(r, btnPagado, null);
+          } else {
+            metodoPagoRow.style.display = 'flex';
+          }
+        });
+        card.querySelectorAll('.btn-metodo').forEach(b => {
+          b.addEventListener('click', () => togglePagado(r, btnPagado, b.dataset.metodo));
+        });
+        card.querySelector('.btn-metodo-cancelar').addEventListener('click', () => { metodoPagoRow.style.display = 'none'; });
         const btnSinCosto = card.querySelector('.btn-sincosto');
         btnSinCosto.addEventListener('click', () => toggleSinCosto(r, btnSinCosto));
+        const obsInput = card.querySelector('.obs-input');
+        const btnObsGuardar = card.querySelector('.btn-obs-guardar');
+        btnObsGuardar.addEventListener('click', () => guardarObservacion(r, obsInput, btnObsGuardar));
         grupoEl.appendChild(card);
       });
 
@@ -408,13 +434,18 @@
     abrirModalCancelar(r, boton);
   }
 
-  async function togglePagado(r, boton) {
-    const nuevoValor = r.pagado === 'Sí' ? 'no' : 'si';
+  function textoBotonPagado(r) {
+    return r.pagado === 'Sí' ? ('✓ Pagado' + (r.metodoPago ? ' (' + r.metodoPago + ')' : '') + ' — desmarcar') : 'Marcar como pagado';
+  }
+
+  async function togglePagado(r, boton, metodo) {
+    const nuevoValor = metodo ? 'si' : (r.pagado === 'Sí' ? 'no' : 'si');
     boton.disabled = true;
     boton.textContent = 'Guardando…';
     try {
       const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
         '&marcarPagado=1&pagado=' + nuevoValor +
+        (metodo ? '&metodo=' + encodeURIComponent(metodo) : '') +
         '&fecha=' + encodeURIComponent(r.fecha) +
         '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
         '&hora=' + encodeURIComponent(r.hora) + '&_=' + Date.now();
@@ -422,16 +453,46 @@
       const data = await resp.json();
       if (data.ok) {
         r.pagado = nuevoValor === 'si' ? 'Sí' : 'No';
+        r.metodoPago = nuevoValor === 'si' ? (metodo || r.metodoPago || '') : '';
         render();
         updatedNote.textContent = 'Actualizado · ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
       } else {
         boton.disabled = false;
-        boton.textContent = r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado';
+        boton.textContent = textoBotonPagado(r);
         alert('No pudimos guardarlo. Probá de nuevo.');
       }
     } catch (e) {
       boton.disabled = false;
-      boton.textContent = r.pagado === 'Sí' ? '✓ Pagado — desmarcar' : 'Marcar como pagado';
+      boton.textContent = textoBotonPagado(r);
+      alert('No pudimos conectar. Probá de nuevo.');
+    }
+  }
+
+  async function guardarObservacion(r, inputEl, boton) {
+    const valor = inputEl.value.trim();
+    boton.disabled = true;
+    boton.textContent = 'Guardando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&guardarObservacion=1&observacion=' + encodeURIComponent(valor) +
+        '&fecha=' + encodeURIComponent(r.fecha) +
+        '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
+        '&hora=' + encodeURIComponent(r.hora) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        r.observaciones = valor;
+        boton.disabled = false;
+        boton.textContent = 'Guardado ✓';
+        setTimeout(() => { if (boton) boton.textContent = 'Guardar'; }, 1400);
+      } else {
+        boton.disabled = false;
+        boton.textContent = 'Guardar';
+        alert('No pudimos guardar la observación. Probá de nuevo.');
+      }
+    } catch (e) {
+      boton.disabled = false;
+      boton.textContent = 'Guardar';
       alert('No pudimos conectar. Probá de nuevo.');
     }
   }
@@ -477,11 +538,11 @@
     return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
   }
   function descargarPlanillaDia(fecha, items) {
-    const encabezados = ['Hora', 'Nombre', 'Cédula', 'Teléfono', 'Nacimiento', 'Oftalmólogo', 'Servicio', 'Diabetes', 'Lentes de contacto', 'Pagado', 'Sin costo'];
+    const encabezados = ['Hora', 'Nombre', 'Cédula', 'Teléfono', 'Nacimiento', 'Oftalmólogo', 'Servicio', 'Diabetes', 'Lentes de contacto', 'Pagado', 'Método de pago', 'Sin costo', 'Observaciones'];
     const filas = items
       .slice()
       .sort((a, b) => (a.hora || '').localeCompare(b.hora || ''))
-      .map(r => [r.hora, r.nombre, r.cedula, r.telefono, r.nacimiento, r.oftalmologo, r.servicio, r.diabetes, r.lentesContacto, r.pagado, r.sinCosto]);
+      .map(r => [r.hora, r.nombre, r.cedula, r.telefono, r.nacimiento, r.oftalmologo, r.servicio, r.diabetes, r.lentesContacto, r.pagado, r.metodoPago, r.sinCosto, r.observaciones]);
     const csv = [encabezados, ...filas].map(fila => fila.map(csvCelda).join(';')).join('\r\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
