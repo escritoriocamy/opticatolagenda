@@ -333,6 +333,9 @@
               '<button type="button" class="btn-editar" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Editar datos</button>' +
             '</div>' +
             '<div class="editar-row" style="display:none;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:flex-end;background:#F6F8F9;border-radius:10px;padding:10px">' +
+              '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;flex:1 1 100%;min-width:220px">Servicio / convenio' +
+                '<input type="text" class="edit-servicio" value="' + escapeHtml(r.servicio || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
+              '</label>' +
               '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;flex:1;min-width:140px">Nombre' +
                 '<input type="text" class="edit-nombre" value="' + escapeHtml(r.nombre || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
               '</label>' +
@@ -494,12 +497,13 @@
   }
 
   async function guardarEdicion(r, card, boton, editarRow) {
+    const servicio = card.querySelector('.edit-servicio').value.trim();
     const nombre = card.querySelector('.edit-nombre').value.trim();
     const cedula = card.querySelector('.edit-cedula').value.trim();
     const telefono = card.querySelector('.edit-telefono').value.trim();
     const nacimiento = card.querySelector('.edit-nacimiento').value;
-    if (!nombre || !cedula || !nacimiento) {
-      alert('Nombre, cédula y fecha de nacimiento son obligatorios.');
+    if (!nombre || !cedula || !nacimiento || !servicio) {
+      alert('Servicio, nombre, cédula y fecha de nacimiento son obligatorios.');
       return;
     }
     boton.disabled = true;
@@ -507,6 +511,7 @@
     try {
       const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
         '&editarDatos=1' +
+        '&servicio=' + encodeURIComponent(servicio) +
         '&nombre=' + encodeURIComponent(nombre) +
         '&cedula=' + encodeURIComponent(cedula) +
         '&telefono=' + encodeURIComponent(telefono) +
@@ -517,6 +522,7 @@
       const resp = await fetch(url, { cache: 'no-store' });
       const data = await resp.json();
       if (data.ok) {
+        r.servicio = servicio;
         r.nombre = nombre;
         r.cedula = cedula;
         r.telefono = telefono;
