@@ -330,6 +330,23 @@
               '<button type="button" class="btn-pagado" style="background:none;border:1px solid ' + (r.pagado === 'Sí' ? '#B7DCC3' : '#C7D6DC') + ';color:' + (r.pagado === 'Sí' ? '#1F7A45' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + textoPagado + '</button>' +
               '<button type="button" class="btn-sincosto" style="background:none;border:1px solid ' + (r.sinCosto === 'Sí' ? '#D4C4EC' : '#C7D6DC') + ';color:' + (r.sinCosto === 'Sí' ? '#5B3A9E' : '#42545E') + ';font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">' + (r.sinCosto === 'Sí' ? '✓ Sin costo — desmarcar' : 'Marcar sin costo') + '</button>' +
               '<button type="button" class="btn-cancelar" style="background:none;border:1px solid #E7B4A5;color:#B4361A;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Cancelar reserva</button>' +
+              '<button type="button" class="btn-editar" style="background:none;border:1px solid #C7D6DC;color:#42545E;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer">Editar datos</button>' +
+            '</div>' +
+            '<div class="editar-row" style="display:none;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:flex-end;background:#F6F8F9;border-radius:10px;padding:10px">' +
+              '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;flex:1;min-width:140px">Nombre' +
+                '<input type="text" class="edit-nombre" value="' + escapeHtml(r.nombre || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
+              '</label>' +
+              '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;flex:1;min-width:110px">Cédula' +
+                '<input type="text" class="edit-cedula" value="' + escapeHtml(r.cedula || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
+              '</label>' +
+              '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;flex:1;min-width:130px">Teléfono' +
+                '<input type="text" class="edit-telefono" value="' + escapeHtml(r.telefono || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
+              '</label>' +
+              '<label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:#64757F;min-width:150px">Fecha de nacimiento' +
+                '<input type="date" class="edit-nacimiento" value="' + escapeHtml(r.nacimiento || '') + '" style="border:1px solid #DCE2E5;border-radius:8px;padding:7px 9px;font-size:12.5px;color:#0F2230">' +
+              '</label>' +
+              '<button type="button" class="btn-editar-guardar" style="background:#14496E;border:none;color:#fff;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer">Guardar</button>' +
+              '<button type="button" class="btn-editar-cancelar" style="background:none;border:none;color:#93A5AF;font-size:13px;padding:8px;cursor:pointer">Cancelar</button>' +
             '</div>' +
             '<div class="metodo-pago-row" style="display:none;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">' +
               '<span style="font-size:12px;color:#64757F">¿Cómo pagó?</span>' +
@@ -345,6 +362,14 @@
           '</div>';
         const btnCancelar = card.querySelector('.btn-cancelar');
         btnCancelar.addEventListener('click', () => cancelarReserva(r, btnCancelar));
+        const btnEditar = card.querySelector('.btn-editar');
+        const editarRow = card.querySelector('.editar-row');
+        btnEditar.addEventListener('click', () => {
+          editarRow.style.display = editarRow.style.display === 'flex' ? 'none' : 'flex';
+        });
+        card.querySelector('.btn-editar-cancelar').addEventListener('click', () => { editarRow.style.display = 'none'; });
+        const btnEditarGuardar = card.querySelector('.btn-editar-guardar');
+        btnEditarGuardar.addEventListener('click', () => guardarEdicion(r, card, btnEditarGuardar, editarRow));
         const btnPagado = card.querySelector('.btn-pagado');
         const metodoPagoRow = card.querySelector('.metodo-pago-row');
         btnPagado.addEventListener('click', () => {
@@ -464,6 +489,49 @@
     } catch (e) {
       boton.disabled = false;
       boton.textContent = textoBotonPagado(r);
+      alert('No pudimos conectar. Probá de nuevo.');
+    }
+  }
+
+  async function guardarEdicion(r, card, boton, editarRow) {
+    const nombre = card.querySelector('.edit-nombre').value.trim();
+    const cedula = card.querySelector('.edit-cedula').value.trim();
+    const telefono = card.querySelector('.edit-telefono').value.trim();
+    const nacimiento = card.querySelector('.edit-nacimiento').value;
+    if (!nombre || !cedula || !nacimiento) {
+      alert('Nombre, cédula y fecha de nacimiento son obligatorios.');
+      return;
+    }
+    boton.disabled = true;
+    boton.textContent = 'Guardando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&editarDatos=1' +
+        '&nombre=' + encodeURIComponent(nombre) +
+        '&cedula=' + encodeURIComponent(cedula) +
+        '&telefono=' + encodeURIComponent(telefono) +
+        '&nacimiento=' + encodeURIComponent(nacimiento) +
+        '&fecha=' + encodeURIComponent(r.fecha) +
+        '&oftalmologo=' + encodeURIComponent(r.oftalmologo) +
+        '&hora=' + encodeURIComponent(r.hora) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        r.nombre = nombre;
+        r.cedula = cedula;
+        r.telefono = telefono;
+        r.nacimiento = nacimiento;
+        editarRow.style.display = 'none';
+        render();
+        updatedNote.textContent = 'Datos actualizados · ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
+      } else {
+        boton.disabled = false;
+        boton.textContent = 'Guardar';
+        alert('No pudimos guardar los cambios. Probá de nuevo.');
+      }
+    } catch (e) {
+      boton.disabled = false;
+      boton.textContent = 'Guardar';
       alert('No pudimos conectar. Probá de nuevo.');
     }
   }
