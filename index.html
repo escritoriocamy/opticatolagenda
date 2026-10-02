@@ -580,42 +580,10 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   // agendar a las 17:00 como último turno). Un mismo médico puede tener más
   // de una franja el mismo día (ej: mañana y tarde) — solo hay que agregar
   // otro objeto con la misma "fecha".
-  const DISPONIBILIDAD = {
-    'Dra. Rosario Saldaña': [
-      { fecha: '2026-09-03', inicio: 540, fin: 690 },  // 09:00 a 11:30
-      { fecha: '2026-09-10', inicio: 525, fin: 690 }, // 08:45 a 11:30 (se agregó un turno más a las 08:45)
-      { fecha: '2026-09-11', inicio: 540, fin: 690 },  // 09:00 a 11:30 (consulta agregada)
-      { fecha: '2026-09-11', inicio: 900, fin: 1110 }, // 15:00 a 18:30 (se agregó un turno más a las 18:30)
-      { fecha: '2026-09-17', inicio: 540, fin: 690 },
-      { fecha: '2026-09-24', inicio: 540, fin: 690 },
-      { fecha: '2026-09-26', inicio: 540, fin: 720 },  // 09:00 a 12:00
-      // Octubre (nota manuscrita de Saldaña)
-      { fecha: '2026-10-01', inicio: 540, fin: 690 },  // jueves, 09:00 a 11:30
-      { fecha: '2026-10-02', inicio: 900, fin: 1080 }, // viernes, 15:00 a 18:00
-      { fecha: '2026-10-03', inicio: 540, fin: 720 },  // sábado, 09:00 a 12:00
-      { fecha: '2026-10-08', inicio: 540, fin: 690 },  // jueves, 09:00 a 11:30
-      { fecha: '2026-10-15', inicio: 540, fin: 690 },  // jueves, 09:00 a 11:30
-      { fecha: '2026-10-22', inicio: 540, fin: 690 },  // jueves, 09:00 a 11:30
-      { fecha: '2026-10-23', inicio: 900, fin: 1080 }, // viernes, 15:00 a 18:00
-      { fecha: '2026-10-29', inicio: 540, fin: 690 },  // jueves, 09:00 a 11:30
-      { fecha: '2026-10-30', inicio: 900, fin: 1080 }  // viernes, 15:00 a 18:00
-    ],
-    'Dr. Rodrigo Rivas': [
-      { fecha: '2026-09-12', inicio: 540, fin: 750 },  // 09:00 a 12:30
-      { fecha: '2026-09-15', inicio: 900, fin: 1080 }, // 15:00 a 18:00
-      { fecha: '2026-09-16', inicio: 900, fin: 1080 }, // 15:00 a 18:00
-      { fecha: '2026-09-18', inicio: 900, fin: 1080 }, // 15:00 a 18:00
-      { fecha: '2026-10-10', inicio: 540, fin: 750 },  // sábado, 09:00 a 12:30
-      { fecha: '2026-10-17', inicio: 540, fin: 750 }   // sábado, 09:00 a 12:30
-    ],
-    'Dr. Tomás Pérez': [
-      { fecha: '2026-09-22', inicio: 870, fin: 1020 }, // 14:30 a 17:00
-      { fecha: '2026-10-06', inicio: 525, fin: 690 },  // martes, 08:45 a 11:30 (se agregó un turno más a las 08:45)
-      { fecha: '2026-10-13', inicio: 540, fin: 690 },  // martes, 09:00 a 11:30
-      { fecha: '2026-10-20', inicio: 870, fin: 960 },  // martes, 14:30 a 16:00
-      { fecha: '2026-10-27', inicio: 870, fin: 1020 }  // martes, 14:30 a 17:00
-    ]
-  };
+  // Ya no se escribe a mano acá: se carga desde la planilla (hoja
+  // "Disponibilidad") al abrir la página, con cargarDisponibilidad() más
+  // abajo. El consultorio agrega y quita horarios desde el panel de admin.
+  let DISPONIBILIDAD = {};
 
   // Selección especial: "cualquier oftalmólogo" — el paciente ve la
   // disponibilidad combinada de los tres médicos y, al elegir un día, el
@@ -658,6 +626,28 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
     nombre: '', apellido: '', cedula: '', telefono: '', nacimiento: '', diabetes: '', lentesContacto: '', aceptaPrivacidad: false, error: '',
     enviando: false, canal: null, ocupadas: []
   };
+
+  // ---------- Disponibilidad (se carga desde la planilla) ----------
+  function parseHora(hhmm) {
+    const partes = String(hhmm || '').split(':');
+    return (parseInt(partes[0], 10) || 0) * 60 + (parseInt(partes[1], 10) || 0);
+  }
+  async function cargarDisponibilidad() {
+    try {
+      const resp = await fetch(ENDPOINT_SHEETS + '?disponibilidad=1&_=' + Date.now(), { cache: 'no-store' });
+      const data = await resp.json();
+      const lista = (data && data.disponibilidad) || [];
+      const mapa = {};
+      lista.forEach(function (x) {
+        if (!x.oftalmologo || !x.fecha) return;
+        if (!mapa[x.oftalmologo]) mapa[x.oftalmologo] = [];
+        mapa[x.oftalmologo].push({ fecha: x.fecha, inicio: parseHora(x.horaInicio), fin: parseHora(x.horaFin) });
+      });
+      DISPONIBILIDAD = mapa;
+    } catch (err) {
+      DISPONIBILIDAD = {};
+    }
+  }
 
   // ---------- Horas ya reservadas ----------
   const ocupadosCache = {};
@@ -1218,9 +1208,12 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   }
 
   renderMedicos();
-  renderCalendar();
-  renderElegirPanel();
-  showPanel('elegir');
+  calGrid.innerHTML = '<div style="grid-column:1/-1;padding:16px 2px;font-size:13px;color:#93A5AF">Cargando disponibilidad…</div>';
+  cargarDisponibilidad().then(function () {
+    renderCalendar();
+    renderElegirPanel();
+    showPanel('elegir');
+  });
 
   // --- Cancelar mi turno (paciente) ---
   const cancelCedula = document.getElementById('cancel-cedula');

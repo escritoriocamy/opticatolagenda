@@ -116,6 +116,33 @@
     <div class="stat-card"><div class="num" id="stat-total">–</div><div class="label">Total</div></div>
   </div>
 
+  <div id="disp-card" style="background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:16px;font-weight:700;letter-spacing:-0.01em">Disponibilidad para agendar</div>
+        <div style="font-size:12.5px;color:#64757F;margin-top:2px">Agregá o quitá los días y horarios en que atiende cada oftalmólogo, para que se puedan reservar en la web.</div>
+      </div>
+      <button type="button" id="btn-disp-toggle" style="background:#14496E;color:#fff;border:none;border-radius:999px;padding:10px 20px;font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;white-space:nowrap">+ Agregar horario</button>
+    </div>
+    <div id="disp-form" style="display:none;margin-top:18px;gap:10px;flex-wrap:wrap;align-items:flex-end;padding-top:18px;border-top:1px solid #E2E7E9">
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64757F">Oftalmólogo
+        <select id="disp-medico" style="border:1px solid #DCE2E5;border-radius:8px;padding:10px;font-size:13.5px;min-width:200px;color:#0F2230;background:#fff"></select>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64757F">Fecha
+        <input type="date" id="disp-fecha" style="border:1px solid #DCE2E5;border-radius:8px;padding:10px;font-size:13.5px;color:#0F2230">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64757F">Desde
+        <select id="disp-inicio" style="border:1px solid #DCE2E5;border-radius:8px;padding:10px;font-size:13.5px;color:#0F2230;background:#fff"></select>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64757F">Hasta
+        <select id="disp-fin" style="border:1px solid #DCE2E5;border-radius:8px;padding:10px;font-size:13.5px;color:#0F2230;background:#fff"></select>
+      </label>
+      <button type="button" id="disp-guardar" style="background:#14496E;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer">Agregar</button>
+      <span id="disp-msg" style="display:none;font-size:13px;flex-basis:100%"></span>
+    </div>
+    <div id="disp-lista" style="margin-top:16px;display:flex;flex-direction:column;gap:14px"></div>
+  </div>
+
   <div class="toolbar">
     <div class="tabs" id="tabs-periodo">
       <button data-periodo="hoy" type="button">Hoy</button>
@@ -175,6 +202,19 @@
   const lista = document.getElementById('lista');
   const tabsPeriodo = document.getElementById('tabs-periodo');
 
+  const MEDICOS_DISP = ['Dr. Rodrigo Rivas', 'Dra. Rosario Saldaña', 'Dr. Tomás Pérez'];
+  const INTERVALO_DISP = 15; // minutos — mismo intervalo que usa la agenda online
+  const btnDispToggle = document.getElementById('btn-disp-toggle');
+  const dispForm = document.getElementById('disp-form');
+  const dispMedico = document.getElementById('disp-medico');
+  const dispFecha = document.getElementById('disp-fecha');
+  const dispInicio = document.getElementById('disp-inicio');
+  const dispFin = document.getElementById('disp-fin');
+  const dispGuardar = document.getElementById('disp-guardar');
+  const dispMsg = document.getElementById('disp-msg');
+  const dispLista = document.getElementById('disp-lista');
+  let disponibilidad = [];
+
   let reservas = [];
   let periodo = 'proximas';
   let claveActual = '';
@@ -229,6 +269,7 @@
         updatedNote.textContent = 'Actualizado a las ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
       }
     } catch (e) {}
+    cargarDisponibilidadAdmin();
     btnRefresh.classList.remove('loading');
   }
 
@@ -243,6 +284,153 @@
 
     updatedNote.textContent = 'Actualizado a las ' + new Date().toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
     render();
+    cargarDisponibilidadAdmin();
+  }
+
+  // ---------- Disponibilidad para agendar ----------
+  // Los días y horarios en que cada oftalmólogo atiende ya no se escriben a
+  // mano en el código de la web: se guardan en la planilla (hoja
+  // "Disponibilidad") y se administran desde acá. La web de reservas los lee
+  // de ahí automáticamente.
+
+  function horasDisp() {
+    const out = [];
+    for (let m = 7 * 60; m <= 21 * 60; m += INTERVALO_DISP) {
+      out.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
+    }
+    return out;
+  }
+
+  function poblarSelectsDisp() {
+    dispMedico.innerHTML = MEDICOS_DISP.map(m => '<option value="' + m.replace(/"/g, '&quot;') + '">' + m + '</option>').join('');
+    const opciones = horasDisp().map(h => '<option value="' + h + '">' + h + '</option>').join('');
+    dispInicio.innerHTML = opciones;
+    dispFin.innerHTML = opciones;
+    dispInicio.value = '09:00';
+    dispFin.value = '11:30';
+    dispFecha.min = hoyStr();
+  }
+
+  async function cargarDisponibilidadAdmin() {
+    try {
+      const resp = await fetch(ENDPOINT + '?disponibilidad=1&_=' + Date.now(), { cache: 'no-store' });
+      const data = await resp.json();
+      disponibilidad = (data && data.disponibilidad) || [];
+    } catch (e) {
+      disponibilidad = [];
+    }
+    renderDisponibilidad();
+  }
+
+  function renderDisponibilidad() {
+    const hoy = hoyStr();
+    const proximas = disponibilidad.filter(d => d.fecha >= hoy);
+    dispLista.innerHTML = '';
+
+    if (proximas.length === 0) {
+      dispLista.innerHTML = '<div style="font-size:13.5px;color:#93A5AF">No hay horarios cargados todavía. Usá "+ Agregar horario" para cargar los primeros.</div>';
+      return;
+    }
+
+    const porMedico = {};
+    MEDICOS_DISP.forEach(m => { porMedico[m] = []; });
+    proximas.forEach(d => {
+      if (!porMedico[d.oftalmologo]) porMedico[d.oftalmologo] = [];
+      porMedico[d.oftalmologo].push(d);
+    });
+
+    Object.keys(porMedico).forEach(medico => {
+      const items = porMedico[medico];
+      if (items.length === 0) return;
+      items.sort((a, b) => (a.fecha + a.horaInicio).localeCompare(b.fecha + b.horaInicio));
+
+      const bloque = document.createElement('div');
+      bloque.innerHTML = '<div style="font-size:13px;font-weight:700;color:#14496E;margin-bottom:8px">' + medico + '</div>';
+      const chips = document.createElement('div');
+      chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px';
+      items.forEach(d => {
+        const chip = document.createElement('span');
+        chip.style.cssText = 'display:inline-flex;align-items:center;gap:8px;background:#F6F8F9;border:1px solid #E2E7E9;border-radius:999px;padding:7px 8px 7px 14px;font-size:12.5px;color:#42545E';
+        chip.innerHTML = '<span>' + capitalizar(fechaLabel(d.fecha)) + ' · ' + d.horaInicio + ' a ' + d.horaFin + '</span>';
+        const btnQuitar = document.createElement('button');
+        btnQuitar.type = 'button';
+        btnQuitar.title = 'Quitar este horario';
+        btnQuitar.textContent = '✕';
+        btnQuitar.style.cssText = 'background:none;border:none;color:#B4361A;font-size:13px;cursor:pointer;padding:2px 4px;line-height:1';
+        btnQuitar.addEventListener('click', () => quitarDisponibilidad(d, chip));
+        chip.appendChild(btnQuitar);
+        chips.appendChild(chip);
+      });
+      bloque.appendChild(chips);
+      dispLista.appendChild(bloque);
+    });
+  }
+
+  async function quitarDisponibilidad(d, chip) {
+    const ok = confirm('¿Quitar el horario del ' + d.fecha + ' de ' + d.horaInicio + ' a ' + d.horaFin + ' con ' + d.oftalmologo + '? Ya no se va a poder reservar ahí.');
+    if (!ok) return;
+    chip.style.opacity = '.5';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&eliminarDisponibilidad=1' +
+        '&oftalmologo=' + encodeURIComponent(d.oftalmologo) +
+        '&fecha=' + encodeURIComponent(d.fecha) +
+        '&horaInicio=' + encodeURIComponent(d.horaInicio) +
+        '&horaFin=' + encodeURIComponent(d.horaFin) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        disponibilidad = disponibilidad.filter(x => !(x.oftalmologo === d.oftalmologo && x.fecha === d.fecha && x.horaInicio === d.horaInicio && x.horaFin === d.horaFin));
+        renderDisponibilidad();
+      } else {
+        chip.style.opacity = '1';
+        alert('No pudimos quitarlo. Probá de nuevo.');
+      }
+    } catch (e) {
+      chip.style.opacity = '1';
+      alert('No pudimos conectar. Probá de nuevo.');
+    }
+  }
+
+  function mostrarMsgDisp(texto, tipo) {
+    dispMsg.textContent = texto;
+    dispMsg.style.display = 'inline';
+    dispMsg.style.color = tipo === 'error' ? '#B4361A' : '#1F7A45';
+  }
+
+  async function agregarDisponibilidadAdmin() {
+    const oftalmologo = dispMedico.value;
+    const fecha = dispFecha.value;
+    const horaInicio = dispInicio.value;
+    const horaFin = dispFin.value;
+    dispMsg.style.display = 'none';
+    if (!fecha) { mostrarMsgDisp('Elegí una fecha.', 'error'); return; }
+    if (horaFin <= horaInicio) { mostrarMsgDisp('El horario de fin tiene que ser posterior al de inicio.', 'error'); return; }
+    dispGuardar.disabled = true;
+    dispGuardar.textContent = 'Agregando…';
+    try {
+      const url = ENDPOINT + '?clave=' + encodeURIComponent(claveActual) +
+        '&agregarDisponibilidad=1' +
+        '&oftalmologo=' + encodeURIComponent(oftalmologo) +
+        '&fecha=' + encodeURIComponent(fecha) +
+        '&horaInicio=' + encodeURIComponent(horaInicio) +
+        '&horaFin=' + encodeURIComponent(horaFin) + '&_=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data.ok) {
+        disponibilidad.push({ oftalmologo, fecha, horaInicio, horaFin });
+        renderDisponibilidad();
+        mostrarMsgDisp('¡Listo! Ya se puede reservar ese horario.', 'ok');
+        dispFecha.value = '';
+      } else {
+        mostrarMsgDisp('No pudimos agregarlo. Probá de nuevo.', 'error');
+      }
+    } catch (e) {
+      mostrarMsgDisp('No pudimos conectar. Probá de nuevo.', 'error');
+    } finally {
+      dispGuardar.disabled = false;
+      dispGuardar.textContent = 'Agregar';
+    }
   }
 
   function render() {
@@ -654,6 +842,14 @@
     btnLogout.style.display = 'none';
     inClave.value = '';
   });
+
+  btnDispToggle.addEventListener('click', () => {
+    const visible = dispForm.style.display === 'flex';
+    dispForm.style.display = visible ? 'none' : 'flex';
+    btnDispToggle.textContent = visible ? '+ Agregar horario' : 'Ocultar formulario';
+  });
+  dispGuardar.addEventListener('click', agregarDisponibilidadAdmin);
+  poblarSelectsDisp();
 
   // Auto-login si hay clave guardada
   try {
