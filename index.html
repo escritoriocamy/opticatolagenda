@@ -673,6 +673,19 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
   function etiqueta(d) {
     return d ? DIAS_CORTOS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] : '';
   }
+  // Arma el link de WhatsApp con los datos de la reserva actual — lo usa
+  // tanto el botón principal (que abre WhatsApp apenas se guarda la
+  // reserva) como el link de respaldo en el panel "listo".
+  function construirLinkWhatsapp() {
+    const m = MEDICOS[state.medico];
+    const nombreCompletoWa = (state.nombre + ' ' + state.apellido).trim() || 'Paciente';
+    const mensajeWa =
+      'Hola! Quiero confirmar mi consulta.\n\n' +
+      'Paciente: ' + nombreCompletoWa + '\n' +
+      (state.sel && state.hora != null ? 'Turno: ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '\n' : '') +
+      (state.servicio ? 'Servicio: ' + state.servicio : '');
+    return 'https://wa.me/59892494961?text=' + encodeURIComponent(mensajeWa);
+  }
   function horariosDe(d) {
     if (!d || state.medico === TODOS) return [];
     const disps = disponibilidadDia(d, MEDICOS[state.medico]);
@@ -1028,7 +1041,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         '<span>Acepto la <a href="privacidad.html" target="_blank" rel="noopener" style="color:#14496E;font-weight:600">Política de Privacidad</a> y el uso de mis datos para gestionar este turno. *</span>' +
       '</label>' +
       '<div id="form-error" style="display:none;font-size:13px;color:#C22A12;font-weight:600"></div>' +
-      '<button type="button" id="btn-confirmar" style="margin-top:4px;background:#14496E;color:#fff;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Solicitar hora</button>';
+      '<button type="button" id="btn-confirmar" style="margin-top:4px;background:#25D366;color:#073B22;border:none;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Confirmar tu hora por WhatsApp</button>';
 
     const inNombre = document.getElementById('in-nombre');
     const inApellido = document.getElementById('in-apellido');
@@ -1127,10 +1140,17 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       btnConfirmar.disabled = true;
       btnConfirmar.textContent = 'Verificando…';
 
+      // Se abre la pestaña de WhatsApp ya mismo (en blanco) para que el
+      // navegador no la bloquee como pop-up — recién se le pone la
+      // dirección final una vez que la reserva quedó guardada. Si algo
+      // falla más abajo, esta pestaña en blanco se cierra sola.
+      const waWin = window.open('', '_blank');
+
       const keyOcupado = m2.nombre + '|' + fecha;
       delete ocupadosCache[keyOcupado]; // forzamos a repreguntarle al Sheet, no usar la caché
       const ocupadasAhora = await cargarOcupados(m2.nombre, fecha);
       if (ocupadasAhora.includes(hh)) {
+        if (waWin) waWin.close();
         state.ocupadas = ocupadasAhora;
         state.enviando = false;
         state.etapa = 'elegir'; state.hora = null;
@@ -1146,6 +1166,7 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         const resp = await fetch(ENDPOINT_SHEETS, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
         const data = await resp.json();
         if (!data.ok) {
+          if (waWin) waWin.close();
           if (data.error === 'ocupado') {
             state.enviando = false;
             state.etapa = 'elegir'; state.hora = null;
@@ -1157,11 +1178,15 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
         }
         ocupadosCache[keyOcupado] = ocupadasAhora.concat([hh]);
         state.etapa = 'listo'; state.canal = 'planilla'; state.enviando = false; setError('');
+        // La reserva ya quedó guardada (y ya aparece en el panel de admin)
+        // — ahora sí mandamos esa pestaña a WhatsApp para que confirme.
+        if (waWin) waWin.location.href = construirLinkWhatsapp();
         renderListoPanel(); showPanel('listo');
       } catch (e) {
+        if (waWin) waWin.close();
         state.enviando = false;
         btnConfirmar.disabled = false;
-        btnConfirmar.textContent = 'Solicitar hora';
+        btnConfirmar.textContent = 'Confirmar tu hora por WhatsApp';
         setError('No pudimos enviar la solicitud. Probá de nuevo o escribinos al 092 49 49 61.');
       }
     });
@@ -1177,20 +1202,17 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
       : '';
     const notaEnvio = 'Tu consulta debe quedar paga 48 horas antes de tu cita.';
 
-    const nombreCompletoWa = (state.nombre + ' ' + state.apellido).trim() || 'Paciente';
-    const mensajeWa =
-      'Hola! Quiero confirmar mi consulta.\n\n' +
-      'Paciente: ' + nombreCompletoWa + '\n' +
-      (state.sel && state.hora != null ? 'Turno: ' + etiqueta(state.sel) + ' a las ' + fmt(state.hora) + ' con ' + m.nombre + '\n' : '') +
-      (state.servicio ? 'Servicio: ' + state.servicio : '');
-    const linkWaSeña = 'https://wa.me/59892494961?text=' + encodeURIComponent(mensajeWa);
+    // El WhatsApp ya se abrió solo apenas se guardó la reserva (ver
+    // btnConfirmar más arriba). Este botón queda como respaldo, por si esa
+    // pestaña se cerró o el navegador la bloqueó.
+    const linkWaSeña = construirLinkWhatsapp();
 
     panelListo.innerHTML =
       '<div style="width:44px;height:44px;border-radius:50%;background:#14496E;color:#A8D8EE;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">✓</div>' +
       '<h3 style="margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Solicitud <span style="font-family:\'Instrument Serif\',Georgia,serif;font-style:italic;font-weight:400">enviada.</span></h3>' +
       '<div style="font-size:15px;line-height:1.6;color:#4C5E68">' + resumenFinal + '</div>' +
       '<p style="margin:0;font-size:13.5px;color:#64757F;line-height:1.55">' + notaEnvio + '</p>' +
-      '<a href="' + linkWaSeña + '" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Confirmar tu consulta por WhatsApp</a>' +
+      '<a href="' + linkWaSeña + '" target="_blank" rel="noopener" style="align-self:stretch;text-align:center;background:#25D366;color:#073B22;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">¿No se abrió? Confirmá por WhatsApp</a>' +
       '<a href="#resena-form" style="align-self:stretch;text-align:center;background:#14496E;color:#fff;border-radius:999px;padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Contanos cómo fue tu experiencia</a>' +
       '<button type="button" id="btn-reiniciar" class="btn-outline" style="align-self:flex-start;border:1.5px solid #14496E;background:#fff;color:#14496E;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer">Agendar otra hora</button>';
 
