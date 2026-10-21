@@ -73,12 +73,50 @@
   .appt-meta b{color:#0F2230;font-weight:600}
   .appt-extra{margin-top:6px;font-size:12.5px;color:#93A5AF}
 
+  /* ---- Estadísticas ---- */
+  .est-card{background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:24px}
+  .est-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .est-toggle{background:none;border:1px solid #C7D6DC;color:#14496E;border-radius:999px;padding:9px 18px;font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+  .est-body{display:none;margin-top:18px;padding-top:18px;border-top:1px solid #E2E7E9}
+  .est-body.open{display:block}
+  .est-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+  .est-controls select{border:1px solid #DCE2E5;border-radius:10px;padding:10px 14px;font-size:13.5px;color:#0F2230;background:#fff;cursor:pointer}
+  .est-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .est-kpi{background:#F6F8F9;border-radius:12px;padding:14px 16px}
+  .est-kpi .num{font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.1}
+  .est-kpi .label{margin-top:5px;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#64757F;text-transform:uppercase}
+  .est-kpi .sub{margin-top:3px;font-size:12px;color:#93A5AF}
+  .est-avisos{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+  .est-aviso{border:1px solid #F0D9A8;background:#FFF8E8;border-radius:12px;padding:11px 14px;font-size:13.5px;color:#7A5410}
+  .est-aviso summary{cursor:pointer;font-weight:600}
+  .est-aviso ul{margin:8px 0 2px;padding-left:18px;line-height:1.7;color:#42545E;font-size:13px}
+  .est-aviso.ok{border-color:#B7DCC3;background:#EEF8F1;color:#1F7A45}
+  .est-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .est-box{border:1px solid #E2E7E9;border-radius:12px;padding:14px 16px;min-width:0;overflow-x:auto}
+  .est-box.wide{grid-column:1 / -1}
+  .est-box h3{margin:0 0 10px;font-size:13px;font-weight:700;color:#14496E;letter-spacing:-0.01em}
+  .est-table{width:100%;border-collapse:collapse;font-size:13px}
+  .est-table th{text-align:right;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#93A5AF;padding:0 0 6px 8px;white-space:nowrap}
+  .est-table th:first-child{text-align:left;padding-left:0}
+  .est-table td{padding:7px 0 7px 8px;border-top:1px solid #F0F3F4;text-align:right;white-space:nowrap;color:#42545E;font-variant-numeric:tabular-nums}
+  .est-table td:first-child{text-align:left;padding-left:0;white-space:normal;color:#0F2230}
+  .est-bar{height:5px;background:#E7F0F5;border-radius:3px;margin-top:5px;overflow:hidden}
+  .est-bar span{display:block;height:100%;background:#2C7BA8;border-radius:3px}
+  .est-empty{font-size:13.5px;color:#93A5AF}
+  .est-nota{font-size:11.5px;color:#93A5AF;margin-top:12px}
+
   .empty-state{background:#fff;border-radius:16px;padding:48px 24px;text-align:center;color:#93A5AF;font-size:14.5px}
   .empty-state svg{margin-bottom:14px;opacity:.5}
 
   @media (max-width:720px){
     .topbar{padding:12px 16px}
     .stats{grid-template-columns:1fr}
+    .est-kpis{grid-template-columns:1fr 1fr}
+    .est-grid{grid-template-columns:1fr}
+    .est-table{font-size:12px}
+    .est-table th{letter-spacing:.02em;padding-left:6px}
+    .est-table td{padding-left:6px}
+    .est-table td:first-child{min-width:110px}
     #dashboard{padding:20px 14px 60px}
     .appt-card{gap:12px;padding:14px}
     .appt-time{width:52px;font-size:15px}
@@ -115,6 +153,29 @@
     <div class="stat-card"><div class="num" id="stat-hoy">–</div><div class="label">Hoy</div></div>
     <div class="stat-card"><div class="num" id="stat-proximas">–</div><div class="label">Próximas</div></div>
     <div class="stat-card"><div class="num" id="stat-total">–</div><div class="label">Total</div></div>
+  </div>
+
+  <div class="est-card" id="est-card">
+    <div class="est-head">
+      <div>
+        <div style="font-size:16px;font-weight:700;letter-spacing:-0.01em">Estadísticas</div>
+        <div style="font-size:12.5px;color:#64757F;margin-top:2px" id="est-resumen">Turnos, cobros y servicios del período.</div>
+      </div>
+      <button type="button" class="est-toggle" id="est-toggle">Ver estadísticas</button>
+    </div>
+    <div class="est-body" id="est-body">
+      <div class="est-controls">
+        <select id="est-periodo">
+          <option value="mes">Este mes</option>
+          <option value="mes-pasado">Mes pasado</option>
+          <option value="30">Últimos 30 días</option>
+          <option value="semana">Esta semana</option>
+          <option value="todo">Todo</option>
+        </select>
+        <select id="est-medico"><option value="">Todos los oftalmólogos</option></select>
+      </div>
+      <div id="est-contenido"></div>
+    </div>
   </div>
 
   <div id="disp-card" style="background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:24px">
@@ -462,6 +523,7 @@
     document.getElementById('stat-hoy').textContent = reservas.filter(r => r.fecha === hoy).length;
     document.getElementById('stat-proximas').textContent = reservas.filter(r => r.fecha > hoy).length;
     document.getElementById('stat-total').textContent = reservas.length;
+    renderEstadisticas();
 
     lista.innerHTML = '';
 
@@ -591,6 +653,198 @@
       lista.appendChild(grupoEl);
     });
   }
+
+  // ---------- Estadísticas ----------
+  // Todo se calcula acá, con las mismas reservas que ya trae el panel: no
+  // cambia nada en el Apps Script ni en la planilla. El servicio viene como
+  // texto, p. ej. "Receta para lentes… — Convenio Óptica Tol ($1.800) + OCT ($3.000)",
+  // así que de ahí se sacan el servicio, el convenio y el importe.
+  const SERVICIOS_BASE = ['Consulta oftalmológica integral', 'Receta para lentes convencionales y lentes de contacto', 'Paquimetría', 'OCT', 'Refractometría'];
+  const SERVICIO_CORTO = { 'Receta para lentes convencionales y lentes de contacto': 'Receta para lentes' };
+  const estToggle = document.getElementById('est-toggle');
+  const estBody = document.getElementById('est-body');
+  const estPeriodo = document.getElementById('est-periodo');
+  const estMedico = document.getElementById('est-medico');
+  const estContenido = document.getElementById('est-contenido');
+  const estResumen = document.getElementById('est-resumen');
+  const LS_EST = 'consultorio_est_abierto';
+
+  function servicioBase(texto) {
+    const t = (texto || '').trim();
+    const encontrado = SERVICIOS_BASE.find(b => t.toLowerCase().startsWith(b.toLowerCase()));
+    if (encontrado) return encontrado;
+    return t ? 'Otros' : 'Sin servicio';
+  }
+  function convenioDe(texto) {
+    const m = /^.+? — (.+?) \(\$/.exec(texto || '');
+    return m ? m[1].trim() : '';
+  }
+  function importeDe(texto) {
+    let total = 0;
+    (texto || '').replace(/\$\s?([\d.]+)/g, (_, n) => { total += parseInt(n.replace(/\./g, ''), 10) || 0; });
+    return total;
+  }
+  function tieneOctPlus(texto) { return /\+ OCT/.test(texto || ''); }
+  function fmtPesosAdmin(n) { return '$' + Math.round(n).toLocaleString('es-UY'); }
+  function fechaStr(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function rangoEst() {
+    const hoy = new Date();
+    const v = estPeriodo.value;
+    if (v === 'mes') return [fechaStr(new Date(hoy.getFullYear(), hoy.getMonth(), 1)), fechaStr(new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0))];
+    if (v === 'mes-pasado') return [fechaStr(new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1)), fechaStr(new Date(hoy.getFullYear(), hoy.getMonth(), 0))];
+    if (v === '30') return [fechaStr(new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 29)), fechaStr(hoy)];
+    if (v === 'semana') {
+      const desdeLunes = (hoy.getDay() + 6) % 7;
+      return [fechaStr(new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - desdeLunes)), fechaStr(new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - desdeLunes + 6))];
+    }
+    return ['0000-00-00', '9999-99-99'];
+  }
+  function cobrable(r) { return r.sinCosto !== 'Sí'; }
+
+  function agrupar(items, claveFn) {
+    const mapa = {};
+    items.forEach(r => {
+      const k = claveFn(r);
+      if (!mapa[k]) mapa[k] = { turnos: 0, pagados: 0, sinCosto: 0, cobrado: 0 };
+      const g = mapa[k];
+      g.turnos++;
+      if (r.sinCosto === 'Sí') g.sinCosto++;
+      else if (r.pagado === 'Sí') { g.pagados++; g.cobrado += importeDe(r.servicio); }
+    });
+    return Object.keys(mapa).map(k => Object.assign({ nombre: k }, mapa[k])).sort((a, b) => b.turnos - a.turnos);
+  }
+  function tablaGrupos(filas, total, titulo) {
+    if (filas.length === 0) return '<div class="est-empty">Sin datos.</div>';
+    return '<table class="est-table"><thead><tr><th>' + titulo + '</th><th>Turnos</th><th>Pagados</th><th>Sin costo</th><th>Cobrado</th></tr></thead><tbody>' +
+      filas.map(f => {
+        const pct = total ? Math.round(f.turnos * 100 / total) : 0;
+        return '<tr><td>' + escapeHtml(SERVICIO_CORTO[f.nombre] || f.nombre) +
+          '<div class="est-bar"><span style="width:' + pct + '%"></span></div></td>' +
+          '<td><b>' + f.turnos + '</b> <span style="color:#93A5AF">' + pct + '%</span></td>' +
+          '<td>' + f.pagados + '</td><td>' + f.sinCosto + '</td><td>' + fmtPesosAdmin(f.cobrado) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+  function listaTurnos(items) {
+    return '<ul>' + items.slice(0, 40).map(r =>
+      '<li>' + escapeHtml(capitalizar(fechaLabel(r.fecha))) + ' · ' + escapeHtml(r.hora || '') + ' — <b>' + escapeHtml(r.nombre || 'Sin nombre') + '</b> (' + escapeHtml(r.oftalmologo || '') + ')' +
+      (r.telefono ? ' · <a href="https://wa.me/' + escapeHtml(r.telefono.replace(/\D/g, '')) + '" target="_blank" rel="noopener">' + escapeHtml(r.telefono) + '</a>' : '') + '</li>'
+    ).join('') + (items.length > 40 ? '<li>… y ' + (items.length - 40) + ' más</li>' : '') + '</ul>';
+  }
+
+  function renderEstadisticas() {
+    const medicosActuales = Array.from(new Set(reservas.map(r => r.oftalmologo).filter(Boolean))).sort();
+    const elegido = estMedico.value;
+    estMedico.innerHTML = '<option value="">Todos los oftalmólogos</option>' +
+      medicosActuales.map(m => '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>').join('');
+    estMedico.value = medicosActuales.includes(elegido) ? elegido : '';
+
+    const hoy = hoyStr();
+    const manana = fechaStr(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1));
+    const medico = estMedico.value;
+    const base = reservas.filter(r => r.fecha && (!medico || r.oftalmologo === medico));
+
+    // Avisos para el día a día (no dependen del período elegido)
+    const sinConfirmarManana = base.filter(r => r.fecha === manana && r.confirmado !== 'Sí').sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
+    const pasadosSinCobrar = base.filter(r => r.fecha < hoy && r.pagado !== 'Sí' && cobrable(r)).sort((a, b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora));
+
+    const [desde, hasta] = rangoEst();
+    const items = base.filter(r => r.fecha >= desde && r.fecha <= hasta);
+    const total = items.length;
+    const pagados = items.filter(r => r.pagado === 'Sí' && cobrable(r));
+    const cobrado = pagados.reduce((s, r) => s + importeDe(r.servicio), 0);
+    const porCobrar = items.filter(r => r.fecha < hoy && r.pagado !== 'Sí' && cobrable(r));
+    const montoPorCobrar = porCobrar.reduce((s, r) => s + importeDe(r.servicio), 0);
+    const sinCosto = items.filter(r => r.sinCosto === 'Sí').length;
+    const futuros = items.filter(r => r.fecha >= hoy);
+    const confirmadosFut = futuros.filter(r => r.confirmado === 'Sí').length;
+
+    estResumen.textContent = estPeriodo.options[estPeriodo.selectedIndex].text + ': ' + total + (total === 1 ? ' turno' : ' turnos') + ' · cobrado ' + fmtPesosAdmin(cobrado);
+
+    let html = '<div class="est-kpis">' +
+      '<div class="est-kpi"><div class="num">' + total + '</div><div class="label">Turnos</div><div class="sub">' + futuros.length + ' por venir</div></div>' +
+      '<div class="est-kpi"><div class="num">' + fmtPesosAdmin(cobrado) + '</div><div class="label">Cobrado</div><div class="sub">' + pagados.length + (pagados.length === 1 ? ' turno pagado' : ' turnos pagados') + '</div></div>' +
+      '<div class="est-kpi"><div class="num">' + porCobrar.length + '</div><div class="label">Pasados sin cobrar</div><div class="sub">' + fmtPesosAdmin(montoPorCobrar) + ' según tarifa</div></div>' +
+      '<div class="est-kpi"><div class="num">' + (futuros.length ? Math.round(confirmadosFut * 100 / futuros.length) + '%' : '–') + '</div><div class="label">Confirmados</div><div class="sub">' + confirmadosFut + ' de ' + futuros.length + ' por venir · ' + sinCosto + ' sin costo</div></div>' +
+      '</div>';
+
+    html += '<div class="est-avisos">';
+    if (sinConfirmarManana.length) {
+      html += '<details class="est-aviso"><summary>Mañana hay ' + sinConfirmarManana.length + (sinConfirmarManana.length === 1 ? ' turno sin confirmar' : ' turnos sin confirmar') + '</summary>' + listaTurnos(sinConfirmarManana) + '</details>';
+    } else if (base.some(r => r.fecha === manana)) {
+      html += '<div class="est-aviso ok">Todos los turnos de mañana están confirmados.</div>';
+    }
+    if (pasadosSinCobrar.length) {
+      html += '<details class="est-aviso"><summary>' + pasadosSinCobrar.length + (pasadosSinCobrar.length === 1 ? ' turno pasado sin marcar como pagado' : ' turnos pasados sin marcar como pagados') + ' (todas las fechas)</summary>' + listaTurnos(pasadosSinCobrar) + '</details>';
+    }
+    html += '</div>';
+
+    if (total === 0) {
+      estContenido.innerHTML = html + '<div class="est-empty">No hay turnos en este período.</div>';
+      return;
+    }
+
+    const porServicio = agrupar(items, r => servicioBase(r.servicio));
+    const conConvenio = items.filter(r => convenioDe(r.servicio));
+    const porConvenio = agrupar(conConvenio, r => {
+      const c = convenioDe(r.servicio);
+      if (c !== 'Otros') return c;
+      const b = servicioBase(r.servicio);
+      return (SERVICIO_CORTO[b] || b) + ' — Otros';
+    });
+    const porMedico = agrupar(items, r => r.oftalmologo || 'Sin oftalmólogo');
+    const octPlus = items.filter(r => tieneOctPlus(r.servicio)).length;
+
+    const metodos = {};
+    pagados.forEach(r => {
+      const m = r.metodoPago || 'Sin especificar';
+      if (!metodos[m]) metodos[m] = { n: 0, monto: 0 };
+      metodos[m].n++; metodos[m].monto += importeDe(r.servicio);
+    });
+    const filasMetodo = Object.keys(metodos).sort((a, b) => metodos[b].n - metodos[a].n);
+
+    const porDia = [0, 0, 0, 0, 0, 0, 0];
+    items.forEach(r => { const [y, m, d] = r.fecha.split('-').map(Number); porDia[new Date(y, m - 1, d).getDay()]++; });
+    const maxDia = Math.max(...porDia, 1);
+    const ordenDias = [1, 2, 3, 4, 5, 6, 0];
+
+    const diabetes = items.filter(r => r.diabetes === 'Sí').length;
+    const lentes = items.filter(r => r.lentesContacto === 'Sí').length;
+    const cedulas = new Set(items.map(r => (r.cedula || '').replace(/\D/g, '')).filter(Boolean));
+
+    html += '<div class="est-grid">' +
+      '<div class="est-box wide"><h3>Por servicio</h3>' + tablaGrupos(porServicio, total, 'Servicio') +
+        (octPlus ? '<div class="est-nota">Además, ' + octPlus + (octPlus === 1 ? ' turno agregó' : ' turnos agregaron') + ' OCT como estudio plus.</div>' : '') + '</div>' +
+      (porConvenio.length ? '<div class="est-box wide"><h3>Por convenio / tarifa</h3>' + tablaGrupos(porConvenio, conConvenio.length, 'Convenio') + '</div>' : '') +
+      '<div class="est-box wide"><h3>Por oftalmólogo</h3>' + tablaGrupos(porMedico, total, 'Oftalmólogo') + '</div>' +
+      '<div class="est-box"><h3>Cómo pagaron</h3>' + (filasMetodo.length ?
+        '<table class="est-table"><thead><tr><th>Método</th><th>Turnos</th><th>Monto</th></tr></thead><tbody>' +
+        filasMetodo.map(m => '<tr><td>' + escapeHtml(m) + '</td><td>' + metodos[m].n + '</td><td>' + fmtPesosAdmin(metodos[m].monto) + '</td></tr>').join('') +
+        '</tbody></table>' : '<div class="est-empty">Todavía no hay pagos marcados.</div>') + '</div>' +
+      '<div class="est-box"><h3>Por día de la semana</h3><table class="est-table"><tbody>' +
+        ordenDias.filter(i => porDia[i] > 0).map(i => '<tr><td>' + capitalizar(DIAS[i]) + '<div class="est-bar"><span style="width:' + Math.round(porDia[i] * 100 / maxDia) + '%"></span></div></td><td>' + porDia[i] + '</td></tr>').join('') +
+        '</tbody></table></div>' +
+      '<div class="est-box wide"><h3>Pacientes</h3><table class="est-table"><tbody>' +
+        '<tr><td>Pacientes distintos (por cédula)</td><td>' + cedulas.size + '</td></tr>' +
+        '<tr><td>Con diabetes</td><td>' + diabetes + '</td></tr>' +
+        '<tr><td>Usan lentes de contacto</td><td>' + lentes + '</td></tr>' +
+        '</tbody></table></div>' +
+      '</div>' +
+      '<div class="est-nota">Los montos salen de la tarifa elegida al reservar (lo que figura en el servicio). Los turnos marcados "sin costo" no suman al cobrado. Las reservas canceladas no se cuentan porque se borran de la planilla.</div>';
+
+    estContenido.innerHTML = html;
+  }
+
+  function abrirEstadisticas(abrir) {
+    estBody.classList.toggle('open', abrir);
+    estToggle.textContent = abrir ? 'Ocultar' : 'Ver estadísticas';
+    try { localStorage.setItem(LS_EST, abrir ? '1' : '0'); } catch (e) {}
+  }
+  estToggle.addEventListener('click', () => abrirEstadisticas(!estBody.classList.contains('open')));
+  estPeriodo.addEventListener('change', renderEstadisticas);
+  estMedico.addEventListener('change', renderEstadisticas);
+  try { if (localStorage.getItem(LS_EST) === '1') abrirEstadisticas(true); } catch (e) {}
 
   const modalCancelar = document.getElementById('modal-cancelar');
   const modalDetalle = document.getElementById('modal-detalle');
