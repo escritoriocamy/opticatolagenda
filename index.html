@@ -178,35 +178,33 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 }
 @media (prefers-reduced-motion: reduce){.pcell{transition:none}}
 /* ---- 10 años ---- */
-/* Sello 10 años en la portada */
+/* Portada: 10 años (tipo tapa de revista) */
+header{position:relative;overflow:hidden}
 .hero-inner{position:relative}
-.aniv-sello{position:absolute;right:0;top:50%;transform:translateY(-50%);width:330px;height:330px;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;border-radius:50%;overflow:hidden}
-.aniv-sello svg.aro{position:absolute;inset:0;width:100%;height:100%;animation:anivGiro 38s linear infinite}
-.aniv-sello::before{content:'';position:absolute;inset:34px;border-radius:50%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%);border:1px solid rgba(168,216,238,.35);box-shadow:0 30px 60px rgba(4,20,35,.25),inset 0 1px 0 rgba(255,255,255,.2)}
-.aniv-sello .centro{position:relative;display:flex;flex-direction:column;align-items:center;line-height:1}
-.aniv-sello .texto{display:flex;flex-direction:column;align-items:center}
-.aniv-sello .diez{font-size:168px;font-weight:800;letter-spacing:-.075em;line-height:.8;background:linear-gradient(170deg,#fff 20%,#A8D8EE 90%);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .06em 6px 0}
-.aniv-sello .anios{margin-top:4px;font-size:15px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:#A8D8EE;padding-left:.32em}
-.aniv-sello .vision{margin-top:8px;font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:25px;color:#fff;opacity:.95}
-.aniv-sello:hover::before{background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.22),rgba(255,255,255,.06) 60%)}
-@keyframes anivGiro{to{transform:rotate(360deg)}}
-@media (min-width: 1101px){ .hero-inner > :not(.aniv-sello){max-width:calc(100% - 360px) !important} }
+.hero-aniv{position:absolute;right:-24px;top:-60px;bottom:-112px;width:50%;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;pointer-events:none}
+.hero-aniv::before{content:'';position:absolute;right:4%;bottom:-8%;width:92%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(168,216,238,.30) 0%,rgba(168,216,238,.10) 38%,rgba(168,216,238,0) 66%)}
+.hero-aniv .lockup{position:relative;display:flex;align-items:center;gap:18px;color:#fff;text-decoration:none;pointer-events:auto;margin-right:18px}
+.hero-aniv .num{font-size:132px;line-height:.78;font-weight:800;letter-spacing:-.07em}
+.hero-aniv .pila{display:flex;flex-direction:column;font-size:27px;line-height:1.02;letter-spacing:-.02em;padding-top:2px}
+.hero-aniv .pila b{font-weight:700}
+.hero-aniv .pila span{font-weight:400;color:#A8D8EE}
+.hero-aniv .lema{position:relative;margin:16px 18px 0 0;display:flex;align-items:center;gap:12px;font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.hero-aniv .lema::before{content:'';width:34px;height:1px;background:rgba(168,216,238,.7)}
+.hero-aniv img{position:relative;margin-top:22px;width:100%;height:auto;display:block}
+@media (min-width: 1101px){ .hero-inner > :not(.hero-aniv){max-width:54% !important} }
 @media (max-width: 1100px){
-  .aniv-sello{position:relative;top:auto;right:auto;transform:none;width:auto;height:auto;display:inline-flex;margin-bottom:26px;padding:14px 26px 14px 18px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(168,216,238,.4)}
-  .aniv-sello::before,.aniv-sello svg.aro{display:none}
-  .aniv-sello .centro{flex-direction:row;align-items:center;gap:16px}
-  .aniv-sello .diez{font-size:96px}
-  .aniv-sello .texto{display:flex;flex-direction:column;align-items:flex-start}
-  .aniv-sello .anios{margin-top:0;padding-left:0}
-  .aniv-sello .vision{margin-top:4px;font-size:24px}
+  .hero-aniv{position:static;width:auto;display:block;margin:0 0 30px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.18)}
+  .hero-aniv::before,.hero-aniv img,.hero-aniv .lema{display:none}
+  .hero-aniv .lockup{display:inline-flex;margin:0;gap:14px}
+  .hero-aniv .num{font-size:88px}
+  .hero-aniv .pila{font-size:19px}
 }
 @media (max-width: 720px){
-  header .aniv-sello{width:auto !important;padding:12px 22px 12px 16px !important;text-align:left !important;font-size:inherit !important;display:inline-flex !important}
-  .aniv-sello .diez{font-size:84px}
-  .aniv-sello .anios{font-size:13px;letter-spacing:.26em}
-  .aniv-sello .vision{font-size:22px}
+  header .hero-aniv .lockup{width:auto !important;padding:0 !important;font-size:inherit !important;text-align:left !important}
+  .hero-aniv{margin-bottom:24px;padding-bottom:22px}
+  .hero-aniv .num{font-size:76px}
+  .hero-aniv .pila{font-size:17px}
 }
-@media (prefers-reduced-motion: reduce){.aniv-sello svg.aro{animation:none}}
 .aniv-card{max-width:1180px;margin:0 auto;background:#fff;border-radius:28px;display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:24px;overflow:hidden;position:relative;box-shadow:0 30px 70px rgba(15,34,48,.08)}
 .aniv-texto{padding:56px 0 56px 56px;position:relative;z-index:1}
 .aniv-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#2C7BA8}
@@ -273,10 +271,11 @@ header a[href="#agendar"]:hover{background:#CBEAF8;color:#0F2230}
 
   <header style="background:linear-gradient(120deg,#14496E 0%,#14496E 45%,#2C7BA8 100%);color:#fff;padding:104px 40px 112px">
     <div class="hero-inner" style="max-width:1180px;margin:0 auto">
-      <a href="#aniversario" class="aniv-sello" aria-label="10 años cuidando tu visión">
-        <svg class="aro" viewBox="0 0 330 330" aria-hidden="true"><defs><path id="anivCirculo" d="M165,165 m-148,0 a148,148 0 1,1 296,0 a148,148 0 1,1 -296,0"/></defs><text font-family="Archivo,sans-serif" font-size="12.5" font-weight="700" letter-spacing="4.6" fill="#A8D8EE"><textPath href="#anivCirculo">UNA HISTORIA QUE CONSTRUIMOS JUNTOS · UNA HISTORIA QUE CONSTRUIMOS JUNTOS ·</textPath></text></svg>
-        <span class="centro"><span class="diez">10</span><span class="texto"><span class="anios">años</span><span class="vision">cuidando tu visión</span></span></span>
-      </a>
+      <div class="hero-aniv">
+        <a href="#aniversario" class="lockup" aria-label="10 años cuidando tu visión"><span class="num">10</span><span class="pila"><b>años</b><span>cuidando</span><b>tu visión</b></span></a>
+        <div class="lema">Una historia que construimos juntos</div>
+        <img src="assets/equipo-10-anios-recorte.webp" alt="Dr. Rodrigo Rivas, Dra. Rosario Saldaña y Dr. Tomás Pérez" width="945" height="617" fetchpriority="high">
+      </div>
       <div style="font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#A8D8EE">Consultorio Oftalmológico · San José de Mayo</div>
       <h1 class="reveal-on-scroll" style="margin:26px 0 0;font-size:96px;line-height:0.95;font-weight:700;letter-spacing:-0.035em;max-width:16ch;text-wrap:pretty">Consultas <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400">sin espera.</span></h1>
       <p style="margin:32px 0 0;font-size:20px;line-height:1.5;opacity:.88;max-width:52ch">Consultas y estudios oftalmológicos con profesionales especializados. Elegí el oftalmólogo, el servicio y solicitá el día y horario que prefieras.</p>
